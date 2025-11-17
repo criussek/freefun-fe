@@ -46,10 +46,12 @@ export default function Footer({ siteSettings }: FooterProps) {
         <div className="text-white">
           {/* Site Title and Tagline - Full Width */}
           <div className="mb-6">
-            <h2 className="text-3xl font-bold mb-2">{siteSettings?.siteTitle || '3FUN'}</h2>
-            {siteSettings?.tagline && (
-              <p className="text-lg opacity-80">{siteSettings.tagline}</p>
-            )}
+            <h2 className="text-3xl font-bold">
+              {siteSettings?.siteTitle || '3FUN'}
+              {siteSettings?.tagline && (
+                <span className="text-lg opacity-80 ml-3 font-normal">{siteSettings.tagline}</span>
+              )}
+            </h2>
           </div>
 
           {/* Horizontal Rule - Full Width */}
