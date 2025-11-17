@@ -45,7 +45,7 @@ export default async function FAQPage() {
       />
 
       {/* Two Column Layout: Title + Contact Info + FAQs */}
-      <section className="py-16">
+      <section className="py-24">
         <div className="max-w-[1200px] mx-auto px-[3vw]">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             {/* Left Column - Title, Description & Contact Info */}
