@@ -61,6 +61,14 @@ export const POP_HOME = {
             },
           },
         },
+        'home.book-now': {
+          fields: ['sectionTitle', 'sectionDescription', 'buttonLabel', 'buttonUrl'],
+          populate: {
+            sectionImage: {
+              fields: ['url', 'alternativeText'],
+            },
+          },
+        },
       },
     },
   },

@@ -8,6 +8,7 @@ import WhyChooseUsSection from '@/components/walden/WhyChooseUsSection'
 import FeaturedCampersSection from '@/components/walden/FeaturedCampersSection'
 import TestimonialsSection from '@/components/walden/TestimonialsSection'
 import FAQSection from '@/components/walden/FAQSection'
+import BookNowSection from '@/components/walden/BookNowSection'
 
 export default async function Home() {
   // Fetch home page from Strapi
@@ -86,6 +87,10 @@ export default async function Home() {
               seeFAQsUrl={section.seeFAQsUrl}
             />
           )
+        }
+
+        if (section.__component === 'home.book-now') {
+          return <BookNowSection key={index} bookNow={section.bookNow} />
         }
 
         return null

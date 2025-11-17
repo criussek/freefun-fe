@@ -5,6 +5,7 @@ import { fromStrapiTestimonial } from './testimonial';
 import { fromStrapiFAQ } from './faq';
 import { fromStrapiHero } from './hero';
 import { fromStrapiFeaturedCampers } from './featured-campers';
+import { fromStrapiBookNow } from './book-now';
 
 export function fromStrapiHome(e: StrapiEntity<any> | any): HomePage {
   const a = (e && (e as any).attributes) ? (e as any).attributes : (e ?? {});
@@ -81,6 +82,15 @@ export function fromStrapiHome(e: StrapiEntity<any> | any): HomePage {
         faqs,
         seeFAQsLabel: s?.seeFAQsLabel ?? undefined,
         seeFAQsUrl: s?.seeFAQsUrl ?? undefined,
+      });
+      continue;
+    }
+
+    if (type === 'home.book-now') {
+      const bookNow = fromStrapiBookNow(s);
+      sections.push({
+        __component: 'home.book-now',
+        bookNow,
       });
       continue;
     }

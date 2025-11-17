@@ -47,6 +47,14 @@ export interface FeaturedCampers {
   seeCampersUrl: string;
 }
 
+export interface BookNow {
+  sectionTitle?: string;
+  sectionDescription?: string;
+  sectionImage: string | null;
+  buttonLabel?: string;
+  buttonUrl?: string;
+}
+
 // Home page section types
 export type HomeSection =
   | { __component: 'home.hero'; hero: Hero }
@@ -54,6 +62,7 @@ export type HomeSection =
   | { __component: 'home.featured-campers'; featuredCampers: FeaturedCampers }
   | { __component: 'home.testimonials'; sectionTitle?: string; sectionDescription?: string; testimonials: Testimonial[] }
   | { __component: 'home.faq-list'; sectionTitle?: string; sectionDescription?: string; faqs: FAQ[]; seeFAQsLabel?: string; seeFAQsUrl?: string }
+  | { __component: 'home.book-now'; bookNow: BookNow }
   | { __component: 'home.newsletter'; [key: string]: any };
 
 export interface HomePage {

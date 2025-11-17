@@ -39,7 +39,7 @@ export default async function TestimonialsSection({
     <>
       {/* Section Header - Same background as testimonials */}
       {sectionTitle && (
-        <div className="bg-[#e0e0db] pt-20 pb-8">
+        <div className="bg-white pt-20 pb-8">
           <div className="max-w-[1200px] mx-auto px-[4vw] text-center">
             <h2 className="mb-12 font-medium">{sectionTitle}</h2>
             {sectionDescription && (

@@ -1,13 +1,15 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Facebook, Instagram, Phone } from 'lucide-react'
 import logo from '@/media/3fun_logo.svg'
+import bgLogo from '@/media/bg-logo.png'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
 
   const navigation = [
+    { name: 'Home', href: '/' },
     { name: 'The fleet', href: '/fleet' },
     { name: 'Rates', href: '/rates' },
     { name: 'Our story', href: '/about' },
@@ -17,46 +19,89 @@ export default function Navbar() {
 
   return (
     <nav className="absolute top-0 left-0 right-0 z-50">
-      {/* Transparent padding on top */}
-      <div className="h-[100px]"></div>
+      <div className="w-full px-[2.6vw]">
+        <div className="flex items-center justify-between">
+          {/* Left Side - Social Icons and Phone */}
+          <div className="hidden lg:flex items-center space-x-6 flex-1">
+            {/* Social Icons */}
+            <div className="flex items-center space-x-4">
+              <a
+                href="https://www.facebook.com/3FUN"
+                target="_blank"
+                rel="nofollow"
+                className="text-white hover:opacity-70 transition-opacity"
+                aria-label="Facebook"
+              >
+                <Facebook size={24} />
+              </a>
+              <a
+                href="https://www.instagram.com/3FUN"
+                target="_blank"
+                rel="nofollow"
+                className="text-white hover:opacity-70 transition-opacity"
+                aria-label="Instagram"
+              >
+                <Instagram size={24} />
+              </a>
+            </div>
 
-      {/* Black semi-transparent background wrapper */}
-      <div className="absolute top-[100px] left-0 right-0 bg-black bg-opacity-50">
-        <div className="max-w-[1200px] mx-auto px-[3vw]">
-          <div className="flex justify-between items-center py-6">
-            {/* Logo */}
-            <Link href="/" className="flex items-center z-50">
-              <img src={logo.src} alt="3FUN Logo" className="h-40 w-40" />
+            {/* Phone Number */}
+            <div className="flex items-center space-x-2 pl-6 border-l-2 border-white/30">
+              <Phone size={24} className="text-white" />
+              <a
+                href="tel:+48123456789"
+                className="text-white hover:opacity-70 transition-opacity text-base font-bold tracking-wider"
+              >
+                +48 123 456 789
+              </a>
+            </div>
+          </div>
+
+          {/* Center - Logo */}
+          <div
+            className="flex-shrink-0 pb-8"
+            style={{
+              backgroundImage: `url(${bgLogo.src})`,
+              backgroundPosition: 'top center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: 'contain',
+              minWidth: '500px',
+              width: '500px',
+            }}
+          >
+            <div style={{ height: '1rem' }}></div>
+            <Link href="/" className="flex items-center justify-center z-50">
+              <img src={logo.src} alt="3FUN Logo" className="h-60 w-60" />
             </Link>
+          </div>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-8">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="text-base font-bold tracking-wider text-white hover:opacity-70 transition-opacity"
-                >
-                  {item.name}
-                </Link>
-              ))}
+          {/* Right Side - Navigation Menu */}
+          <div className="hidden lg:flex items-center justify-end space-x-8 flex-1">
+            {navigation.map((item) => (
               <Link
-                href="/contact"
-                className="bg-white text-black tracking-wider px-10 py-5 font-bold hover:bg-opacity-80 transition-all"
+                key={item.name}
+                href={item.href}
+                className="text-base font-bold tracking-wider text-white hover:opacity-70 transition-opacity"
               >
-                Book now
+                {item.name}
               </Link>
-            </div>
+            ))}
+            <Link
+              href="/contact"
+              className="bg-white text-black tracking-wider px-10 py-5 font-bold hover:bg-opacity-80 transition-all"
+            >
+              Book now
+            </Link>
+          </div>
 
-            {/* Mobile menu button */}
-            <div className="lg:hidden z-50">
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="text-white hover:opacity-70"
-              >
-                {isOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
-            </div>
+          {/* Mobile menu button */}
+          <div className="lg:hidden z-50">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-white hover:opacity-70"
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
         </div>
       </div>
@@ -65,6 +110,38 @@ export default function Navbar() {
       {isOpen && (
         <div className="lg:hidden fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-95 z-40">
           <div className="px-[3vw] pt-32 pb-8">
+            {/* Social Icons Mobile */}
+            <div className="flex items-center space-x-4 mb-6 pb-6 border-b border-white/20">
+              <a
+                href="https://www.facebook.com/3FUN"
+                target="_blank"
+                rel="nofollow"
+                className="text-white hover:opacity-70 transition-opacity"
+                aria-label="Facebook"
+              >
+                <Facebook size={24} />
+              </a>
+              <a
+                href="https://www.instagram.com/3FUN"
+                target="_blank"
+                rel="nofollow"
+                className="text-white hover:opacity-70 transition-opacity"
+                aria-label="Instagram"
+              >
+                <Instagram size={24} />
+              </a>
+            </div>
+
+            {/* Phone Number Mobile */}
+            <a
+              href="tel:+48123456789"
+              className="flex items-center space-x-2 mb-6 pb-6 border-b border-white/20 text-white hover:opacity-70"
+            >
+              <Phone size={20} />
+              <span>+48 123 456 789</span>
+            </a>
+
+            {/* Navigation Links */}
             {navigation.map((item) => (
               <Link
                 key={item.name}
@@ -75,6 +152,8 @@ export default function Navbar() {
                 {item.name}
               </Link>
             ))}
+
+            {/* Book Now Button */}
             <Link
               href="/contact"
               className="block mt-8 bg-white text-black px-8 py-4 text-center font-bold hover:bg-opacity-90 transition-all"

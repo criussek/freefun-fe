@@ -47,7 +47,7 @@ export default function TestimonialsCarousel({ testimonials, hasHeader = false }
   }
 
   return (
-    <section className={`${hasHeader ? 'pb-6' : 'py-6'} bg-[#e0e0db]`} style={{ minHeight: '2vh' }}>
+    <section className={`${hasHeader ? 'pb-6' : 'py-6'} bg-white`} style={{ minHeight: '2vh' }}>
       <div className="w-full px-[3vw]">
         <div className="relative flex items-center" style={{ minHeight: '2vh' }}>
           {/* Left Arrow */}
