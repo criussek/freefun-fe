@@ -68,3 +68,21 @@ export type HomeSection =
 export interface HomePage {
   sections: HomeSection[];
 }
+
+export interface Link {
+  label: string;
+  url: string;
+}
+
+export interface SiteSettings {
+  siteTitle?: string;
+  tagline?: string;
+  logo: string | null;
+  secondaryLogo: string | null;
+  contactEmail?: string;
+  contactPhone?: string;
+  contactAddress?: string;
+  navbarLinks: Link[];
+  socialLinks: Link[];
+  footerLinks: Link[];
+}

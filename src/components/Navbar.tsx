@@ -2,20 +2,41 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Menu, X, Facebook, Instagram, Phone } from 'lucide-react'
+import { SiteSettings } from '@/types/domain'
 import logo from '@/media/3fun_logo.svg'
 import bgLogo from '@/media/bg-logo.png'
 
-export default function Navbar() {
+interface NavbarProps {
+  siteSettings?: SiteSettings
+}
+
+export default function Navbar({ siteSettings }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false)
 
-  const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'The fleet', href: '/fleet' },
-    { name: 'Rates', href: '/rates' },
-    { name: 'Our story', href: '/about' },
-    { name: 'Trip Planning', href: '/trip-planning' },
-    { name: 'FAQs', href: '/faq' },
-  ]
+  // Use site settings data or fallback to defaults
+  const logoUrl = siteSettings?.logo || logo.src
+  const secondaryLogoUrl = siteSettings?.secondaryLogo || bgLogo.src
+  const contactPhone = siteSettings?.contactPhone || '+48 123 456 789'
+
+  const navigation = siteSettings?.navbarLinks && siteSettings.navbarLinks.length > 0
+    ? siteSettings.navbarLinks
+    : [
+        { label: 'Home', url: '/' },
+        { label: 'The fleet', url: '/fleet' },
+        { label: 'Rates', url: '/rates' },
+        { label: 'Our story', url: '/about' },
+        { label: 'Trip Planning', url: '/trip-planning' },
+        { label: 'FAQs', url: '/faq' },
+      ]
+
+  // Find Facebook and Instagram links from socialLinks
+  const facebookLink = siteSettings?.socialLinks?.find(link =>
+    link.label.toLowerCase().includes('facebook')
+  )?.url || 'https://www.facebook.com/3FUN'
+
+  const instagramLink = siteSettings?.socialLinks?.find(link =>
+    link.label.toLowerCase().includes('instagram')
+  )?.url || 'https://www.instagram.com/3FUN'
 
   return (
     <nav className="absolute top-0 left-0 right-0 z-50">
@@ -26,7 +47,7 @@ export default function Navbar() {
             {/* Social Icons */}
             <div className="flex items-center space-x-4">
               <a
-                href="https://www.facebook.com/3FUN"
+                href={facebookLink}
                 target="_blank"
                 rel="nofollow"
                 className="text-white hover:opacity-70 transition-opacity"
@@ -35,7 +56,7 @@ export default function Navbar() {
                 <Facebook size={24} />
               </a>
               <a
-                href="https://www.instagram.com/3FUN"
+                href={instagramLink}
                 target="_blank"
                 rel="nofollow"
                 className="text-white hover:opacity-70 transition-opacity"
@@ -49,10 +70,10 @@ export default function Navbar() {
             <div className="flex items-center space-x-2 pl-6 border-l-2 border-white/30">
               <Phone size={24} className="text-white" />
               <a
-                href="tel:+48123456789"
+                href={`tel:${contactPhone}`}
                 className="text-white hover:opacity-70 transition-opacity text-base font-bold tracking-wider"
               >
-                +48 123 456 789
+                {contactPhone}
               </a>
             </div>
           </div>
@@ -61,7 +82,7 @@ export default function Navbar() {
           <div
             className="flex-shrink-0 pb-8"
             style={{
-              backgroundImage: `url(${bgLogo.src})`,
+              backgroundImage: `url(${secondaryLogoUrl})`,
               backgroundPosition: 'top center',
               backgroundRepeat: 'no-repeat',
               backgroundSize: 'contain',
@@ -71,7 +92,7 @@ export default function Navbar() {
           >
             <div style={{ height: '1rem' }}></div>
             <Link href="/" className="flex items-center justify-center z-50">
-              <img src={logo.src} alt="3FUN Logo" className="h-60 w-60" />
+              <img src={logoUrl} alt="3FUN Logo" className="h-60 w-60" />
             </Link>
           </div>
 
@@ -79,11 +100,11 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center justify-end space-x-8 flex-1">
             {navigation.map((item) => (
               <Link
-                key={item.name}
-                href={item.href}
+                key={item.label}
+                href={item.url}
                 className="text-base font-bold tracking-wider text-white hover:opacity-70 transition-opacity"
               >
-                {item.name}
+                {item.label}
               </Link>
             ))}
             <Link
@@ -113,7 +134,7 @@ export default function Navbar() {
             {/* Social Icons Mobile */}
             <div className="flex items-center space-x-4 mb-6 pb-6 border-b border-white/20">
               <a
-                href="https://www.facebook.com/3FUN"
+                href={facebookLink}
                 target="_blank"
                 rel="nofollow"
                 className="text-white hover:opacity-70 transition-opacity"
@@ -122,7 +143,7 @@ export default function Navbar() {
                 <Facebook size={24} />
               </a>
               <a
-                href="https://www.instagram.com/3FUN"
+                href={instagramLink}
                 target="_blank"
                 rel="nofollow"
                 className="text-white hover:opacity-70 transition-opacity"
@@ -134,22 +155,22 @@ export default function Navbar() {
 
             {/* Phone Number Mobile */}
             <a
-              href="tel:+48123456789"
+              href={`tel:${contactPhone}`}
               className="flex items-center space-x-2 mb-6 pb-6 border-b border-white/20 text-white hover:opacity-70"
             >
               <Phone size={20} />
-              <span>+48 123 456 789</span>
+              <span>{contactPhone}</span>
             </a>
 
             {/* Navigation Links */}
             {navigation.map((item) => (
               <Link
-                key={item.name}
-                href={item.href}
+                key={item.label}
+                href={item.url}
                 className="block py-4 text-base font-bold text-white hover:opacity-70 border-b border-white/20"
                 onClick={() => setIsOpen(false)}
               >
-                {item.name}
+                {item.label}
               </Link>
             ))}
 

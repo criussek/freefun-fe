@@ -8,6 +8,27 @@ export const POP_FAQ = {
   fields: ['question', 'answer'],
 };
 
+export const POP_SITE_SETTINGS = {
+  fields: ['siteTitle', 'tagline', 'contactEmail', 'contactPhone', 'contactAddress'],
+  populate: {
+    logo: {
+      fields: ['url', 'alternativeText'],
+    },
+    secondaryLogo: {
+      fields: ['url', 'alternativeText'],
+    },
+    navbarLinks: {
+      fields: ['label', 'url'],
+    },
+    socialLinks: {
+      fields: ['label', 'url'],
+    },
+    footerLinks: {
+      fields: ['label', 'url'],
+    },
+  },
+};
+
 export const POP_HOME = {
   populate: {
     sections: {
