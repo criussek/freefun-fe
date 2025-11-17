@@ -10,7 +10,7 @@ export default function PageHero({ title, description, backgroundImage }: PageHe
   const bgImage = backgroundImage || bgHero.src
 
   return (
-    <section className="relative h-[60vh] w-full overflow-hidden">
+    <section className="relative h-screen w-full overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-400 to-gray-600">
         <img src={bgImage} alt="Hero background" className="w-full h-full object-cover" />
