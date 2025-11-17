@@ -36,7 +36,7 @@ export default function FAQSection() {
             Frequently Asked Questions
           </h2>
           <p className="text-lg text-gray-700">
-            Got questions? We've got answers!
+            Got questions? We&apos;ve got answers!
           </p>
         </div>
 

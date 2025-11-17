@@ -52,7 +52,7 @@ export default function AboutPage() {
               About 3FUN
             </h1>
             <p className="text-xl text-gray-200 max-w-3xl mx-auto">
-              We're more than just a rental company - we're your partners in creating
+              We&apos;re more than just a rental company - we&apos;re your partners in creating
               unforgettable outdoor adventures.
             </p>
           </div>
@@ -71,7 +71,7 @@ export default function AboutPage() {
                 <p>
                   Founded in 2019, 3FUN started with a simple dream: to make outdoor
                   adventures accessible to everyone. We believe that exploring nature
-                  shouldn't be complicated or expensive.
+                  shouldn&apos;t be complicated or expensive.
                 </p>
                 <p>
                   What began as a small fleet of three campervans has grown into a
@@ -79,7 +79,7 @@ export default function AboutPage() {
                   equipment throughout the Pacific Northwest.
                 </p>
                 <p>
-                  Today, we're proud to have helped thousands of families, couples,
+                  Today, we&apos;re proud to have helped thousands of families, couples,
                   and solo adventurers experience the freedom and joy of the open road.
                 </p>
               </div>

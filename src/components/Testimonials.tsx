@@ -36,7 +36,7 @@ export default function Testimonials() {
             What Our Customers Say
           </h2>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-            Don't just take our word for it - hear from our happy adventurers!
+            Don&apos;t just take our word for it - hear from our happy adventurers!
           </p>
         </div>
 
@@ -51,7 +51,7 @@ export default function Testimonials() {
                   <Star key={i} className="text-gold fill-gold" size={20} />
                 ))}
               </div>
-              <p className="text-gray-700 mb-4 italic">"{testimonial.text}"</p>
+              <p className="text-gray-700 mb-4 italic">&quot;{testimonial.text}&quot;</p>
               <div className="border-t border-gray-300 pt-4">
                 <p className="font-semibold text-forest">{testimonial.name}</p>
                 <p className="text-sm text-gray-600">{testimonial.location}</p>

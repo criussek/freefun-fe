@@ -39,7 +39,7 @@ export default function ContactPage() {
               Get in Touch
             </h1>
             <p className="text-xl text-gray-200 max-w-3xl mx-auto">
-              Have questions or ready to book? We'd love to hear from you!
+              Have questions or ready to book? We&apos;d love to hear from you!
             </p>
           </div>
         </div>
@@ -218,7 +218,7 @@ export default function ContactPage() {
 
                   {status === 'success' && (
                     <p className="text-green-600 text-center font-semibold">
-                      Thank you! We'll get back to you soon.
+                      Thank you! We&apos;ll get back to you soon.
                     </p>
                   )}
                   {status === 'error' && (

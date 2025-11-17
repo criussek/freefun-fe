@@ -348,7 +348,7 @@ export default function MachinesPage() {
             </div>
 
             <div className="bg-cream rounded-lg p-6">
-              <h3 className="text-xl font-bold text-forest mb-3">What's Included</h3>
+              <h3 className="text-xl font-bold text-forest mb-3">What&apos;s Included</h3>
               <ul className="space-y-2 text-gray-700">
                 <li className="flex items-start">
                   <Check size={16} className="text-forest mr-2 mt-1 flex-shrink-0" />

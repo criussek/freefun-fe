@@ -5,8 +5,8 @@ export default function IntroSection() {
         <h2 className="mb-6">Experience the outdoors</h2>
         <p className="text-lg leading-relaxed">
           Our campervans are thoughtfully designed and meticulously maintained to provide
-          you with a premium outdoor experience. Whether you're seeking solitude in the
-          wilderness or adventure on the open road, we're here to help you get there.
+          you with a premium outdoor experience. Whether you&apos;re seeking solitude in the
+          wilderness or adventure on the open road, we&apos;re here to help you get there.
         </p>
       </div>
     </section>

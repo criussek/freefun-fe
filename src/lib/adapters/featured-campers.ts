@@ -1,5 +1,5 @@
 import { StrapiEntity } from '@/types/strapi';
-import { FeaturedCampers } from '@/types/domain';
+import { FeaturedCampers, Machine } from '@/types/domain';
 import { fromStrapiMachine } from './machine';
 
 export function fromStrapiFeaturedCampers(e: StrapiEntity<any> | any): FeaturedCampers {
@@ -15,7 +15,7 @@ export function fromStrapiFeaturedCampers(e: StrapiEntity<any> | any): FeaturedC
   const machinesRel = listify(a?.machines);
   const machines = machinesRel
     .map((item: any) => (item ? fromStrapiMachine(item) : null))
-    .filter(Boolean);
+    .filter((m): m is Machine => m !== null);
 
   return {
     sectionTitle: a.sectionTitle ?? undefined,

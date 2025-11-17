@@ -77,7 +77,7 @@ export default function TestimonialsCarousel({ testimonials }: TestimonialsCarou
                 {testimonials[currentIndex].authorName}
               </h2>
               <div style={{ fontSize: '1.2rem', lineHeight: '1.6', marginTop: '1%' }}>
-                <p>"{testimonials[currentIndex].quote}"</p>
+                <p>&quot;{testimonials[currentIndex].quote}&quot;</p>
               </div>
             </div>
           </div>

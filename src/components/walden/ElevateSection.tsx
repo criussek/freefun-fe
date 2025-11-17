@@ -16,7 +16,7 @@ export default function ElevateSection() {
             views and fall asleep under the stars.
           </p>
           <a href="/fleet" className="btn-secondary">
-            See what's included
+            See what&apos;s included
           </a>
         </div>
 
