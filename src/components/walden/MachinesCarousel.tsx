@@ -11,38 +11,51 @@ interface MachinesCarouselProps {
 
 export default function MachinesCarousel({ machines }: MachinesCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [isTransitioning, setIsTransitioning] = useState(false)
   const itemsPerPage = 3
 
   const maxIndex = Math.max(0, machines.length - itemsPerPage)
 
   const goToNext = () => {
-    setCurrentIndex((prev) => Math.min(prev + 1, maxIndex))
+    if (isTransitioning || currentIndex >= maxIndex) return
+    setIsTransitioning(true)
+    setCurrentIndex((prev) => prev + 1)
+    setTimeout(() => setIsTransitioning(false), 500)
   }
 
   const goToPrev = () => {
-    setCurrentIndex((prev) => Math.max(prev - 1, 0))
+    if (isTransitioning || currentIndex === 0) return
+    setIsTransitioning(true)
+    setCurrentIndex((prev) => prev - 1)
+    setTimeout(() => setIsTransitioning(false), 500)
   }
 
-  const visibleMachines = machines.slice(currentIndex, currentIndex + itemsPerPage)
+  // Calculate the translation offset
+  const getTranslateX = () => {
+    // Each card takes up 1/3 of the container width + gap
+    const cardWidthPercent = 100 / itemsPerPage
+    return -(currentIndex * cardWidthPercent)
+  }
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full px-12 lg:px-20">
       {/* Slides Container */}
       <div className="overflow-hidden">
         <div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 transition-all duration-300"
+          className="flex gap-5 transition-transform duration-500 ease-in-out"
           style={{
-            transform: `translateX(0)`,
+            transform: `translateX(calc(${-currentIndex} * ((100% + 20px) / 3)))`,
           }}
         >
-          {visibleMachines.map((machine, index) => (
+          {machines.map((machine, index) => (
             <div
               key={machine.slug}
-              className="bg-white p-[6%] rounded-lg"
+              className="bg-white p-[2%] flex-none"
+              style={{ width: 'calc((100% - 40px) / 3)' }}
             >
               {/* Image */}
               <div className="w-full mb-[8%]">
-                <div className="relative aspect-[3/2] overflow-hidden">
+                <div className="relative aspect-[3/2] overflow-hidden rounded-lg">
                   {machine.cardPhoto ? (
                     <Image
                       src={machine.cardPhoto}
@@ -60,14 +73,14 @@ export default function MachinesCarousel({ machines }: MachinesCarouselProps) {
               </div>
 
               {/* Content */}
-              <div className="text-center">
-                <h2 className="text-2xl font-semibold mb-[4%] max-w-[75%] mx-auto">
+              <div className="text-center text-black">
+                <h2 className="text-2xl font-semibold mb-[4%] max-w-[%] mx-auto">
                   {machine.name}
                 </h2>
-                <div className="text-base mb-[8%] max-w-[75%] mx-auto">
+                <div className="text-base mb-[8%] max-w-[100%] mx-auto">
                   <p>{machine.overview}</p>
                 </div>
-                <div className="max-w-[75%] mx-auto">
+                <div className="max-w-[100%] mx-auto">
                   <Link
                     href={`/${machine.slug}`}
                     className="btn-secondary inline-block"
@@ -87,11 +100,11 @@ export default function MachinesCarousel({ machines }: MachinesCarouselProps) {
           {/* Left Arrow */}
           <button
             onClick={goToPrev}
-            disabled={currentIndex === 0}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white bg-opacity-90 hover:bg-opacity-100 disabled:opacity-30 disabled:cursor-not-allowed p-4 rounded-full shadow-lg transition-all"
+            disabled={currentIndex === 0 || isTransitioning}
+            className="absolute left-2 lg:left-4 top-1/2 -translate-y-1/2 z-50 hover:opacity-70 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
             aria-label="Previous"
           >
-            <svg className="w-6 h-6" viewBox="0 0 44 18" xmlns="http://www.w3.org/2000/svg">
+            <svg className="w-11 h-[18px] text-white" viewBox="0 0 44 18" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M9.90649 16.96L2.1221 9.17556L9.9065 1.39116"
                 stroke="currentColor"
@@ -110,11 +123,11 @@ export default function MachinesCarousel({ machines }: MachinesCarouselProps) {
           {/* Right Arrow */}
           <button
             onClick={goToNext}
-            disabled={currentIndex >= maxIndex}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white bg-opacity-90 hover:bg-opacity-100 disabled:opacity-30 disabled:cursor-not-allowed p-4 rounded-full shadow-lg transition-all"
+            disabled={currentIndex >= maxIndex || isTransitioning}
+            className="absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 z-50 hover:opacity-70 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
             aria-label="Next"
           >
-            <svg className="w-6 h-6" viewBox="0 0 44 18" xmlns="http://www.w3.org/2000/svg">
+            <svg className="w-11 h-[18px] text-white" viewBox="0 0 44 18" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M34.1477 1.39111L41.9321 9.17551L34.1477 16.9599"
                 stroke="currentColor"
