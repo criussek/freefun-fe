@@ -26,7 +26,7 @@ export default async function FAQPage() {
   const siteSettings = siteSettingsRes?.data ? fromStrapiSiteSettings(siteSettingsRes.data) : undefined
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-white pt-[200px]">
       {/* Two Column Layout: Title + Contact Info + FAQs */}
       <section className="py-16">
         <div className="max-w-[1200px] mx-auto px-[3vw]">
