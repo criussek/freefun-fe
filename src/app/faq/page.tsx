@@ -26,33 +26,30 @@ export default async function FAQPage() {
   const siteSettings = siteSettingsRes?.data ? fromStrapiSiteSettings(siteSettingsRes.data) : undefined
 
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-[#28332e] text-white py-20">
-        <div className="max-w-[1200px] mx-auto px-[3vw]">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Wszystko co musisz wiedzieć o 3FUN
-            </h1>
-            <p className="text-xl text-gray-200 max-w-3xl mx-auto">
-              Jeśli nie możesz znaleźć odpowiedzi, której szukasz, skontaktuj się z nami pod adresem{' '}
-              <a
-                href={`mailto:${siteSettings?.contactEmail || 'info@3fun.com'}`}
-                className="text-white hover:opacity-70 underline"
-              >
-                {siteSettings?.contactEmail || 'info@3fun.com'}
-              </a>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Two Column Layout: Contact Info + FAQs */}
-      <section className="py-16 bg-white">
+    <main className="min-h-screen bg-white">
+      {/* Two Column Layout: Title + Contact Info + FAQs */}
+      <section className="py-16">
         <div className="max-w-[1200px] mx-auto px-[3vw]">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-            {/* Left Column - Contact Info */}
+            {/* Left Column - Title, Description & Contact Info */}
             <div className="lg:col-span-4">
+              {/* Title and Description */}
+              <div className="mb-8">
+                <h1 className="text-3xl md:text-4xl font-bold mb-4">
+                  Wszystko co musisz wiedzieć o 3FUN
+                </h1>
+                <p className="text-base text-gray-700">
+                  Jeśli nie możesz znaleźć odpowiedzi, której szukasz, skontaktuj się z nami pod adresem{' '}
+                  <a
+                    href={`mailto:${siteSettings?.contactEmail || 'info@3fun.com'}`}
+                    className="text-[#253551] hover:opacity-70 underline"
+                  >
+                    {siteSettings?.contactEmail || 'info@3fun.com'}
+                  </a>
+                </p>
+              </div>
+
+              {/* Contact Info Cards */}
               <ContactInfoSidebar siteSettings={siteSettings} />
             </div>
 
