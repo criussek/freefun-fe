@@ -29,6 +29,15 @@ export const POP_SITE_SETTINGS = {
   },
 };
 
+export const POP_FAQ_PAGE = {
+  fields: ['pageTitle', 'pageDescription', 'contactTitle', 'contactDescription'],
+  populate: {
+    pageImage: {
+      fields: ['url', 'alternativeText'],
+    },
+  },
+};
+
 export const POP_HOME = {
   populate: {
     sections: {

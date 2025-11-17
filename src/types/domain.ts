@@ -86,3 +86,11 @@ export interface SiteSettings {
   socialLinks: Link[];
   footerLinks: Link[];
 }
+
+export interface FAQPage {
+  pageTitle?: string;
+  pageDescription?: string;
+  pageImage: string | null;
+  contactTitle?: string;
+  contactDescription?: string;
+}

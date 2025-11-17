@@ -2,9 +2,11 @@ import { fetchStrapiOrNull } from '@/lib/strapi'
 import { StrapiList, StrapiSingle } from '@/types/strapi'
 import { fromStrapiFAQ } from '@/lib/adapters/faq'
 import { fromStrapiSiteSettings } from '@/lib/adapters/site-setting'
-import { POP_FAQ, POP_SITE_SETTINGS } from '@/lib/populate'
+import { fromStrapiFAQPage } from '@/lib/adapters/faq-page'
+import { POP_FAQ, POP_SITE_SETTINGS, POP_FAQ_PAGE } from '@/lib/populate'
 import FAQAccordionPage from '@/components/walden/FAQAccordionPage'
 import ContactInfoSidebar from '@/components/walden/ContactInfoSidebar'
+import PageHero from '@/components/walden/PageHero'
 
 export default async function FAQPage() {
   // Fetch FAQs from Strapi
@@ -25,8 +27,23 @@ export default async function FAQPage() {
 
   const siteSettings = siteSettingsRes?.data ? fromStrapiSiteSettings(siteSettingsRes.data) : undefined
 
+  // Fetch FAQ page data
+  const faqPageRes = await fetchStrapiOrNull<StrapiSingle<any>>('/api/faq-page', {
+    params: POP_FAQ_PAGE,
+    revalidate: 3600,
+  })
+
+  const faqPage = faqPageRes?.data ? fromStrapiFAQPage(faqPageRes.data) : undefined
+
   return (
-    <main className="min-h-screen bg-white pt-[280px]">
+    <main className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <PageHero
+        title={faqPage?.pageTitle || 'FAQ'}
+        description={faqPage?.pageDescription || ''}
+        backgroundImage={faqPage?.pageImage || null}
+      />
+
       {/* Two Column Layout: Title + Contact Info + FAQs */}
       <section className="py-16">
         <div className="max-w-[1200px] mx-auto px-[3vw]">
@@ -35,17 +52,21 @@ export default async function FAQPage() {
             <div className="lg:col-span-4">
               {/* Title and Description */}
               <div className="mb-8">
-                <h1 className="text-3xl md:text-4xl font-bold mb-4">
-                  Wszystko co musisz wiedzieć o 3FUN
-                </h1>
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                  {faqPage?.contactTitle || 'Wszystko co musisz wiedzieć o 3FUN'}
+                </h2>
                 <p className="text-base text-gray-700">
-                  Jeśli nie możesz znaleźć odpowiedzi, której szukasz, skontaktuj się z nami pod adresem{' '}
-                  <a
-                    href={`mailto:${siteSettings?.contactEmail || 'info@3fun.com'}`}
-                    className="text-[#253551] hover:opacity-70 underline"
-                  >
-                    {siteSettings?.contactEmail || 'info@3fun.com'}
-                  </a>
+                  {faqPage?.contactDescription || (
+                    <>
+                      Jeśli nie możesz znaleźć odpowiedzi, której szukasz, skontaktuj się z nami pod adresem{' '}
+                      <a
+                        href={`mailto:${siteSettings?.contactEmail || 'info@3fun.com'}`}
+                        className="text-[#253551] hover:opacity-70 underline"
+                      >
+                        {siteSettings?.contactEmail || 'info@3fun.com'}
+                      </a>
+                    </>
+                  )}
                 </p>
               </div>
 
