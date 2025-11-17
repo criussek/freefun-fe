@@ -30,7 +30,7 @@ export default async function RootLayout({
       <body>
         <Navbar siteSettings={siteSettings} />
         {children}
-        <Footer />
+        <Footer siteSettings={siteSettings} />
       </body>
     </html>
   )

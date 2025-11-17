@@ -111,7 +111,7 @@ export default function Navbar({ siteSettings }: NavbarProps) {
               href="/contact"
               className="bg-white text-black tracking-wider px-10 py-5 font-bold hover:bg-opacity-80 transition-all"
             >
-              Book now
+              Rezerwuj
             </Link>
           </div>
 
@@ -180,7 +180,7 @@ export default function Navbar({ siteSettings }: NavbarProps) {
               className="block mt-8 bg-white text-black px-8 py-4 text-center font-bold hover:bg-opacity-90 transition-all"
               onClick={() => setIsOpen(false)}
             >
-              Book now
+              Rezerwuj
             </Link>
           </div>
         </div>
