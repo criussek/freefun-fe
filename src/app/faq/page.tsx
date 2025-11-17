@@ -3,8 +3,8 @@ import { StrapiList, StrapiSingle } from '@/types/strapi'
 import { fromStrapiFAQ } from '@/lib/adapters/faq'
 import { fromStrapiSiteSettings } from '@/lib/adapters/site-setting'
 import { POP_FAQ, POP_SITE_SETTINGS } from '@/lib/populate'
-import FAQAccordionClient from '@/components/walden/FAQAccordionClient'
-import ContactInfo from '@/components/walden/ContactInfo'
+import FAQAccordionPage from '@/components/walden/FAQAccordionPage'
+import ContactInfoSidebar from '@/components/walden/ContactInfoSidebar'
 
 export default async function FAQPage() {
   // Fetch FAQs from Strapi
@@ -47,24 +47,24 @@ export default async function FAQPage() {
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* Two Column Layout: Contact Info + FAQs */}
       <section className="py-16 bg-white">
         <div className="max-w-[1200px] mx-auto px-[3vw]">
-          {faqs.length > 0 ? (
-            <FAQAccordionClient faqs={faqs} />
-          ) : (
-            <p className="text-center text-gray-600">Brak FAQ do wyświetlenia</p>
-          )}
-        </div>
-      </section>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            {/* Left Column - Contact Info */}
+            <div className="lg:col-span-4">
+              <ContactInfoSidebar siteSettings={siteSettings} />
+            </div>
 
-      {/* Contact Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-[1200px] mx-auto px-[3vw]">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            Skontaktuj się z nami
-          </h2>
-          <ContactInfo siteSettings={siteSettings} />
+            {/* Right Column - FAQs */}
+            <div className="lg:col-span-8">
+              {faqs.length > 0 ? (
+                <FAQAccordionPage faqs={faqs} />
+              ) : (
+                <p className="text-center text-gray-600">Brak FAQ do wyświetlenia</p>
+              )}
+            </div>
+          </div>
         </div>
       </section>
     </main>
