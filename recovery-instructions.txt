@@ -1,0 +1,23 @@
+QUICK RECOVERY INSTRUCTIONS FOR 3FUN WEBSITE
+=============================================
+
+1. Extract this zip file to your desired location
+2. Open terminal in the extracted folder
+3. Run: npm install
+4. Run: npm run dev
+5. Open http://localhost:3000
+
+The project includes:
+- Complete Next.js + TypeScript setup
+- All pages: Home, About, FAQ, Contact, Fleet, Machines
+- Responsive design matching Walden Campervans style
+- Forest green/brown/gold color scheme
+- Hero section with CTAs
+- Fleet showcase
+- Featured machines
+- Testimonials
+- Newsletter signup
+- Contact forms
+
+Note: Replace placeholder images with your actual images.
+All components are fully functional and ready to customize.
