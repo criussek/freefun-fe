@@ -8,9 +8,19 @@ interface FAQ {
 
 interface FAQAccordionProps {
   faqs: FAQ[];
+  sectionTitle?: string;
+  sectionDescription?: string;
+  seeFAQsLabel?: string;
+  seeFAQsUrl?: string;
 }
 
-export default function FAQAccordion({ faqs }: FAQAccordionProps) {
+export default function FAQAccordion({
+  faqs,
+  sectionTitle,
+  sectionDescription,
+  seeFAQsLabel = 'View all FAQs',
+  seeFAQsUrl = '/faq'
+}: FAQAccordionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const [transitioning, setTransitioning] = useState<number | null>(null)
 
@@ -37,9 +47,26 @@ export default function FAQAccordion({ faqs }: FAQAccordionProps) {
   };
 
   return (
-    <section className="max-w-[1200px] mx-auto px-[3vw] py-20">
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-center mb-12">Frequently asked questions</h2>
+    <>
+      {/* Section Header - Same style as Featured Campers */}
+      {sectionTitle && (
+        <div className="max-w-[1200px] mx-auto px-[4vw] pt-20 text-center">
+          <h2 className="mb-12 font-medium">{sectionTitle}</h2>
+          {sectionDescription && (
+            <>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide text-base/7 mb-8">
+                {sectionDescription}
+              </p>
+              <hr className="max-w-md mx-auto border-0 h-[2px] bg-gradient-to-r from-transparent via-gray-400 to-transparent opacity-50 mb-10" />
+            </>
+          )}
+        </div>
+      )}
+
+      {/* FAQ Accordion */}
+      <section className={`max-w-[1200px] mx-auto px-[3vw] ${sectionTitle ? 'pb-20' : 'py-20'}`}>
+        <div className="max-w-4xl mx-auto">
+          {!sectionTitle && <h2 className="text-center mb-12">Frequently asked questions</h2>}
 
         <div>
           {/* First divider */}
@@ -91,11 +118,12 @@ export default function FAQAccordion({ faqs }: FAQAccordionProps) {
         </div>
 
         <div className="text-center mt-12">
-          <a href="/faq" className="btn-secondary">
-            View all FAQs
+          <a href={seeFAQsUrl} className="btn-secondary">
+            {seeFAQsLabel}
           </a>
         </div>
       </div>
     </section>
+    </>
   )
 }

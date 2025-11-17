@@ -20,7 +20,7 @@ export default function WhyChooseUsSection({ item }: WhyChooseUsSectionProps) {
   // Image on RIGHT (like ElevateSection)
   if (imagePosition === 'right') {
     return (
-      <section className="max-w-[1400px] mx-auto px-[3vw] py-20">
+      <section className="max-w-[1400px] mx-auto px-[3vw] py-10">
         <div className="grid grid-cols-1 md:grid-cols-[3fr_7fr] gap-8 md:gap-12 items-start relative">
           {/* Heading that spans across both columns */}
           <h2 className="md:absolute md:left-0 md:top-4 md:z-10 text-4xl md:text-5xl lg:text-6xl font-light bg-white md:pl-0 md:pr-2 md:py-2 md:w-auto py-0 px-0">

@@ -8,9 +8,10 @@ interface Testimonial {
 
 interface TestimonialsCarouselProps {
   testimonials: Testimonial[];
+  hasHeader?: boolean;
 }
 
-export default function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps) {
+export default function TestimonialsCarousel({ testimonials, hasHeader = false }: TestimonialsCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [direction, setDirection] = useState<'left' | 'right' | null>(null)
   const [isTransitioning, setIsTransitioning] = useState(false)
@@ -46,7 +47,7 @@ export default function TestimonialsCarousel({ testimonials }: TestimonialsCarou
   }
 
   return (
-    <section className="py-6 bg-[#e0e0db]" style={{ minHeight: '2vh' }}>
+    <section className={`${hasHeader ? 'pb-6' : 'py-6'} bg-[#e0e0db]`} style={{ minHeight: '2vh' }}>
       <div className="w-full px-[3vw]">
         <div className="relative flex items-center" style={{ minHeight: '2vh' }}>
           {/* Left Arrow */}
@@ -73,12 +74,12 @@ export default function TestimonialsCarousel({ testimonials }: TestimonialsCarou
                   : 'opacity-100 translate-x-0'
               }`}
             >
-              <h2 className="font-bold mb-4" style={{ fontSize: '2.2rem', lineHeight: '1.2' }}>
-                {testimonials[currentIndex].authorName}
-              </h2>
-              <div style={{ fontSize: '1.2rem', lineHeight: '1.6', marginTop: '1%' }}>
+              <div style={{ fontSize: '1.2rem', lineHeight: '1.6', marginBottom: '1.5rem' }}>
                 <p>&quot;{testimonials[currentIndex].quote}&quot;</p>
               </div>
+              <h2 className="font-bold pb-10" style={{ fontSize: '2.2rem', lineHeight: '1.2' }}>
+                {testimonials[currentIndex].authorName}
+              </h2>
             </div>
           </div>
 

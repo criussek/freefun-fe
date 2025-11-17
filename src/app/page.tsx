@@ -4,8 +4,6 @@ import { fromStrapiHome } from '@/lib/adapters/home'
 import { POP_HOME } from '@/lib/populate'
 import HeroSection from '@/components/walden/HeroSection'
 import RangeSection from '@/components/walden/RangeSection'
-import OffGridCTA from '@/components/walden/OffGridCTA'
-import ImageGallery from '@/components/walden/ImageGallery'
 import WhyChooseUsSection from '@/components/walden/WhyChooseUsSection'
 import FeaturedCampersSection from '@/components/walden/FeaturedCampersSection'
 import TestimonialsSection from '@/components/walden/TestimonialsSection'
@@ -27,6 +25,12 @@ export default async function Home() {
   // Check if there's a featured-campers section
   const hasFeaturedCampers = home.sections.some(s => s.__component === 'home.featured-campers')
 
+  // Check if there's an FAQ section in Strapi
+  const hasFAQSection = home.sections.some(s => s.__component === 'home.faq-list')
+
+  // Check if there's a Testimonials section in Strapi
+  const hasTestimonialsSection = home.sections.some(s => s.__component === 'home.testimonials')
+
   return (
     <main className="min-h-screen">
       <HeroSection hero={hero} />
@@ -40,9 +44,12 @@ export default async function Home() {
                 <div className="max-w-[1200px] mx-auto px-[4vw] pt-20 text-center">
                   <h2 className="mb-12 font-medium">{section.sectionTitle}</h2>
                   {section.sectionDescription && (
-                    <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide text-base/7">
-                      {section.sectionDescription}
-                    </p>
+                    <>
+                      <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide text-base/7 mb-8">
+                        {section.sectionDescription}
+                      </p>
+                      <hr className="max-w-md mx-auto border-0 h-[2px] bg-gradient-to-r from-transparent via-gray-400 to-transparent opacity-50" />
+                    </>
                   )}
                 </div>
               )}
@@ -57,15 +64,41 @@ export default async function Home() {
           return <FeaturedCampersSection key={index} featuredCampers={section.featuredCampers} />
         }
 
+        if (section.__component === 'home.testimonials') {
+          return (
+            <TestimonialsSection
+              key={index}
+              testimonials={section.testimonials}
+              sectionTitle={section.sectionTitle}
+              sectionDescription={section.sectionDescription}
+            />
+          )
+        }
+
+        if (section.__component === 'home.faq-list') {
+          return (
+            <FAQSection
+              key={index}
+              faqs={section.faqs}
+              sectionTitle={section.sectionTitle}
+              sectionDescription={section.sectionDescription}
+              seeFAQsLabel={section.seeFAQsLabel}
+              seeFAQsUrl={section.seeFAQsUrl}
+            />
+          )
+        }
+
         return null
       })}
 
       {/* Show RangeSection only if no featured-campers from Strapi */}
       {!hasFeaturedCampers && <RangeSection />}
-      <OffGridCTA />
-      <ImageGallery />
-      <TestimonialsSection />
-      <FAQSection />
+
+      {/* Show Testimonials section if no Testimonials section from Strapi */}
+      {!hasTestimonialsSection && <TestimonialsSection />}
+
+      {/* Show FAQ section if no FAQ section from Strapi */}
+      {!hasFAQSection && <FAQSection />}
     </main>
   )
 }

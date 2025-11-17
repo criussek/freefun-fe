@@ -57,13 +57,14 @@ export function fromStrapiHome(e: StrapiEntity<any> | any): HomePage {
       const testiRel = listify(s?.testimonials);
       const testimonials = testiRel
         .map((item: any) => (item ? fromStrapiTestimonial(item) : null))
-        .filter(Boolean);
+        .filter((t): t is NonNullable<typeof t> => t !== null);
 
       sections.push({
         __component: 'home.testimonials',
+        sectionTitle: s?.sectionTitle ?? undefined,
+        sectionDescription: s?.sectionDescription ?? undefined,
         testimonials,
-        ...s,
-      } as any);
+      });
       continue;
     }
 
@@ -71,13 +72,16 @@ export function fromStrapiHome(e: StrapiEntity<any> | any): HomePage {
       const faqsRel = listify(s?.faqs);
       const faqs = faqsRel
         .map((item: any) => (item ? fromStrapiFAQ(item) : null))
-        .filter(Boolean);
+        .filter((f): f is NonNullable<typeof f> => f !== null);
 
       sections.push({
         __component: 'home.faq-list',
+        sectionTitle: s?.sectionTitle ?? undefined,
+        sectionDescription: s?.sectionDescription ?? undefined,
         faqs,
-        ...s,
-      } as any);
+        seeFAQsLabel: s?.seeFAQsLabel ?? undefined,
+        seeFAQsUrl: s?.seeFAQsUrl ?? undefined,
+      });
       continue;
     }
 

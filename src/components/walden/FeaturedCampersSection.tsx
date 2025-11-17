@@ -13,12 +13,15 @@ export default function FeaturedCampersSection({ featuredCampers }: FeaturedCamp
     <>
       {/* Section Header - Same style as Why Choose Us */}
       {sectionTitle && (
-        <div className="max-w-[1200px] mx-auto px-[4vw] pt-20 text-center">
+        <div className="max-w-[1200px] mx-auto px-[4vw] pt-10 text-center">
           <h2 className="mb-12 font-medium">{sectionTitle}</h2>
           {sectionDescription && (
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide text-base/7">
-              {sectionDescription}
-            </p>
+            <>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide text-base/7 mb-8">
+                {sectionDescription}
+              </p>
+              <hr className="max-w-md mx-auto border-0 h-[2px] bg-gradient-to-r from-transparent via-gray-400 to-transparent opacity-50" />
+            </>
           )}
         </div>
       )}

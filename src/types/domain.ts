@@ -52,8 +52,8 @@ export type HomeSection =
   | { __component: 'home.hero'; hero: Hero }
   | { __component: 'home.why-choose-us'; sectionTitle: string; sectionDescription?: string; items: WhyChooseUs[] }
   | { __component: 'home.featured-campers'; featuredCampers: FeaturedCampers }
-  | { __component: 'home.testimonials'; [key: string]: any }
-  | { __component: 'home.faq-list'; [key: string]: any }
+  | { __component: 'home.testimonials'; sectionTitle?: string; sectionDescription?: string; testimonials: Testimonial[] }
+  | { __component: 'home.faq-list'; sectionTitle?: string; sectionDescription?: string; faqs: FAQ[]; seeFAQsLabel?: string; seeFAQsUrl?: string }
   | { __component: 'home.newsletter'; [key: string]: any };
 
 export interface HomePage {

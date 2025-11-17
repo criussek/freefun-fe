@@ -46,6 +46,7 @@ export const POP_HOME = {
           },
         },
         'home.testimonials': {
+          fields: ['sectionTitle', 'sectionDescription'],
           populate: {
             testimonials: {
               fields: ['quote', 'authorName'],
@@ -53,6 +54,7 @@ export const POP_HOME = {
           },
         },
         'home.faq-list': {
+          fields: ['sectionTitle', 'sectionDescription', 'seeFAQsLabel', 'seeFAQsUrl'],
           populate: {
             faqs: {
               fields: ['question', 'answer'],
