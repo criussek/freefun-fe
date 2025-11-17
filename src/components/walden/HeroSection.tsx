@@ -30,12 +30,12 @@ export default function HeroSection({ hero }: HeroSectionProps) {
       {/* Content */}
       <div className="relative h-full flex flex-col justify-center items-center text-white max-w-[1200px] mx-auto px-[3vw]">
         <div className="max-w-4xl text-center">
-          <h1 className="text-white mb-4 font-bold tracking-wide text-6xl">
+          <h1 className="text-white mb-4 font-bold tracking-wide text-6xl block">
             {title}
           </h1>
           {subtitle && (
             <h2
-              className="mb-4 font-bold tracking-wide text-8xl"
+              className="mb-4 font-bold tracking-wide text-8xl block"
               style={{
                 background: 'linear-gradient(180deg, #FFEB3B 0%, #E65100 100%)',
                 WebkitBackgroundClip: 'text',
@@ -47,7 +47,7 @@ export default function HeroSection({ hero }: HeroSectionProps) {
             </h2>
           )}
           {subSubtitle && (
-            <h3 className="text-white mb-8 font-bold tracking-wide text-6xl">
+            <h3 className="text-white mb-8 font-bold tracking-wide text-6xl block">
               {subSubtitle}
             </h3>
           )}
