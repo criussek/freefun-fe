@@ -115,13 +115,20 @@ export async function fetchStrapi<T>(path: string, opts: FetchOpts = {}): Promis
   return res.json() as Promise<T>;
 }
 
-/** Same as above, but returns null for 404. */
+/** Same as above, but returns null for 404 or any error (graceful degradation). */
 export async function fetchStrapiOrNull<T>(path: string, opts: FetchOpts = {}): Promise<T | null> {
-  const { res, url } = await fetchRaw(path, opts);
-  if (res.status === 404) return null;
-  if (!res.ok) {
-    const u = new URL(url);
-    throw new Error(`Strapi ${res.status} ${u.pathname}${u.search}`);
+  try {
+    const { res, url } = await fetchRaw(path, opts);
+    if (res.status === 404) return null;
+    if (!res.ok) {
+      const u = new URL(url);
+      console.warn(`[STRAPI] ${res.status} ${u.pathname}${u.search} - returning null`);
+      return null;
+    }
+    return res.json() as Promise<T>;
+  } catch (err) {
+    // Gracefully handle network errors, SSL failures, etc. during build
+    console.warn(`[STRAPI] Error fetching ${path}:`, err instanceof Error ? err.message : err);
+    return null;
   }
-  return res.json() as Promise<T>;
 }
