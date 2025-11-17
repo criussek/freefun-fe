@@ -80,7 +80,7 @@ export default function Navbar({ siteSettings }: NavbarProps) {
 
           {/* Center - Logo */}
           <div
-            className="flex-shrink-0 pb-8"
+            className="flex-shrink-0 pb-8 flex flex-col items-center"
             style={{
               backgroundImage: `url(${secondaryLogoUrl})`,
               backgroundPosition: 'top center',
@@ -91,7 +91,7 @@ export default function Navbar({ siteSettings }: NavbarProps) {
             }}
           >
             <div style={{ height: '1rem' }}></div>
-            <Link href="/" className="flex items-center justify-center z-50">
+            <Link href="/" className="inline-block z-50">
               <img src={logoUrl} alt="3FUN Logo" className="h-60 w-60" />
             </Link>
           </div>
