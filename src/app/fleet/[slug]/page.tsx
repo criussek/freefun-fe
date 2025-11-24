@@ -92,7 +92,7 @@ export default async function MachinePage({ params }: MachinePageProps) {
                           <img
                             src={feature.image}
                             alt={feature.title}
-                            className="object-cover w-full h-full"
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                           />
                         </div>
                       ) : (
@@ -124,7 +124,7 @@ export default async function MachinePage({ params }: MachinePageProps) {
                         <img
                           src={feature.image}
                           alt={feature.title}
-                          className="object-cover w-full h-full"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
                       </div>
                     ) : (
