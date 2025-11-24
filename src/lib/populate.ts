@@ -39,9 +39,15 @@ export const POP_FAQ_PAGE = {
 };
 
 export const POP_FLEET_PAGE = {
-  fields: ['pageTitle', 'pageDescription'],
+  fields: ['pageTitle', 'pageDescription', 'header', 'description', 'freeHeader', 'freeDescription', 'funHeader', 'funDescription'],
   populate: {
     pageImage: {
+      fields: ['url', 'alternativeText'],
+    },
+    freeImage: {
+      fields: ['url', 'alternativeText'],
+    },
+    funImage: {
       fields: ['url', 'alternativeText'],
     },
   },
@@ -78,14 +84,14 @@ export const POP_RATE_PAGE = {
     includedDetails: {
       populate: {
         includedItems: {
-          fields: ['title', 'description'],
+          fields: ['itemHeader', 'itemDescription'],
         },
       },
     },
     extraPaidItemsDetails: {
       populate: {
         paidItems: {
-          fields: ['title', 'description', 'price'],
+          fields: ['itemHeader', 'itemDescription', 'itemPrice', 'priceInterval'],
         },
       },
     },

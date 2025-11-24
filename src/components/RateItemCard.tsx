@@ -13,9 +13,9 @@ export default function RateItemCard({ item }: RateItemCardProps) {
       <p className="text-base text-gray-700 mb-4" style={{ whiteSpace: 'pre-wrap' }}>
         {item.description}
       </p>
-      {item.price && (
-        <p className="text-base font-bold text-[#253551]" style={{ whiteSpace: 'pre-wrap' }}>
-          {item.price}
+      {item.itemPrice !== undefined && (
+        <p className="text-base font-bold text-[#253551]">
+          {item.itemPrice.toFixed(2)} zł{item.priceInterval && ` ${item.priceInterval}`}
         </p>
       )}
     </div>

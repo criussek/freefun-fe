@@ -114,12 +114,21 @@ export interface FleetPage {
   pageTitle?: string;
   pageDescription?: string;
   pageImage: string | null;
+  header?: string;
+  description?: string;
+  freeImage: string | null;
+  freeHeader?: string;
+  freeDescription?: string;
+  funImage: string | null;
+  funHeader?: string;
+  funDescription?: string;
 }
 
 export interface RateItem {
   title: string;
   description: string;
-  price?: string;
+  itemPrice?: number;
+  priceInterval?: string;
 }
 
 export interface RateSection {

@@ -24,7 +24,8 @@ export function fromStrapiRatePage(e: any): RatePage {
       ? a.extraPaidItemsDetails.paidItems.map((item: any) => ({
           title: item.itemHeader ?? '',
           description: item.itemDescription ?? '',
-          price: item.itemPrice ?? undefined,
+          itemPrice: item.itemPrice ? Number(item.itemPrice) : undefined,
+          priceInterval: item.priceInterval ?? undefined,
         }))
       : []
   } : null;

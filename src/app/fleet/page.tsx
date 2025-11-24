@@ -4,7 +4,7 @@ import { fromStrapiMachine } from '@/lib/adapters/machine'
 import { fromStrapiFleetPage } from '@/lib/adapters/fleet-page'
 import { POP_MACHINES, POP_FLEET_PAGE } from '@/lib/populate'
 import PageHero from '@/components/walden/PageHero'
-import MachineCard from '@/components/MachineCard'
+import FleetSelector from '@/components/FleetSelector'
 
 export default async function FleetPage() {
   // Fetch machines from Strapi
@@ -18,7 +18,11 @@ export default async function FleetPage() {
     : []
 
   // Filter only active machines
-  const machines = allMachines.filter(machine => machine.isActive !== false)
+  const activeMachines = allMachines.filter(machine => machine.isActive !== false)
+
+  // Split machines: FREE (camper) vs FUN (jet_ski, quad, motocross, other)
+  const freeMachines = activeMachines.filter(machine => machine.type === 'camper')
+  const funMachines = activeMachines.filter(machine => machine.type !== 'camper')
 
   // Fetch fleet page data
   const fleetPageRes = await fetchStrapiOrNull<StrapiSingle<any>>('/api/fleet', {
@@ -37,18 +41,36 @@ export default async function FleetPage() {
         backgroundImage={fleetPage?.pageImage || null}
       />
 
-      {/* Machines List Section */}
+      {/* Fleet Selection Section */}
       <section className="py-24">
         <div className="max-w-[1600px] mx-auto px-[3vw]">
-          {machines.length > 0 ? (
-            <div className="flex flex-col gap-[114px]">
-              {machines.map((machine, index) => (
-                <MachineCard key={machine.slug || index} machine={machine} />
-              ))}
+          {/* Header and Description */}
+          {(fleetPage?.header || fleetPage?.description) && (
+            <div className="text-center mb-12">
+              {fleetPage?.header && (
+                <h2 className="text-3xl md:text-4xl font-bold text-[#253551] mb-4">
+                  {fleetPage.header}
+                </h2>
+              )}
+              {fleetPage?.description && (
+                <p className="text-lg text-gray-700 max-w-3xl mx-auto">
+                  {fleetPage.description}
+                </p>
+              )}
             </div>
-          ) : (
-            <p className="text-center text-gray-600">Brak maszyn do wyświetlenia</p>
           )}
+
+          {/* Fleet Selector */}
+          <FleetSelector
+            freeImage={fleetPage?.freeImage || null}
+            freeHeader={fleetPage?.freeHeader}
+            freeDescription={fleetPage?.freeDescription}
+            funImage={fleetPage?.funImage || null}
+            funHeader={fleetPage?.funHeader}
+            funDescription={fleetPage?.funDescription}
+            freeMachines={freeMachines}
+            funMachines={funMachines}
+          />
         </div>
       </section>
     </main>

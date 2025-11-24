@@ -8,5 +8,13 @@ export function fromStrapiFleetPage(e: any): FleetPage {
     pageTitle: a.pageTitle ?? undefined,
     pageDescription: a.pageDescription ?? undefined,
     pageImage: mediaURL(a.pageImage) ?? null,
+    header: a.header ?? undefined,
+    description: a.description ?? undefined,
+    freeImage: mediaURL(a.freeImage) ?? null,
+    freeHeader: a.freeHeader ?? undefined,
+    freeDescription: a.freeDescription ?? undefined,
+    funImage: mediaURL(a.funImage) ?? null,
+    funHeader: a.funHeader ?? undefined,
+    funDescription: a.funDescription ?? undefined,
   };
 }
