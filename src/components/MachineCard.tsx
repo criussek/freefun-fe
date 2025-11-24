@@ -60,10 +60,10 @@ export default function MachineCard({ machine }: MachineCardProps) {
             {/* Button */}
             <div className="pt-4">
               <Link
-                href={`/${machine.slug}`}
+                href={`/fleet/${machine.slug}`}
                 className="btn-secondary inline-block"
               >
-                Rezerwuj
+                Zobacz więcej
               </Link>
             </div>
           </div>

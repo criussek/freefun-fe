@@ -31,8 +31,17 @@ export interface Hero {
   secondaryButtonUrl?: string;
 }
 
+export interface MachineFeature {
+  title: string;
+  content: string; // Rich text content (HTML)
+  image: string | null;
+  imagePosition: 'left' | 'right';
+}
+
 export interface Machine {
   name: string;
+  heroName?: string;
+  heroDescription?: string;
   slug: string;
   type: 'camper' | 'jet_ski' | 'motocross' | 'quad' | 'other';
   overview: string;
@@ -41,6 +50,8 @@ export interface Machine {
   specification?: string[];
   basepriceperday?: number;
   isActive?: boolean;
+  gallery?: string[];
+  features?: MachineFeature[];
 }
 
 export interface FeaturedCampers {

@@ -82,10 +82,10 @@ export default function MachinesCarousel({ machines }: MachinesCarouselProps) {
                 </div>
                 <div className="max-w-[100%] mx-auto">
                   <Link
-                    href={`/${machine.slug}`}
+                    href={`/fleet/${machine.slug}`}
                     className="btn-secondary inline-block"
                   >
-                    Rezerwuj
+                    Zobacz więcej
                   </Link>
                 </div>
               </div>
