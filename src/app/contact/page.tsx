@@ -17,7 +17,7 @@ export default async function ContactPage() {
   const siteSettings = siteSettingsRes?.data ? fromStrapiSiteSettings(siteSettingsRes.data) : undefined
 
   // Fetch contact page data
-  const contactPageRes = await fetchStrapiOrNull<StrapiSingle<any>>('/api/contact-page', {
+  const contactPageRes = await fetchStrapiOrNull<StrapiSingle<any>>('/api/contact', {
     params: POP_CONTACT_PAGE,
     revalidate: 3600,
   })
@@ -39,19 +39,10 @@ export default async function ContactPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             {/* Left Column - Title, Description & Contact Info */}
             <div className="lg:col-span-4">
-              {/* Title and Description */}
-              <div className="mb-8">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                  {contactPage?.contactTitle || 'Skontaktuj się z nami'}
-                </h2>
-                <p className="text-base text-gray-700">
-                  {contactPage?.contactDescription || (
-                    <>
-                      Masz pytania? Chętnie na nie odpowiemy. Wypełnij formularz lub skontaktuj się z nami bezpośrednio.
-                    </>
-                  )}
-                </p>
-              </div>
+              {/* Overview */}
+              {contactPage?.pageOverview && (
+                <div className="mb-8 prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: contactPage.pageOverview }} />
+              )}
 
               {/* Contact Info Cards */}
               <ContactInfoSidebar siteSettings={siteSettings} />

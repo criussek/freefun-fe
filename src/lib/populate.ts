@@ -83,7 +83,7 @@ export const POP_RATE_PAGE = {
 };
 
 export const POP_CONTACT_PAGE = {
-  fields: ['pageTitle', 'pageDescription', 'contactTitle', 'contactDescription'],
+  fields: ['pageTitle', 'pageDescription', 'pageOverview'],
   populate: {
     pageImage: {
       fields: ['url', 'alternativeText'],

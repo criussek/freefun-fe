@@ -130,6 +130,5 @@ export interface ContactPage {
   pageTitle?: string;
   pageDescription?: string;
   pageImage: string | null;
-  contactTitle?: string;
-  contactDescription?: string;
+  pageOverview?: string;
 }

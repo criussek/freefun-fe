@@ -8,7 +8,6 @@ export function fromStrapiContactPage(e: any): ContactPage {
     pageTitle: a.pageTitle ?? undefined,
     pageDescription: a.pageDescription ?? undefined,
     pageImage: mediaURL(a.pageImage) ?? null,
-    contactTitle: a.contactTitle ?? undefined,
-    contactDescription: a.contactDescription ?? undefined,
+    pageOverview: a.pageOverview ?? undefined,
   };
 }
