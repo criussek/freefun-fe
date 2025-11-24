@@ -118,7 +118,8 @@ export default function MachineDatePicker({ machineName, pricePerDay, serviceFee
 
   // Calculate prices
   const days = calculateDays()
-  const totalPrice = pricePerDay ? pricePerDay * days : 0
+  const rentalPrice = pricePerDay ? pricePerDay * days : 0
+  const totalPrice = rentalPrice + (serviceFee || 0)
   const depositAmount = totalPrice * 0.5 // 50% deposit
 
   // Calculate payment due date (today + 7 days)
@@ -228,8 +229,38 @@ export default function MachineDatePicker({ machineName, pricePerDay, serviceFee
                 <div className="space-y-3 mb-4">
                   <div className="flex justify-between items-center text-gray-700">
                     <span>{pricePerDay.toFixed(2)} zł × {days} {days === 1 ? 'dzień' : days < 5 ? 'dni' : 'dni'}</span>
-                    <span className="font-semibold">{totalPrice.toFixed(2)} zł</span>
+                    <span className="font-semibold">{rentalPrice.toFixed(2)} zł</span>
                   </div>
+                  {serviceFee !== undefined && serviceFee > 0 && (
+                    <div className="flex justify-between items-center text-gray-700">
+                      <div className="flex items-center gap-2">
+                        <span>Opłata serwisowa</span>
+                        <div className="relative group">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="text-gray-500 cursor-help"
+                          >
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                          </svg>
+                          <div className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                            Ta opłata pokrywa przygotowanie i dezynfekcję jednostki przed każdym wynajmem.
+                            <div className="absolute left-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <span className="font-semibold">{serviceFee.toFixed(2)} zł</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Total */}
@@ -270,38 +301,6 @@ export default function MachineDatePicker({ machineName, pricePerDay, serviceFee
                     </div>
                     <span className="font-bold text-[#253551] text-lg">{depositAmount.toFixed(2)} zł</span>
                   </div>
-
-                  {/* Service Fee */}
-                  {serviceFee !== undefined && serviceFee > 0 && (
-                    <div className="flex justify-between items-center mt-3">
-                      <div className="flex items-center gap-2">
-                        <span className="text-gray-700">Opłata serwisowa</span>
-                        <div className="relative group">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="text-gray-500 cursor-help"
-                          >
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                          </svg>
-                          <div className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                            Ta opłata pokrywa przygotowanie i dezynfekcję jednostki przed każdym wynajmem.
-                            <div className="absolute left-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <span className="font-semibold text-[#253551]">{serviceFee.toFixed(2)} zł</span>
-                    </div>
-                  )}
 
                   {/* Deposit Fee */}
                   {depositFee !== undefined && depositFee > 0 && (
