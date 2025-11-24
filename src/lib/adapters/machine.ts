@@ -55,6 +55,8 @@ export function fromStrapiMachine(e: StrapiEntity<any>): Machine {
     cardPhoto: mediaURL(a.cardPhoto) ?? null,
     specification,
     basepriceperday: a.basePricePerDay ? Number(a.basePricePerDay) : undefined,
+    serviceFee: a.serviceFee ? Number(a.serviceFee) : undefined,
+    depositFee: a.depositFee ? Number(a.depositFee) : undefined,
     isActive: a.isActive ?? true,
     gallery,
     features,

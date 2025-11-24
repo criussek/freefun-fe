@@ -49,6 +49,8 @@ export interface Machine {
   cardPhoto: string | null;
   specification?: string[];
   basepriceperday?: number;
+  serviceFee?: number;
+  depositFee?: number;
   isActive?: boolean;
   gallery?: string[];
   features?: MachineFeature[];

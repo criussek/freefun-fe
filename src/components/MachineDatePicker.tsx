@@ -12,6 +12,8 @@ registerLocale('pl', pl)
 interface MachineDatePickerProps {
   machineName: string
   pricePerDay?: number
+  serviceFee?: number
+  depositFee?: number
 }
 
 interface FormData {
@@ -28,7 +30,7 @@ interface FormErrors {
   phone?: string
 }
 
-export default function MachineDatePicker({ machineName, pricePerDay }: MachineDatePickerProps) {
+export default function MachineDatePicker({ machineName, pricePerDay, serviceFee, depositFee }: MachineDatePickerProps) {
   const [startDate, setStartDate] = useState<Date | null>(null)
   const [endDate, setEndDate] = useState<Date | null>(null)
   const [currentMonth, setCurrentMonth] = useState(new Date())
@@ -268,6 +270,70 @@ export default function MachineDatePicker({ machineName, pricePerDay }: MachineD
                     </div>
                     <span className="font-bold text-[#253551] text-lg">{depositAmount.toFixed(2)} zł</span>
                   </div>
+
+                  {/* Service Fee */}
+                  {serviceFee !== undefined && serviceFee > 0 && (
+                    <div className="flex justify-between items-center mt-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-700">Opłata serwisowa</span>
+                        <div className="relative group">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="text-gray-500 cursor-help"
+                          >
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                          </svg>
+                          <div className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                            Ta opłata pokrywa przygotowanie i dezynfekcję jednostki przed każdym wynajmem.
+                            <div className="absolute left-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <span className="font-semibold text-[#253551]">{serviceFee.toFixed(2)} zł</span>
+                    </div>
+                  )}
+
+                  {/* Deposit Fee */}
+                  {depositFee !== undefined && depositFee > 0 && (
+                    <div className="flex justify-between items-center mt-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-700">Kaucja</span>
+                        <div className="relative group">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="text-gray-500 cursor-help"
+                          >
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                          </svg>
+                          <div className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                            Kaucja zabezpieczająca pobierana z góry w celu pokrycia ewentualnych szkód podczas wynajmu. Jest w pełni zwracana po bezpiecznym zwrocie sprzętu.
+                            <div className="absolute left-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <span className="font-semibold text-[#253551]">{depositFee.toFixed(2)} zł</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Booking Form */}

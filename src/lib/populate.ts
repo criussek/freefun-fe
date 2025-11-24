@@ -54,7 +54,7 @@ export const POP_FLEET_PAGE = {
 };
 
 export const POP_MACHINES = {
-  fields: ['name', 'heroName', 'heroDescription', 'slug', 'type', 'overview', 'fleetOverview', 'basePricePerDay', 'minRentalDays', 'isActive'],
+  fields: ['name', 'heroName', 'heroDescription', 'slug', 'type', 'overview', 'fleetOverview', 'basePricePerDay', 'serviceFee', 'depositFee', 'minRentalDays', 'isActive'],
   populate: {
     cardPhoto: {
       fields: ['url', 'alternativeText'],

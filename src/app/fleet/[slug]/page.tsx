@@ -212,7 +212,12 @@ export default async function MachinePage({ params }: MachinePageProps) {
 
 
           {/* Date Picker Section */}
-          <MachineDatePicker machineName={machine.name} pricePerDay={machine.basepriceperday} />
+          <MachineDatePicker
+            machineName={machine.name}
+            pricePerDay={machine.basepriceperday}
+            serviceFee={machine.serviceFee}
+            depositFee={machine.depositFee}
+          />
 
         </div>
       </section>
