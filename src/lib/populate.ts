@@ -38,6 +38,59 @@ export const POP_FAQ_PAGE = {
   },
 };
 
+export const POP_FLEET_PAGE = {
+  fields: ['pageTitle', 'pageDescription'],
+  populate: {
+    pageImage: {
+      fields: ['url', 'alternativeText'],
+    },
+  },
+};
+
+export const POP_MACHINES = {
+  fields: ['name', 'slug', 'type', 'overview', 'basePricePerDay', 'isActive'],
+  populate: {
+    cardPhoto: {
+      fields: ['url', 'alternativeText'],
+    },
+    specifications: {
+      fields: ['label', 'value', 'icon'],
+    },
+  },
+};
+
+export const POP_RATE_PAGE = {
+  fields: ['pageTitle', 'pageDescription', 'bookingDetails'],
+  populate: {
+    pageImage: {
+      fields: ['url', 'alternativeText'],
+    },
+    includedDetails: {
+      populate: {
+        includedItems: {
+          fields: ['title', 'description'],
+        },
+      },
+    },
+    extraPaidItemsDetails: {
+      populate: {
+        paidItems: {
+          fields: ['title', 'description', 'price'],
+        },
+      },
+    },
+  },
+};
+
+export const POP_CONTACT_PAGE = {
+  fields: ['pageTitle', 'pageDescription', 'contactTitle', 'contactDescription'],
+  populate: {
+    pageImage: {
+      fields: ['url', 'alternativeText'],
+    },
+  },
+};
+
 export const POP_HOME = {
   populate: {
     sections: {

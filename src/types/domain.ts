@@ -36,7 +36,11 @@ export interface Machine {
   slug: string;
   type: 'camper' | 'jet_ski' | 'motocross' | 'quad' | 'other';
   overview: string;
+  fleetOverview?: string;
   cardPhoto: string | null;
+  specification?: string[];
+  basepriceperday?: number;
+  isActive?: boolean;
 }
 
 export interface FeaturedCampers {
@@ -88,6 +92,41 @@ export interface SiteSettings {
 }
 
 export interface FAQPage {
+  pageTitle?: string;
+  pageDescription?: string;
+  pageImage: string | null;
+  contactTitle?: string;
+  contactDescription?: string;
+}
+
+export interface FleetPage {
+  pageTitle?: string;
+  pageDescription?: string;
+  pageImage: string | null;
+}
+
+export interface RateItem {
+  title: string;
+  description: string;
+  price?: string;
+}
+
+export interface RateSection {
+  header: string;
+  description: string;
+  items: RateItem[];
+}
+
+export interface RatePage {
+  pageTitle?: string;
+  pageDescription?: string;
+  pageImage: string | null;
+  includedDetails: RateSection | null;
+  bookingDetails: string | null;
+  extraPaidItemsDetails: RateSection | null;
+}
+
+export interface ContactPage {
   pageTitle?: string;
   pageDescription?: string;
   pageImage: string | null;
