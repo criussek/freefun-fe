@@ -56,7 +56,7 @@ export default async function MachinePage({ params }: MachinePageProps) {
   }
 
   // Get documentId from raw Strapi data
-  const machineId = rawMachine.documentId
+  const machineId = (rawMachine as any).documentId
 
   return (
     <main className="min-h-screen bg-white">

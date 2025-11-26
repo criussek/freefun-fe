@@ -63,7 +63,7 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
     filters.type = { $ne: 'camper' };
   }
 
-  const machinesRes = await fetchStrapiOrNull('/api/machines', {
+  const machinesRes = await fetchStrapiOrNull<{ data: any[] }>('/api/machines', {
     params: {
       filters,
       populate: ['cardPhoto']
@@ -73,15 +73,23 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
   const availableMachines = machinesRes?.data || [];
 
   // Check availability for these machines
-  const availabilityRes = await fetchStrapiOrNull('/api/bookings/check-availability', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      machineIds: availableMachines.map((m: any) => m.documentId),
-      startDate: attributes.startDate,
-      endDate: attributes.endDate
-    })
-  });
+  let availabilityRes: { conflicts?: any[] } | null = null;
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/bookings/check-availability`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        machineIds: availableMachines.map((m: any) => m.documentId),
+        startDate: attributes.startDate,
+        endDate: attributes.endDate
+      })
+    });
+    if (response.ok) {
+      availabilityRes = await response.json();
+    }
+  } catch (err) {
+    console.error('Failed to check availability:', err);
+  }
 
   // Filter out unavailable machines
   const availableMachinesFiltered = availableMachines.filter((m: any) => {
@@ -90,7 +98,7 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
   });
 
   // Fetch additional services from rate
-  const rateRes = await fetchStrapiOrNull('/api/rate', {
+  const rateRes = await fetchStrapiOrNull<StrapiSingle<any>>('/api/rate', {
     params: {
       populate: ['extraPaidItemsDetails.paidItems']
     }
@@ -101,7 +109,7 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
 
   // Normalize booking structure for component
   const normalizedBooking = {
-    documentId: booking.documentId || booking.id,
+    documentId: (booking as any).documentId || (booking as any).id,
     attributes: attributes
   };
 
