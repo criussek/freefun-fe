@@ -23,7 +23,7 @@ export default async function BookingSummaryPage({ params }: BookingSummaryPageP
   const siteSettings = siteSettingsRes?.data ? fromStrapiSiteSettings(siteSettingsRes.data) : undefined;
 
   // Fetch booking with all details
-  const bookingRes = await fetchStrapiOrNull(`/api/bookings/${id}`, {
+  const bookingRes = await fetchStrapiOrNull<StrapiSingle<any>>(`/api/bookings/${id}`, {
     params: {
       populate: {
         machines: {

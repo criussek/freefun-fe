@@ -23,7 +23,7 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
   const siteSettings = siteSettingsRes?.data ? fromStrapiSiteSettings(siteSettingsRes.data) : undefined;
 
   // Fetch booking with machines populated
-  const bookingRes = await fetchStrapiOrNull(`/api/bookings/${id}`, {
+  const bookingRes = await fetchStrapiOrNull<StrapiSingle<any>>(`/api/bookings/${id}`, {
     params: {
       populate: ['machines.cardPhoto', 'machines.gallery']
     }
