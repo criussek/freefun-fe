@@ -99,6 +99,8 @@ export interface SiteSettings {
   contactEmail?: string;
   contactPhone?: string;
   contactAddress?: string;
+  bankName?: string;
+  bankNumber?: string;
   navbarLinks: Link[];
   socialLinks: Link[];
   footerLinks: Link[];

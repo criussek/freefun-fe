@@ -9,7 +9,7 @@ export const POP_FAQ = {
 };
 
 export const POP_SITE_SETTINGS = {
-  fields: ['siteTitle', 'tagline', 'contactEmail', 'contactPhone', 'contactAddress'],
+  fields: ['siteTitle', 'tagline', 'contactEmail', 'contactPhone', 'contactAddress', 'bankName', 'bankNumber'],
   populate: {
     logo: {
       fields: ['url', 'alternativeText'],

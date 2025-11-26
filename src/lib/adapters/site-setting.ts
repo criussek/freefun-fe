@@ -20,6 +20,8 @@ export function fromStrapiSiteSettings(e: any): SiteSettings {
     contactEmail: a.contactEmail ?? undefined,
     contactPhone: a.contactPhone ?? undefined,
     contactAddress: a.contactAddress ?? undefined,
+    bankName: a.bankName ?? undefined,
+    bankNumber: a.bankNumber ?? undefined,
     navbarLinks: extractLinks(a.navbarLinks),
     socialLinks: extractLinks(a.socialLinks),
     footerLinks: extractLinks(a.footerLinks),

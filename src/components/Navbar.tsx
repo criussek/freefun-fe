@@ -8,9 +8,10 @@ import bgLogo from '@/media/bg-logo.png'
 
 interface NavbarProps {
   siteSettings?: SiteSettings
+  variant?: 'transparent' | 'black'
 }
 
-export default function Navbar({ siteSettings }: NavbarProps) {
+export default function Navbar({ siteSettings, variant = 'transparent' }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   // Use site settings data or fallback to defaults
@@ -38,8 +39,12 @@ export default function Navbar({ siteSettings }: NavbarProps) {
     link.label.toLowerCase().includes('instagram')
   )?.url || 'https://www.instagram.com/3FUN'
 
+  const navClasses = variant === 'black'
+    ? "fixed top-0 left-0 right-0 z-50 bg-black shadow-md"
+    : "absolute top-0 left-0 right-0 z-50"
+
   return (
-    <nav className="absolute top-0 left-0 right-0 z-50">
+    <nav className={navClasses}>
       <div className="w-full px-[2.6vw]">
         <div className="flex items-center justify-between">
           {/* Left Side - Social Icons and Phone */}

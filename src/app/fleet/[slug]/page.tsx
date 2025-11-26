@@ -49,10 +49,14 @@ export default async function MachinePage({ params }: MachinePageProps) {
     : []
 
   const machine = machines[0]
+  const rawMachine = machinesRes?.data?.[0]
 
-  if (!machine) {
+  if (!machine || !rawMachine) {
     notFound()
   }
+
+  // Get documentId from raw Strapi data
+  const machineId = rawMachine.documentId
 
   return (
     <main className="min-h-screen bg-white">
@@ -73,12 +77,12 @@ export default async function MachinePage({ params }: MachinePageProps) {
                 <section key={index} className="max-w-[1400px] mx-auto px-[3vw] py-10">
                   <div className="grid grid-cols-1 md:grid-cols-[3fr_7fr] gap-8 md:gap-12 items-start relative">
                     {/* Heading that spans across both columns */}
-                    <h2 className="md:absolute md:left-0 md:top-4 md:z-10 text-4xl md:text-5xl lg:text-6xl font-light bg-white md:pl-0 md:pr-2 md:py-2 md:w-auto py-0 px-0">
+                    <h2 className="md:absolute md:left-0 md:top-11 md:z-10 text-4xl md:text-5xl lg:text-6xl font-light bg-white md:pl-0 md:pr-2 md:py-2 md:w-auto py-0 px-0">
                       {feature.title}
                     </h2>
 
                     {/* Text Content */}
-                    <div className="md:pr-8 pt-0 md:pt-24 pb-5">
+                    <div className="md:pr-8 pt-0 md:pt-32 pb-5">
                       <div
                         className="prose prose-lg max-w-none tracking-wide text-base/7"
                         dangerouslySetInnerHTML={{ __html: feature.content }}
@@ -113,7 +117,7 @@ export default async function MachinePage({ params }: MachinePageProps) {
               <section key={index} className="max-w-[1400px] mx-auto px-[3vw] py-20">
                 <div className="grid grid-cols-1 md:grid-cols-[7fr_3fr] gap-8 md:gap-12 items-start relative">
                   {/* Heading that spans across both columns */}
-                  <h2 className="md:absolute md:right-0 md:top-4 md:z-10 text-4xl md:text-5xl lg:text-6xl font-light md:text-right bg-white md:pl-2 md:pr-0 md:py-2 md:w-auto order-1 pl-0">
+                  <h2 className="md:absolute md:right-0 md:top-11 md:z-10 text-4xl md:text-5xl lg:text-6xl font-light md:text-right bg-white md:pl-2 md:pr-0 md:py-2 md:w-auto order-1 pl-0">
                     {feature.title}
                   </h2>
 
@@ -137,7 +141,7 @@ export default async function MachinePage({ params }: MachinePageProps) {
                   </div>
 
                   {/* Text Content */}
-                  <div className="order-1 md:order-2 md:pl-8 pt-0 md:pt-24">
+                  <div className="order-1 md:order-2 md:pl-8 pt-0 md:pt-32">
                     <div
                       className="prose prose-lg max-w-none tracking-wide text-base/7"
                       dangerouslySetInnerHTML={{ __html: feature.content }}
@@ -213,6 +217,7 @@ export default async function MachinePage({ params }: MachinePageProps) {
 
           {/* Date Picker Section */}
           <MachineDatePicker
+            machineId={machineId}
             machineName={machine.name}
             pricePerDay={machine.basepriceperday}
             serviceFee={machine.serviceFee}

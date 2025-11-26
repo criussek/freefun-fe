@@ -10,6 +10,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 registerLocale('pl', pl)
 
 interface MachineDatePickerProps {
+  machineId: string
   machineName: string
   pricePerDay?: number
   serviceFee?: number
@@ -30,7 +31,7 @@ interface FormErrors {
   phone?: string
 }
 
-export default function MachineDatePicker({ machineName, pricePerDay, serviceFee, depositFee }: MachineDatePickerProps) {
+export default function MachineDatePicker({ machineId, machineName, pricePerDay, serviceFee, depositFee }: MachineDatePickerProps) {
   const [startDate, setStartDate] = useState<Date | null>(null)
   const [endDate, setEndDate] = useState<Date | null>(null)
   const [currentMonth, setCurrentMonth] = useState(new Date())
@@ -41,6 +42,8 @@ export default function MachineDatePicker({ machineName, pricePerDay, serviceFee
     phone: '',
   })
   const [errors, setErrors] = useState<FormErrors>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const onChange = (dates: [Date | null, Date | null]) => {
     const [start, end] = dates
@@ -125,6 +128,46 @@ export default function MachineDatePicker({ machineName, pricePerDay, serviceFee
   // Calculate payment due date (today + 7 days)
   const paymentDueDate = new Date()
   paymentDueDate.setDate(paymentDueDate.getDate() + 7)
+
+  // Handle booking submission
+  const handleSubmit = async () => {
+    if (!isFormValid() || !startDate || !endDate) return
+
+    setIsSubmitting(true)
+    setSubmitError(null)
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/bookings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: {
+            machines: [machineId],
+            startDate: startDate.toISOString(),
+            endDate: endDate.toISOString(),
+            customerName: `${formData.firstname} ${formData.lastname}`,
+            email: formData.email,
+            phone: formData.phone,
+            createdFrom: 'web'
+          }
+        })
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.data) {
+        // Redirect to checkout page
+        window.location.href = `/booking/${data.data.documentId}`
+      } else {
+        throw new Error(data.error?.message || 'Nie udało się utworzyć rezerwacji')
+      }
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : 'Wystąpił błąd')
+      setIsSubmitting(false)
+    }
+  }
 
   return (
     <div className="bg-gray-50 rounded-lg p-8">
@@ -275,7 +318,7 @@ export default function MachineDatePicker({ machineName, pricePerDay, serviceFee
                 <div className="mt-4 pt-4 border-t border-gray-200">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
-                      <span className="text-gray-700">Do zapłaty do {paymentDueDate.toLocaleDateString('pl-PL', { day: 'numeric', month: 'long' })}</span>
+                      <span className="text-gray-700">Do zapłaty do {paymentDueDate.toLocaleDateString('pl-PL', { day: 'numeric', month: 'long' })} (zaliczka 50%)</span>
                       <div className="relative group">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -441,12 +484,20 @@ export default function MachineDatePicker({ machineName, pricePerDay, serviceFee
             )}
 
             {startDate && endDate && (
-              <button
-                className="btn-secondary w-full mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={!isFormValid()}
-              >
-                Rezerwuj teraz
-              </button>
+              <>
+                {submitError && (
+                  <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+                    {submitError}
+                  </div>
+                )}
+                <button
+                  onClick={handleSubmit}
+                  className="btn-secondary w-full mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={!isFormValid() || isSubmitting}
+                >
+                  {isSubmitting ? 'Tworzenie rezerwacji...' : 'Rezerwuj teraz'}
+                </button>
+              </>
             )}
           </div>
         )}

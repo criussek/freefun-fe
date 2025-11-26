@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // Removed 'output: export' to support dynamic booking routes
+  // Booking pages are created at runtime and cannot be pre-generated
   images: {
     unoptimized: true,
   },

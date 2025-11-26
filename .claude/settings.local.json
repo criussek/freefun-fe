@@ -19,7 +19,8 @@
       "Bash(npm i:*)",
       "Bash(npm install:*)",
       "Bash(nul)",
-      "Bash(del nul 2)"
+      "Bash(del nul 2)",
+      "Bash(python:*)"
     ],
     "deny": [],
     "ask": []
