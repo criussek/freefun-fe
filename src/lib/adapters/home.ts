@@ -5,7 +5,9 @@ import { fromStrapiTestimonial } from './testimonial';
 import { fromStrapiFAQ } from './faq';
 import { fromStrapiHero } from './hero';
 import { fromStrapiFeaturedCampers } from './featured-campers';
+import { fromStrapiFeaturedMachines } from './featured-machines';
 import { fromStrapiBookNow } from './book-now';
+import { fromStrapiRideSelector } from './ride-selector';
 
 export function fromStrapiHome(e: StrapiEntity<any> | any): HomePage {
   const a = (e && (e as any).attributes) ? (e as any).attributes : (e ?? {});
@@ -30,6 +32,15 @@ export function fromStrapiHome(e: StrapiEntity<any> | any): HomePage {
       continue;
     }
 
+    if (type === 'home.ride-selector') {
+      const rideSelector = fromStrapiRideSelector(s);
+      sections.push({
+        __component: 'home.ride-selector',
+        rideSelector,
+      });
+      continue;
+    }
+
     if (type === 'home.why-choose-us') {
       const itemsRel = listify(s?.why_choose_uses);
       const items = itemsRel
@@ -38,8 +49,10 @@ export function fromStrapiHome(e: StrapiEntity<any> | any): HomePage {
 
       sections.push({
         __component: 'home.why-choose-us',
-        sectionTitle: s?.sectionTitle ?? '',
-        sectionDescription: s?.sectionDescription ?? undefined,
+        sectionTitleFree: s?.sectionTitleFree ?? undefined,
+        sectionDescriptionFree: s?.sectionDescriptionFree ?? undefined,
+        sectionTitleFun: s?.sectionTitleFun ?? undefined,
+        sectionDescriptionFun: s?.sectionDescriptionFun ?? undefined,
         items,
       });
       continue;
@@ -50,6 +63,15 @@ export function fromStrapiHome(e: StrapiEntity<any> | any): HomePage {
       sections.push({
         __component: 'home.featured-campers',
         featuredCampers,
+      });
+      continue;
+    }
+
+    if (type === 'home.featured-machines') {
+      const featuredMachines = fromStrapiFeaturedMachines(s);
+      sections.push({
+        __component: 'home.featured-machines',
+        featuredMachines,
       });
       continue;
     }

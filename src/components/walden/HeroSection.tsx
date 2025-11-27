@@ -28,14 +28,14 @@ export default function HeroSection({ hero }: HeroSectionProps) {
       <div className="absolute inset-0 bg-black bg-opacity-30"></div>
 
       {/* Content */}
-      <div className="relative h-full flex flex-col justify-center items-center text-white max-w-[1200px] mx-auto px-[3vw]">
+      <div className="relative h-full flex flex-col justify-center items-center text-white max-w-[1200px] mx-auto px-[3vw] pt-24 lg:pt-32">
         <div className="max-w-4xl text-center">
-          <h1 className="text-white mb-4 font-bold tracking-wide text-6xl block">
+          <h1 className="text-white mb-2 md:mb-4 font-bold tracking-wide text-3xl md:text-4xl lg:text-5xl xl:text-6xl block">
             {title}
           </h1>
           {subtitle && (
             <h2
-              className="mb-4 font-bold tracking-wide text-8xl block"
+              className="mb-2 md:mb-4 font-bold tracking-wide text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl block"
               style={{
                 background: 'linear-gradient(180deg, #FFEB3B 0%, #E65100 100%)',
                 WebkitBackgroundClip: 'text',
@@ -47,11 +47,11 @@ export default function HeroSection({ hero }: HeroSectionProps) {
             </h2>
           )}
           {subSubtitle && (
-            <h3 className="text-white mb-8 font-bold tracking-wide text-6xl block">
+            <h3 className="text-white mb-4 md:mb-8 font-bold tracking-wide text-3xl md:text-4xl lg:text-5xl xl:text-6xl block">
               {subSubtitle}
             </h3>
           )}
-          <p className="text-xl md:text-xl mb-16 font-semibold opacity-85">
+          <p className="text-base md:text-lg lg:text-xl mb-8 md:mb-16 font-semibold opacity-85">
             {description}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

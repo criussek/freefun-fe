@@ -119,10 +119,22 @@ export const POP_HOME = {
             },
           },
         },
+        'home.ride-selector': {
+          fields: ['header', 'description', 'freeHeader', 'freeDescription', 'funHeader', 'funDescription'],
+          populate: {
+            freeImage: {
+              fields: ['url', 'alternativeText'],
+            },
+            funImage: {
+              fields: ['url', 'alternativeText'],
+            },
+          },
+        },
         'home.why-choose-us': {
+          fields: ['sectionTitleFree', 'sectionDescriptionFree', 'sectionTitleFun', 'sectionDescriptionFun'],
           populate: {
             why_choose_uses: {
-              fields: ['title', 'content', 'imagePosition', 'buttonText', 'buttonUrl'],
+              fields: ['title', 'content', 'imagePosition', 'buttonText', 'buttonUrl', 'displayFor'],
               populate: {
                 image: {
                   fields: ['url', 'alternativeText'],
@@ -133,6 +145,19 @@ export const POP_HOME = {
         },
         'home.featured-campers': {
           fields: ['sectionTitle', 'sectionDescription', 'seeCampersLabel', 'seeCampersUrl'],
+          populate: {
+            machines: {
+              fields: ['name', 'slug', 'type', 'overview'],
+              populate: {
+                cardPhoto: {
+                  fields: ['url', 'alternativeText'],
+                },
+              },
+            },
+          },
+        },
+        'home.featured-machines': {
+          fields: ['sectionTitle', 'sectionDescription', 'seeMachinesLabel', 'seeMachinesUrl'],
           populate: {
             machines: {
               fields: ['name', 'slug', 'type', 'overview'],

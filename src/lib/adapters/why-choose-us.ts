@@ -11,5 +11,6 @@ export function fromStrapiWhyChooseUs(e: StrapiEntity<any>): WhyChooseUs {
     imagePosition: (a.imagePosition === 'left' || a.imagePosition === 'right') ? a.imagePosition : 'left',
     buttonText: a.buttonText ?? undefined,
     buttonUrl: a.buttonUrl ?? undefined,
+    displayFor: (a.displayFor === 'free' || a.displayFor === 'fun') ? a.displayFor : undefined,
   };
 }

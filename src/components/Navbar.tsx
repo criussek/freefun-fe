@@ -91,13 +91,17 @@ export default function Navbar({ siteSettings, variant = 'transparent' }: Navbar
               backgroundPosition: 'top center',
               backgroundRepeat: 'no-repeat',
               backgroundSize: 'contain',
-              minWidth: '500px',
-              width: '500px',
+              minWidth: '530px',
+              width: '530px',
             }}
           >
             <div style={{ height: '1rem' }}></div>
             <Link href="/" className="inline-block z-50">
-              <img src={logoUrl} alt="3FUN Logo" className="h-60 w-60" />
+              <img
+                src={logoUrl}
+                alt="3FUN Logo"
+                style={{ width: '300px', height: '300px' }}
+              />
             </Link>
           </div>
 

@@ -17,6 +17,7 @@ export interface WhyChooseUs {
   imagePosition: 'left' | 'right';
   buttonText?: string;
   buttonUrl?: string;
+  displayFor?: 'free' | 'fun';
 }
 
 export interface Hero {
@@ -64,6 +65,14 @@ export interface FeaturedCampers {
   seeCampersUrl: string;
 }
 
+export interface FeaturedMachines {
+  sectionTitle?: string;
+  sectionDescription?: string;
+  machines: Machine[];
+  seeMachinesLabel: string;
+  seeMachinesUrl: string;
+}
+
 export interface BookNow {
   sectionTitle?: string;
   sectionDescription?: string;
@@ -72,11 +81,24 @@ export interface BookNow {
   buttonUrl?: string;
 }
 
+export interface RideSelector {
+  header?: string;
+  description?: string;
+  freeImage: string | null;
+  freeHeader?: string;
+  freeDescription?: string;
+  funImage: string | null;
+  funHeader?: string;
+  funDescription?: string;
+}
+
 // Home page section types
 export type HomeSection =
   | { __component: 'home.hero'; hero: Hero }
-  | { __component: 'home.why-choose-us'; sectionTitle: string; sectionDescription?: string; items: WhyChooseUs[] }
+  | { __component: 'home.ride-selector'; rideSelector: RideSelector }
+  | { __component: 'home.why-choose-us'; sectionTitleFree?: string; sectionDescriptionFree?: string; sectionTitleFun?: string; sectionDescriptionFun?: string; items: WhyChooseUs[] }
   | { __component: 'home.featured-campers'; featuredCampers: FeaturedCampers }
+  | { __component: 'home.featured-machines'; featuredMachines: FeaturedMachines }
   | { __component: 'home.testimonials'; sectionTitle?: string; sectionDescription?: string; testimonials: Testimonial[] }
   | { __component: 'home.faq-list'; sectionTitle?: string; sectionDescription?: string; faqs: FAQ[]; seeFAQsLabel?: string; seeFAQsUrl?: string }
   | { __component: 'home.book-now'; bookNow: BookNow }

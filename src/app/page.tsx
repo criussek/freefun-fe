@@ -9,6 +9,7 @@ import FeaturedCampersSection from '@/components/walden/FeaturedCampersSection'
 import TestimonialsSection from '@/components/walden/TestimonialsSection'
 import FAQSection from '@/components/walden/FAQSection'
 import BookNowSection from '@/components/walden/BookNowSection'
+import RideSelector from '@/components/RideSelector'
 
 export default async function Home() {
   // Fetch home page from Strapi
@@ -23,8 +24,14 @@ export default async function Home() {
   const heroSection = home.sections.find(s => s.__component === 'home.hero')
   const hero = heroSection && heroSection.__component === 'home.hero' ? heroSection.hero : undefined
 
+  // Check if there's a ride-selector section
+  const hasRideSelector = home.sections.some(s => s.__component === 'home.ride-selector')
+
   // Check if there's a featured-campers section
   const hasFeaturedCampers = home.sections.some(s => s.__component === 'home.featured-campers')
+
+  // Check if there's a featured-machines section
+  const hasFeaturedMachines = home.sections.some(s => s.__component === 'home.featured-machines')
 
   // Check if there's an FAQ section in Strapi
   const hasFAQSection = home.sections.some(s => s.__component === 'home.faq-list')
@@ -32,28 +39,89 @@ export default async function Home() {
   // Check if there's a Testimonials section in Strapi
   const hasTestimonialsSection = home.sections.some(s => s.__component === 'home.testimonials')
 
+  // Collect all why-choose-us items and section titles/descriptions for RideSelector
+  const whyChooseUsSections = home.sections.filter(s => s.__component === 'home.why-choose-us')
+  const allWhyChooseUsItems = whyChooseUsSections.flatMap(s =>
+    s.__component === 'home.why-choose-us' ? s.items : []
+  )
+
+  // Get the first why-choose-us section's titles/descriptions (or combine from multiple if needed)
+  const firstWhyChooseUsSection = whyChooseUsSections[0]
+  const sectionTitleFree = firstWhyChooseUsSection && firstWhyChooseUsSection.__component === 'home.why-choose-us'
+    ? firstWhyChooseUsSection.sectionTitleFree
+    : undefined
+  const sectionDescriptionFree = firstWhyChooseUsSection && firstWhyChooseUsSection.__component === 'home.why-choose-us'
+    ? firstWhyChooseUsSection.sectionDescriptionFree
+    : undefined
+  const sectionTitleFun = firstWhyChooseUsSection && firstWhyChooseUsSection.__component === 'home.why-choose-us'
+    ? firstWhyChooseUsSection.sectionTitleFun
+    : undefined
+  const sectionDescriptionFun = firstWhyChooseUsSection && firstWhyChooseUsSection.__component === 'home.why-choose-us'
+    ? firstWhyChooseUsSection.sectionDescriptionFun
+    : undefined
+
+  // Find featured-campers section (for FREE)
+  const featuredCampersSection = home.sections.find(s => s.__component === 'home.featured-campers')
+  const featuredCampersForSelector = featuredCampersSection && featuredCampersSection.__component === 'home.featured-campers'
+    ? featuredCampersSection.featuredCampers
+    : undefined
+
+  // Find featured-machines section (for FUN)
+  const featuredMachinesSection = home.sections.find(s => s.__component === 'home.featured-machines')
+  const featuredMachinesForSelector = featuredMachinesSection && featuredMachinesSection.__component === 'home.featured-machines'
+    ? {
+        sectionTitle: featuredMachinesSection.featuredMachines.sectionTitle,
+        sectionDescription: featuredMachinesSection.featuredMachines.sectionDescription,
+        machines: featuredMachinesSection.featuredMachines.machines,
+        seeCampersLabel: featuredMachinesSection.featuredMachines.seeMachinesLabel,
+        seeCampersUrl: featuredMachinesSection.featuredMachines.seeMachinesUrl,
+      }
+    : undefined
+
   return (
     <main className="min-h-screen">
       <HeroSection hero={hero} />
 
       {/* Dynamic sections from Strapi */}
       {home.sections.map((section, index) => {
+        // If ride-selector section, render it with featured machines and why-choose-us items
+        if (section.__component === 'home.ride-selector') {
+          return (
+            <RideSelector
+              key={index}
+              header={section.rideSelector.header}
+              description={section.rideSelector.description}
+              freeImage={section.rideSelector.freeImage}
+              freeHeader={section.rideSelector.freeHeader}
+              freeDescription={section.rideSelector.freeDescription}
+              funImage={section.rideSelector.funImage}
+              funHeader={section.rideSelector.funHeader}
+              funDescription={section.rideSelector.funDescription}
+              whyChooseUsItems={allWhyChooseUsItems}
+              sectionTitleFree={sectionTitleFree}
+              sectionDescriptionFree={sectionDescriptionFree}
+              sectionTitleFun={sectionTitleFun}
+              sectionDescriptionFun={sectionDescriptionFun}
+              featuredCampers={featuredCampersForSelector}
+              featuredMachines={featuredMachinesForSelector}
+            />
+          )
+        }
+
+        // Skip why-choose-us, featured-campers, and featured-machines if ride-selector is present
+        if (hasRideSelector && (
+          section.__component === 'home.why-choose-us' ||
+          section.__component === 'home.featured-campers' ||
+          section.__component === 'home.featured-machines'
+        )) {
+          return null
+        }
+
         if (section.__component === 'home.why-choose-us') {
+          // This section is handled by RideSelector when ride-selector is present
+          // If no ride-selector, show all items
           return (
             <div key={index}>
-              {section.sectionTitle && (
-                <div className="max-w-[1200px] mx-auto px-[4vw] pt-20 text-center">
-                  <h2 className="mb-12 font-medium">{section.sectionTitle}</h2>
-                  {section.sectionDescription && (
-                    <>
-                      <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide text-base/7 mb-8">
-                        {section.sectionDescription}
-                      </p>
-                      <hr className="max-w-md mx-auto border-0 h-[2px] bg-gradient-to-r from-transparent via-gray-400 to-transparent opacity-50" />
-                    </>
-                  )}
-                </div>
-              )}
               {section.items.map((item, itemIndex) => (
                 <WhyChooseUsSection key={itemIndex} item={item} />
               ))}
@@ -63,6 +131,18 @@ export default async function Home() {
 
         if (section.__component === 'home.featured-campers') {
           return <FeaturedCampersSection key={index} featuredCampers={section.featuredCampers} />
+        }
+
+        if (section.__component === 'home.featured-machines') {
+          // Reuse FeaturedCampersSection for machines too (same component structure)
+          const featuredCampers = {
+            sectionTitle: section.featuredMachines.sectionTitle,
+            sectionDescription: section.featuredMachines.sectionDescription,
+            machines: section.featuredMachines.machines,
+            seeCampersLabel: section.featuredMachines.seeMachinesLabel,
+            seeCampersUrl: section.featuredMachines.seeMachinesUrl,
+          }
+          return <FeaturedCampersSection key={index} featuredCampers={featuredCampers} />
         }
 
         if (section.__component === 'home.testimonials') {
@@ -96,8 +176,8 @@ export default async function Home() {
         return null
       })}
 
-      {/* Show RangeSection only if no featured-campers from Strapi */}
-      {!hasFeaturedCampers && <RangeSection />}
+      {/* Show RangeSection only if no featured-campers, no featured-machines, and no ride-selector from Strapi */}
+      {!hasFeaturedCampers && !hasFeaturedMachines && !hasRideSelector && <RangeSection />}
 
       {/* Show Testimonials section if no Testimonials section from Strapi */}
       {!hasTestimonialsSection && <TestimonialsSection />}
