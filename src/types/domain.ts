@@ -21,15 +21,12 @@ export interface WhyChooseUs {
 }
 
 export interface Hero {
-  title: string;
-  subtitle: string;
-  subSubtitle: string;
-  description: string;
-  backgroundImage: string | null;
-  primaryButtonLabel?: string;
-  primaryButtonUrl?: string;
-  secondaryButtonLabel?: string;
-  secondaryButtonUrl?: string;
+  freeImage?: string | null;
+  freeHeader?: string;
+  freeDescription?: string;
+  funImage?: string | null;
+  funHeader?: string;
+  funDescription?: string;
 }
 
 export interface MachineFeature {
@@ -81,21 +78,9 @@ export interface BookNow {
   buttonUrl?: string;
 }
 
-export interface RideSelector {
-  header?: string;
-  description?: string;
-  freeImage: string | null;
-  freeHeader?: string;
-  freeDescription?: string;
-  funImage: string | null;
-  funHeader?: string;
-  funDescription?: string;
-}
-
 // Home page section types
 export type HomeSection =
   | { __component: 'home.hero'; hero: Hero }
-  | { __component: 'home.ride-selector'; rideSelector: RideSelector }
   | { __component: 'home.why-choose-us'; sectionTitleFree?: string; sectionDescriptionFree?: string; sectionTitleFun?: string; sectionDescriptionFun?: string; items: WhyChooseUs[] }
   | { __component: 'home.featured-campers'; featuredCampers: FeaturedCampers }
   | { __component: 'home.featured-machines'; featuredMachines: FeaturedMachines }
@@ -123,6 +108,8 @@ export interface SiteSettings {
   contactAddress?: string;
   bankName?: string;
   bankNumber?: string;
+  defaultPickupTime?: string;
+  defaultReturnTime?: string;
   navbarLinks: Link[];
   socialLinks: Link[];
   footerLinks: Link[];

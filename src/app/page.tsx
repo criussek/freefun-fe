@@ -9,7 +9,6 @@ import FeaturedCampersSection from '@/components/walden/FeaturedCampersSection'
 import TestimonialsSection from '@/components/walden/TestimonialsSection'
 import FAQSection from '@/components/walden/FAQSection'
 import BookNowSection from '@/components/walden/BookNowSection'
-import RideSelector from '@/components/RideSelector'
 
 export default async function Home() {
   // Fetch home page from Strapi
@@ -23,9 +22,6 @@ export default async function Home() {
   // Find hero section from Strapi or use default
   const heroSection = home.sections.find(s => s.__component === 'home.hero')
   const hero = heroSection && heroSection.__component === 'home.hero' ? heroSection.hero : undefined
-
-  // Check if there's a ride-selector section
-  const hasRideSelector = home.sections.some(s => s.__component === 'home.ride-selector')
 
   // Check if there's a featured-campers section
   const hasFeaturedCampers = home.sections.some(s => s.__component === 'home.featured-campers')
@@ -78,38 +74,26 @@ export default async function Home() {
       }
     : undefined
 
+  // Check if hero has split-screen mode (freeImage and funImage)
+  const heroHasSplitScreen = hero?.freeImage && hero?.funImage
+
   return (
     <main className="min-h-screen">
-      <HeroSection hero={hero} />
+      <HeroSection
+        hero={hero}
+        whyChooseUsItems={allWhyChooseUsItems}
+        sectionTitleFree={sectionTitleFree}
+        sectionDescriptionFree={sectionDescriptionFree}
+        sectionTitleFun={sectionTitleFun}
+        sectionDescriptionFun={sectionDescriptionFun}
+        featuredCampers={featuredCampersForSelector}
+        featuredMachines={featuredMachinesForSelector}
+      />
 
       {/* Dynamic sections from Strapi */}
       {home.sections.map((section, index) => {
-        // If ride-selector section, render it with featured machines and why-choose-us items
-        if (section.__component === 'home.ride-selector') {
-          return (
-            <RideSelector
-              key={index}
-              header={section.rideSelector.header}
-              description={section.rideSelector.description}
-              freeImage={section.rideSelector.freeImage}
-              freeHeader={section.rideSelector.freeHeader}
-              freeDescription={section.rideSelector.freeDescription}
-              funImage={section.rideSelector.funImage}
-              funHeader={section.rideSelector.funHeader}
-              funDescription={section.rideSelector.funDescription}
-              whyChooseUsItems={allWhyChooseUsItems}
-              sectionTitleFree={sectionTitleFree}
-              sectionDescriptionFree={sectionDescriptionFree}
-              sectionTitleFun={sectionTitleFun}
-              sectionDescriptionFun={sectionDescriptionFun}
-              featuredCampers={featuredCampersForSelector}
-              featuredMachines={featuredMachinesForSelector}
-            />
-          )
-        }
-
-        // Skip why-choose-us, featured-campers, and featured-machines if ride-selector is present
-        if (hasRideSelector && (
+        // Skip why-choose-us, featured-campers, and featured-machines if hero has split-screen mode
+        if (heroHasSplitScreen && (
           section.__component === 'home.why-choose-us' ||
           section.__component === 'home.featured-campers' ||
           section.__component === 'home.featured-machines'
@@ -118,8 +102,8 @@ export default async function Home() {
         }
 
         if (section.__component === 'home.why-choose-us') {
-          // This section is handled by RideSelector when ride-selector is present
-          // If no ride-selector, show all items
+          // This section is handled by HeroSection when hero has split-screen mode
+          // If no split-screen hero, show all items
           return (
             <div key={index}>
               {section.items.map((item, itemIndex) => (
@@ -176,8 +160,8 @@ export default async function Home() {
         return null
       })}
 
-      {/* Show RangeSection only if no featured-campers, no featured-machines, and no ride-selector from Strapi */}
-      {!hasFeaturedCampers && !hasFeaturedMachines && !hasRideSelector && <RangeSection />}
+      {/* Show RangeSection only if no featured-campers, no featured-machines, and no hero split-screen from Strapi */}
+      {!hasFeaturedCampers && !hasFeaturedMachines && !heroHasSplitScreen && <RangeSection />}
 
       {/* Show Testimonials section if no Testimonials section from Strapi */}
       {!hasTestimonialsSection && <TestimonialsSection />}

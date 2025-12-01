@@ -7,7 +7,6 @@ import { fromStrapiHero } from './hero';
 import { fromStrapiFeaturedCampers } from './featured-campers';
 import { fromStrapiFeaturedMachines } from './featured-machines';
 import { fromStrapiBookNow } from './book-now';
-import { fromStrapiRideSelector } from './ride-selector';
 
 export function fromStrapiHome(e: StrapiEntity<any> | any): HomePage {
   const a = (e && (e as any).attributes) ? (e as any).attributes : (e ?? {});
@@ -28,15 +27,6 @@ export function fromStrapiHome(e: StrapiEntity<any> | any): HomePage {
       sections.push({
         __component: 'home.hero',
         hero,
-      });
-      continue;
-    }
-
-    if (type === 'home.ride-selector') {
-      const rideSelector = fromStrapiRideSelector(s);
-      sections.push({
-        __component: 'home.ride-selector',
-        rideSelector,
       });
       continue;
     }

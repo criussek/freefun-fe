@@ -91,8 +91,8 @@ export default function Navbar({ siteSettings, variant = 'transparent' }: Navbar
               backgroundPosition: 'top center',
               backgroundRepeat: 'no-repeat',
               backgroundSize: 'contain',
-              minWidth: '530px',
-              width: '530px',
+              minWidth: '550px',
+              width: '550px',
             }}
           >
             <div style={{ height: '1rem' }}></div>
@@ -100,7 +100,7 @@ export default function Navbar({ siteSettings, variant = 'transparent' }: Navbar
               <img
                 src={logoUrl}
                 alt="3FUN Logo"
-                style={{ width: '300px', height: '300px' }}
+                style={{ width: '380px', height: '380px', marginTop: '-40px', marginLeft: '-6px' }}
               />
             </Link>
           </div>

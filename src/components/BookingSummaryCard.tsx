@@ -2,6 +2,7 @@
 
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
+import { mediaURL } from '@/lib/images';
 
 interface AdditionalMachine {
   machine: any;
@@ -24,6 +25,8 @@ interface BookingSummaryCardProps {
   subtotal: number;
   deposit: number;
   remaining: number;
+  pickupTime: string;
+  returnTime: string;
 }
 
 export default function BookingSummaryCard({
@@ -35,7 +38,9 @@ export default function BookingSummaryCard({
   refundableDeposit,
   subtotal,
   deposit,
-  remaining
+  remaining,
+  pickupTime,
+  returnTime
 }: BookingSummaryCardProps) {
   // Handle both possible response structures (v4 vs v5)
   const attributes = booking.attributes || booking;
@@ -64,10 +69,10 @@ export default function BookingSummaryCard({
       <div className="mb-4 pb-4 border-b border-gray-200">
         {(() => {
           const machineAttrs = primaryMachine.attributes || primaryMachine;
-          const cardPhoto = machineAttrs.cardPhoto?.data?.attributes || machineAttrs.cardPhoto;
-          return cardPhoto?.url && (
+          const cardPhotoUrl = mediaURL(machineAttrs.cardPhoto);
+          return cardPhotoUrl && (
             <img
-              src={cardPhoto.url}
+              src={cardPhotoUrl}
               alt={machineAttrs.name}
               className="w-full h-32 object-cover rounded-lg mb-3"
             />
@@ -87,12 +92,14 @@ export default function BookingSummaryCard({
           <span className="text-gray-600">Odbiór:</span>
           <span className="font-medium text-gray-900">
             {formatDate(attributes.startDate)}
+            {pickupTime && ` o ${pickupTime.slice(0, 5)}`}
           </span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-600">Zwrot:</span>
           <span className="font-medium text-gray-900">
             {formatDate(attributes.endDate)}
+            {returnTime && ` o ${returnTime.slice(0, 5)}`}
           </span>
         </div>
         <div className="flex justify-between">
@@ -101,34 +108,54 @@ export default function BookingSummaryCard({
             {daysCount} {daysCount === 1 ? 'dzień' : daysCount < 5 ? 'dni' : 'dni'}
           </span>
         </div>
+        <div className="flex justify-between">
+          <span className="text-gray-600">Cena wynajmu:</span>
+          <span className="font-medium text-gray-900">
+            {((primaryMachine.attributes || primaryMachine).basePricePerDay * daysCount).toFixed(2)} zł
+          </span>
+        </div>
       </div>
 
       {/* Additional Machines */}
       {additionalMachines.length > 0 && (
         <div className="mb-4 pb-4 border-b border-gray-200">
-          <h4 className="font-medium text-gray-700 mb-2 text-sm">Dodatkowe maszyny:</h4>
+          <h4 className="font-semibold text-gray-900 mb-3 text-sm">Dodatkowe maszyny:</h4>
           {additionalMachines.map((item) => {
             const machineAttrs = item.machine.attributes || item.machine;
             return (
               <div key={item.machine.documentId} className="text-sm mb-2">
                 <div className="flex justify-between">
                   <span className="text-gray-600">
-                    {machineAttrs.name} × {item.quantity}
+                    {machineAttrs.name}:
                   </span>
                   <span className="font-medium text-gray-900">
-                    {(machineAttrs.basePricePerDay * daysCount * item.quantity).toFixed(2)} zł
+                    {(machineAttrs.basePricePerDay * daysCount).toFixed(2)} zł
                   </span>
                 </div>
               </div>
             );
           })}
+          {/* Additional Machines Total */}
+          {additionalMachines.length > 1 && (
+            <div className="text-sm mt-3 pt-3 border-t border-gray-200">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Razem dodatkowe maszyny:</span>
+                <span className="font-medium text-gray-900">
+                  {additionalMachines.reduce((sum, item) => {
+                    const machineAttrs = item.machine.attributes || item.machine;
+                    return sum + (machineAttrs.basePricePerDay * daysCount);
+                  }, 0).toFixed(2)} zł
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
       {/* Additional Services */}
       {additionalServices.length > 0 && (
         <div className="mb-4 pb-4 border-b border-gray-200">
-          <h4 className="font-medium text-gray-700 mb-2 text-sm">Dodatkowe usługi:</h4>
+          <h4 className="font-semibold text-gray-900 mb-3 text-sm">Dodatkowe usługi:</h4>
           {additionalServices.map((service, index) => {
             const serviceTotal = service.priceInterval === 'za dzień'
               ? service.itemPrice * daysCount
@@ -137,7 +164,7 @@ export default function BookingSummaryCard({
             return (
               <div key={index} className="text-sm mb-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">{service.itemHeader}</span>
+                  <span className="text-gray-600">{service.itemHeader}:</span>
                   <span className="font-medium text-gray-900">
                     {serviceTotal.toFixed(2)} zł
                   </span>
@@ -145,6 +172,22 @@ export default function BookingSummaryCard({
               </div>
             );
           })}
+          {/* Additional Services Total */}
+          {additionalServices.length > 1 && (
+            <div className="text-sm mt-3 pt-3 border-t border-gray-200">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Razem dodatkowe usługi:</span>
+                <span className="font-medium text-gray-900">
+                  {additionalServices.reduce((sum, service) => {
+                    const serviceTotal = service.priceInterval === 'za dzień'
+                      ? service.itemPrice * daysCount
+                      : service.itemPrice;
+                    return sum + serviceTotal;
+                  }, 0).toFixed(2)} zł
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -153,7 +196,20 @@ export default function BookingSummaryCard({
         {/* Service Fees */}
         {serviceFees > 0 && (
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Opłata serwisowa:</span>
+            <div className="flex items-center gap-2">
+              <span className="text-gray-600">Opłata serwisowa:</span>
+              <div className="relative group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500 cursor-help">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <div className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                  Ta opłata pokrywa przygotowanie i dezynfekcję jednostki przed każdym wynajmem.
+                  <div className="absolute left-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                </div>
+              </div>
+            </div>
             <span className="font-medium text-gray-900">
               {serviceFees.toFixed(2)} zł
             </span>
@@ -169,16 +225,24 @@ export default function BookingSummaryCard({
         </div>
 
         {/* Deposit (50% payment) */}
-        <div className="flex justify-between items-center py-3 px-4 bg-green-50 rounded-lg">
-          <div>
-            <span className="font-semibold text-gray-900 block">
-              Zaliczka (50%)
+        <div className="flex justify-between text-sm gap-2 items-start">
+          <div className="flex items-start gap-2 flex-1">
+            <span className="text-gray-600">
+              Do zapłaty w ciągu 7 dni (zaliczka 50%):
             </span>
-            <span className="text-xs text-gray-600">
-              Do zapłaty w ciągu 7 dni
-            </span>
+            <div className="relative group flex-shrink-0 mt-0.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500 cursor-help">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              <div className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                Ta kwota musi być wpłacona w ciągu 7 dni od złożenia rezerwacji, aby ją potwierdzić. Jeśli nie zostanie wpłacona, rezerwacja zostanie usunięta.
+                <div className="absolute left-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+              </div>
+            </div>
           </div>
-          <span className="font-bold text-green-700 text-lg">
+          <span className="font-semibold text-gray-900 whitespace-nowrap">
             {deposit.toFixed(2)} zł
           </span>
         </div>
@@ -193,16 +257,22 @@ export default function BookingSummaryCard({
 
         {/* Refundable Deposit */}
         {refundableDeposit > 0 && (
-          <div className="flex justify-between items-center py-3 px-4 bg-blue-50 rounded-lg border border-blue-200">
-            <div>
-              <span className="font-semibold text-gray-900 block">
-                Kaucja zwrotna
-              </span>
-              <span className="text-xs text-gray-600">
-                Do zapłaty przy odbiorze
-              </span>
+          <div className="flex justify-between text-sm">
+            <div className="flex items-center gap-2">
+              <span className="text-gray-600">Kaucja zwrotna (przy odbiorze):</span>
+              <div className="relative group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500 cursor-help">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <div className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                  Kaucja zabezpieczająca pobierana z góry w celu pokrycia ewentualnych szkód podczas wynajmu. Jest w pełni zwracana po bezpiecznym zwrocie sprzętu.
+                  <div className="absolute left-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                </div>
+              </div>
             </div>
-            <span className="font-bold text-blue-700 text-lg">
+            <span className="font-semibold text-gray-900">
               {refundableDeposit.toFixed(2)} zł
             </span>
           </div>

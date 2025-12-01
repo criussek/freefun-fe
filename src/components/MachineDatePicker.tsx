@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import DatePicker, { registerLocale } from 'react-datepicker'
-import { addMonths, subMonths } from 'date-fns'
+import { addMonths, subMonths, differenceInDays } from 'date-fns'
 import { pl } from 'date-fns/locale'
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -35,6 +35,8 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
   const [startDate, setStartDate] = useState<Date | null>(null)
   const [endDate, setEndDate] = useState<Date | null>(null)
   const [currentMonth, setCurrentMonth] = useState(new Date())
+  const [excludedDates, setExcludedDates] = useState<Date[]>([])
+  const [isLoadingDates, setIsLoadingDates] = useState(true)
   const [formData, setFormData] = useState<FormData>({
     firstname: '',
     lastname: '',
@@ -44,6 +46,31 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
   const [errors, setErrors] = useState<FormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+
+  // Fetch unavailable dates when component mounts
+  useEffect(() => {
+    const fetchUnavailableDates = async () => {
+      try {
+        setIsLoadingDates(true)
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/bookings/unavailable-dates/${machineId}`
+        )
+
+        if (response.ok) {
+          const data = await response.json()
+          // Convert date strings to Date objects
+          const dates = data.unavailableDates.map((dateStr: string) => new Date(dateStr))
+          setExcludedDates(dates)
+        }
+      } catch (error) {
+        console.error('Error fetching unavailable dates:', error)
+      } finally {
+        setIsLoadingDates(false)
+      }
+    }
+
+    fetchUnavailableDates()
+  }, [machineId])
 
   const onChange = (dates: [Date | null, Date | null]) => {
     const [start, end] = dates
@@ -67,7 +94,20 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
       case 'lastname':
         return value.trim() === '' ? 'Nazwisko jest wymagane' : undefined
       case 'phone':
-        return value.trim() === '' ? 'Telefon jest wymagany' : undefined
+        if (value.trim() === '') {
+          return 'Telefon jest wymagany'
+        }
+        // Allow only digits, spaces, dashes, plus sign, and parentheses
+        const phoneRegex = /^[\d\s\-+()]+$/
+        if (!phoneRegex.test(value)) {
+          return 'Numer telefonu może zawierać tylko cyfry, spacje, myślniki i znak +'
+        }
+        // Check if there are at least 9 digits
+        const digitsOnly = value.replace(/[\s\-+()]/g, '')
+        if (digitsOnly.length < 9) {
+          return 'Numer telefonu musi zawierać minimum 9 cyfr'
+        }
+        return undefined
       case 'email':
         if (value.trim() === '') {
           return 'Email jest wymagany'
@@ -111,12 +151,11 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
     )
   }
 
-  // Calculate number of days
+  // Calculate number of days (inclusive, matching backend logic)
   const calculateDays = () => {
     if (!startDate || !endDate) return 0
-    const diffTime = Math.abs(endDate.getTime() - startDate.getTime())
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-    return diffDays
+    // Add 1 to include both start and end dates (e.g., Thu to Sun = 4 days)
+    return differenceInDays(endDate, startDate) + 1
   }
 
   // Calculate prices
@@ -223,20 +262,37 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
 
         {/* DatePicker with two months */}
         <div className="date-picker-wrapper">
-          <DatePicker
-            selected={startDate}
-            onChange={onChange}
-            startDate={startDate}
-            endDate={endDate}
-            selectsRange
-            inline
-            monthsShown={2}
-            minDate={new Date()}
-            openToDate={currentMonth}
-            calendarClassName="custom-calendar"
-            locale="pl"
-            key={currentMonth.toISOString()}
-          />
+          {isLoadingDates ? (
+            <div className="text-center py-8 text-gray-500">
+              Ładowanie dostępnych dat...
+            </div>
+          ) : (
+            <DatePicker
+              selected={startDate}
+              onChange={onChange}
+              startDate={startDate}
+              endDate={endDate}
+              selectsRange
+              inline
+              monthsShown={2}
+              minDate={new Date()}
+              excludeDates={excludedDates}
+              openToDate={currentMonth}
+              calendarClassName="custom-calendar"
+              locale="pl"
+              key={currentMonth.toISOString()}
+              dayClassName={(date) => {
+                // Check if this date is in the excluded dates
+                const isExcluded = excludedDates.some(
+                  (excludedDate) =>
+                    excludedDate.getFullYear() === date.getFullYear() &&
+                    excludedDate.getMonth() === date.getMonth() &&
+                    excludedDate.getDate() === date.getDate()
+                )
+                return isExcluded ? 'booked-date' : null
+              }}
+            />
+          )}
         </div>
 
         {/* Selected dates display */}
@@ -468,7 +524,9 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
                           value={formData.phone}
                           onChange={handleFormChange}
                           onBlur={handleFormBlur}
-                          placeholder="Wpisz swój numer telefonu"
+                          placeholder="np. +48 123 456 789"
+                          inputMode="tel"
+                          pattern="[\d\s\-+()]+"
                           className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#253551] focus:border-transparent transition-colors ${
                             errors.phone ? 'border-red-500' : 'border-gray-300'
                           }`}
@@ -599,10 +657,49 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
         .react-datepicker__day--disabled {
           color: #d1d5db !important;
           cursor: not-allowed;
+          position: relative;
         }
 
         .react-datepicker__day--disabled:hover {
           background-color: transparent !important;
+        }
+
+        .booked-date {
+          background-color: #fee2e2 !important;
+          color: #991b1b !important;
+          text-decoration: line-through;
+          cursor: not-allowed;
+          position: relative;
+        }
+
+        .booked-date:hover::after {
+          content: 'Ten termin jest już zarezerwowany';
+          position: absolute;
+          bottom: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: #1f2937;
+          color: white;
+          padding: 0.5rem 0.75rem;
+          border-radius: 0.375rem;
+          font-size: 0.75rem;
+          white-space: nowrap;
+          z-index: 1000;
+          margin-bottom: 0.25rem;
+          pointer-events: none;
+        }
+
+        .booked-date:hover::before {
+          content: '';
+          position: absolute;
+          top: -0.25rem;
+          left: 50%;
+          transform: translateX(-50%);
+          border-left: 0.25rem solid transparent;
+          border-right: 0.25rem solid transparent;
+          border-top: 0.25rem solid #1f2937;
+          z-index: 1000;
+          pointer-events: none;
         }
 
         .react-datepicker__day--today {

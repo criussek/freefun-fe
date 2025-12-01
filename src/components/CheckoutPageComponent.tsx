@@ -35,13 +35,17 @@ interface CheckoutPageComponentProps {
   availableMachines: any[];
   additionalServices: any[];
   pickupAddress: string;
+  defaultPickupTime: string;
+  defaultReturnTime: string;
 }
 
 export default function CheckoutPageComponent({
   booking,
   availableMachines,
   additionalServices,
-  pickupAddress
+  pickupAddress,
+  defaultPickupTime,
+  defaultReturnTime
 }: CheckoutPageComponentProps) {
   const router = useRouter();
 
@@ -59,7 +63,8 @@ export default function CheckoutPageComponent({
   const [services, setServices] = useState<AdditionalService[]>(
     additionalServices.map((s, index) => ({ ...s, id: index, selected: false }))
   );
-  const [pickupTime, setPickupTime] = useState('10:00');
+  const [pickupTime, setPickupTime] = useState(defaultPickupTime);
+  const [returnTime, setReturnTime] = useState(defaultReturnTime);
   const [specialInstructions, setSpecialInstructions] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [agreedToCancellation, setAgreedToCancellation] = useState(false);
@@ -67,12 +72,13 @@ export default function CheckoutPageComponent({
   const [error, setError] = useState<string | null>(null);
 
   // Calculations
+  // bookingTotal already includes primary machines + their service fees
   const bookingTotal = attributes.totalPrice || 0;
 
   // Get primary machine(s) from booking
   const bookingMachines = attributes.machines?.data || attributes.machines || [];
 
-  // Calculate service fees for primary machines
+  // Calculate service fees for display breakdown (already included in bookingTotal)
   const primaryServiceFees = bookingMachines.reduce((sum: number, machine: any) => {
     const machineAttrs = machine.attributes || machine;
     return sum + (machineAttrs.serviceFee || 0);
@@ -110,10 +116,10 @@ export default function CheckoutPageComponent({
       return sum + price;
     }, 0);
 
-  // Totals
+  // Totals (bookingTotal already has primary service fees, only add additional ones)
   const totalServiceFees = primaryServiceFees + additionalServiceFees;
   const totalDepositFees = primaryDepositFees + additionalDepositFees;
-  const subtotal = bookingTotal + additionalMachinesTotal + additionalServicesTotal + totalServiceFees;
+  const subtotal = bookingTotal + additionalMachinesTotal + additionalServicesTotal + additionalServiceFees;
   const deposit = subtotal * 0.5; // 50% payment deposit
   const remaining = subtotal - deposit;
 
@@ -173,6 +179,7 @@ export default function CheckoutPageComponent({
             additionalServices: selectedServicesData,
             pickupLocation: pickupAddress,
             pickupTime,
+            returnTime,
             specialInstructions,
             agreedToTerms,
             agreedToCancellation
@@ -255,13 +262,6 @@ export default function CheckoutPageComponent({
                   selectedAdditionalMachines.filter(m => m.machine.documentId !== machineId)
                 );
               }}
-              onQuantityChange={(machineId, quantity) => {
-                setSelectedAdditionalMachines(
-                  selectedAdditionalMachines.map(m =>
-                    m.machine.documentId === machineId ? { ...m, quantity } : m
-                  )
-                );
-              }}
             />
           )}
 
@@ -284,7 +284,9 @@ export default function CheckoutPageComponent({
           <PickupDetailsSection
             pickupAddress={pickupAddress}
             pickupTime={pickupTime}
-            onTimeChange={setPickupTime}
+            returnTime={returnTime}
+            onPickupTimeChange={setPickupTime}
+            onReturnTimeChange={setReturnTime}
             specialInstructions={specialInstructions}
             onInstructionsChange={setSpecialInstructions}
           />
@@ -326,6 +328,8 @@ export default function CheckoutPageComponent({
             subtotal={subtotal}
             deposit={deposit}
             remaining={remaining}
+            pickupTime={pickupTime}
+            returnTime={returnTime}
           />
         </div>
       </div>

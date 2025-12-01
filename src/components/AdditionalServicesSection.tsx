@@ -29,7 +29,7 @@ export default function AdditionalServicesSection({
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
-      <h2 className="text-xl font-semibold text-[#253551] mb-2">
+      <h2 className="text-lg font-semibold text-[#253551] mb-2">
         Dodatkowe usługi
       </h2>
       <p className="text-sm text-gray-600 mb-4">
@@ -64,9 +64,9 @@ export default function AdditionalServicesSection({
 
                 {/* Service Details */}
                 <div className="flex-1">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">
+                  <div className="flex items-start justify-between gap-6">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900 mb-1 text-base">
                         {service.itemHeader}
                       </h3>
                       <p className="text-sm text-gray-600 mb-2">
@@ -75,11 +75,11 @@ export default function AdditionalServicesSection({
                     </div>
 
                     {/* Price */}
-                    <div className="text-right">
+                    <div className="text-right flex-shrink-0">
                       <p className="font-bold text-[#253551] text-lg whitespace-nowrap">
                         {totalPrice.toFixed(2)} zł
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 whitespace-nowrap">
                         {service.priceInterval === 'za dzień' ? (
                           <span>{service.itemPrice} zł/dzień × {daysCount}</span>
                         ) : (

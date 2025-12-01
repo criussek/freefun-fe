@@ -66,7 +66,26 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
   const machinesRes = await fetchStrapiOrNull<{ data: any[] }>('/api/machines', {
     params: {
       filters,
-      populate: ['cardPhoto']
+      populate: {
+        cardPhoto: {
+          fields: ['url', 'alternativeText']
+        },
+        gallery: {
+          fields: ['url', 'alternativeText']
+        },
+        specifications: {
+          fields: ['label', 'value', 'icon']
+        },
+        features: {
+          fields: ['title', 'content', 'imagePosition'],
+          populate: {
+            image: {
+              fields: ['url', 'alternativeText']
+            }
+          }
+        }
+      },
+      fields: ['name', 'slug', 'type', 'overview', 'fleetOverview', 'basePricePerDay', 'serviceFee', 'depositFee']
     }
   });
 
@@ -120,6 +139,8 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
         availableMachines={availableMachinesFiltered}
         additionalServices={additionalServices}
         pickupAddress={siteSettings?.contactAddress || 'Adres odbioru zostanie podany w wiadomości email'}
+        defaultPickupTime={siteSettings?.defaultPickupTime || '10:00'}
+        defaultReturnTime={siteSettings?.defaultReturnTime || '10:00'}
       />
     </main>
   );

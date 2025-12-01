@@ -63,23 +63,21 @@ export default function BookingSummaryComponent({
     }
   };
 
-  // Calculate service fees and refundable deposits
+  // Calculate service fees (for display purposes)
   const serviceFees = machines.reduce((sum: number, machine: any) => {
     const machineAttrs = machine.attributes || machine;
     return sum + (machineAttrs.serviceFee || 0);
   }, 0);
 
-  const refundableDeposit = machines.reduce((sum: number, machine: any) => {
-    const machineAttrs = machine.attributes || machine;
-    return sum + (machineAttrs.depositFee || 0);
-  }, 0);
-
-  // Calculate totals including service fees
-  const baseTotal = attributes.totalPrice || 0;
-  const additionalServicesTotal = attributes.additionalServicesTotal || 0;
-  const subtotal = baseTotal + additionalServicesTotal + serviceFees;
-  const depositAmount = subtotal * 0.5; // 50% of total including service fees
+  // Use totals from backend (already includes machines + services + fees)
+  const subtotal = attributes.totalPrice || 0;
+  const depositAmount = subtotal * 0.5; // 50% payment deposit
   const remainingAmount = subtotal - depositAmount;
+  const refundableDeposit = attributes.depositAmount || 0; // Refundable security deposit
+
+  // For breakdown display
+  const additionalServicesTotal = attributes.additionalServicesTotal || 0;
+  const baseTotal = subtotal - additionalServicesTotal - serviceFees;
 
   return (
     <>
@@ -277,13 +275,14 @@ export default function BookingSummaryComponent({
               <h3 className="text-sm font-medium text-gray-600 mb-1">Odbiór</h3>
               <p className="font-semibold text-gray-900">
                 {formatDate(attributes.startDate)}
-                {attributes.pickupTime && ` o ${attributes.pickupTime}`}
+                {attributes.pickupTime && ` o ${attributes.pickupTime.slice(0, 5)}`}
               </p>
             </div>
             <div>
               <h3 className="text-sm font-medium text-gray-600 mb-1">Zwrot</h3>
               <p className="font-semibold text-gray-900">
                 {formatDate(attributes.endDate)}
+                {attributes.returnTime && ` o ${attributes.returnTime.slice(0, 5)}`}
               </p>
             </div>
             <div>
@@ -371,7 +370,7 @@ export default function BookingSummaryComponent({
                     <span className="font-medium text-gray-900">
                       {machine.name}
                     </span>{' '}
-                    × {machine.quantity} -{' '}
+                    -{' '}
                     <span className="text-gray-600">
                       {machine.total?.toFixed(2)} zł
                     </span>

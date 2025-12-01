@@ -1,69 +1,159 @@
-import bgHero from '@/media/bg-hero.png';
-import { Hero } from '@/types/domain';
+'use client'
+
+import { useState } from 'react'
+import { Hero, WhyChooseUs, FeaturedCampers } from '@/types/domain'
+import WhyChooseUsSection from '@/components/walden/WhyChooseUsSection'
+import FeaturedCampersSection from '@/components/walden/FeaturedCampersSection'
 
 interface HeroSectionProps {
   hero?: Hero;
+  whyChooseUsItems?: WhyChooseUs[];
+  sectionTitleFree?: string;
+  sectionDescriptionFree?: string;
+  sectionTitleFun?: string;
+  sectionDescriptionFun?: string;
+  featuredCampers?: FeaturedCampers;
+  featuredMachines?: FeaturedCampers;
 }
 
-export default function HeroSection({ hero }: HeroSectionProps) {
-  // Use Strapi data if available, otherwise use defaults
-  const backgroundImage = hero?.backgroundImage || bgHero.src;
-  const title = hero?.title || '';
-  const subtitle = hero?.subtitle || '';
-  const subSubtitle = hero?.subSubtitle || '';
-  const description = hero?.description || '';
-  const primaryButtonLabel = hero?.primaryButtonLabel || '';
-  const primaryButtonUrl = hero?.primaryButtonUrl || '';
-  const secondaryButtonLabel = hero?.secondaryButtonLabel || '';
-  const secondaryButtonUrl = hero?.secondaryButtonUrl || '';
+type Selection = 'free' | 'fun' | null
 
-  return (
-    <section className="relative h-screen w-full overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-400 to-gray-600">
-        <img src={backgroundImage} alt="Hero background" className="w-full h-full object-cover"/>
-      </div>
+export default function HeroSection({
+  hero,
+  whyChooseUsItems = [],
+  sectionTitleFree,
+  sectionDescriptionFree,
+  sectionTitleFun,
+  sectionDescriptionFun,
+  featuredCampers,
+  featuredMachines
+}: HeroSectionProps) {
+  const [selected, setSelected] = useState<Selection>(null)
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-30"></div>
+  // Check if this is split-screen mode (has freeImage and funImage)
+  const isSplitScreen = hero?.freeImage && hero?.funImage
 
-      {/* Content */}
-      <div className="relative h-full flex flex-col justify-center items-center text-white max-w-[1200px] mx-auto px-[3vw] pt-24 lg:pt-32">
-        <div className="max-w-4xl text-center">
-          <h1 className="text-white mb-2 md:mb-4 font-bold tracking-wide text-3xl md:text-4xl lg:text-5xl xl:text-6xl block">
-            {title}
-          </h1>
-          {subtitle && (
-            <h2
-              className="mb-2 md:mb-4 font-bold tracking-wide text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl block"
-              style={{
-                background: 'linear-gradient(180deg, #FFEB3B 0%, #E65100 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
+  const handleSelect = (selection: Selection) => {
+    setSelected(selection)
+    // Smooth scroll to content section
+    setTimeout(() => {
+      const contentSection = document.getElementById('hero-content-section')
+      if (contentSection) {
+        contentSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 100)
+  }
+
+  // Split-screen mode
+  if (isSplitScreen) {
+    const filteredWhyChooseUs = selected
+      ? whyChooseUsItems.filter(item => !item.displayFor || item.displayFor === selected)
+      : []
+    const featuredSection = selected === 'free' ? featuredCampers : featuredMachines
+
+    return (
+      <>
+        {/* Split-screen Hero - Always Visible */}
+        <section className="relative w-full h-screen overflow-hidden">
+          {/* Full-Width Full-Height Split Screen Images */}
+          <div className="relative flex flex-col md:flex-row w-full h-full">
+            {/* FREE Option - Left Half */}
+            <div
+              onClick={() => handleSelect('free')}
+              className="relative w-full md:w-1/2 h-full cursor-pointer overflow-hidden group"
             >
-              {subtitle}
-            </h2>
-          )}
-          {subSubtitle && (
-            <h3 className="text-white mb-4 md:mb-8 font-bold tracking-wide text-3xl md:text-4xl lg:text-5xl xl:text-6xl block">
-              {subSubtitle}
-            </h3>
-          )}
-          <p className="text-base md:text-lg lg:text-xl mb-8 md:mb-16 font-semibold opacity-85">
-            {description}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href={primaryButtonUrl} className="border-2 bg-white tracking-wider text-black px-8 py-4 font-bold hover:bg-opacity-80 transition-all text-center">
-              {primaryButtonLabel}
-            </a>
-            <a href={secondaryButtonUrl} className="border-2 tracking-wider border-white text-white px-8 py-4 font-bold hover:bg-white hover:text-black transition-all text-center">
-              {secondaryButtonLabel}
-            </a>
+              {hero?.freeImage && (
+                <img
+                  src={hero.freeImage}
+                  alt={hero?.freeHeader || 'FREE'}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              )}
+              <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition-all duration-300" />
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8 text-center">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">{hero?.freeHeader || 'FREE'}</h2>
+                {hero?.freeDescription && (
+                  <p className="text-lg md:text-xl lg:text-2xl max-w-md">{hero.freeDescription}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Vertical White Divider */}
+            <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-[4px] bg-white transform -translate-x-1/2 z-30" />
+
+            {/* FUN Option - Right Half */}
+            <div
+              onClick={() => handleSelect('fun')}
+              className="relative w-full md:w-1/2 h-full cursor-pointer overflow-hidden group"
+            >
+              {hero?.funImage && (
+                <img
+                  src={hero.funImage}
+                  alt={hero?.funHeader || 'FUN'}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              )}
+              <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition-all duration-300" />
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8 text-center">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">{hero?.funHeader || 'FUN'}</h2>
+                {hero?.funDescription && (
+                  <p className="text-lg md:text-xl lg:text-2xl max-w-md">{hero.funDescription}</p>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </section>
-  )
+        </section>
+
+        {/* Content Section - Only shows after selection */}
+        {selected && (
+          <div id="hero-content-section">
+            {/* Why Choose Us Sections (filtered) */}
+            {filteredWhyChooseUs.length > 0 && (
+              <div>
+                {/* Section Title and Description based on selection */}
+                {selected === 'free' && (sectionTitleFree || sectionDescriptionFree) && (
+                  <div className="max-w-[1200px] mx-auto px-[4vw] pt-20 text-center">
+                    {sectionTitleFree && <h2 className="mb-12 font-medium">{sectionTitleFree}</h2>}
+                    {sectionDescriptionFree && (
+                      <>
+                        <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide text-base/7 mb-8">
+                          {sectionDescriptionFree}
+                        </p>
+                        <hr className="max-w-md mx-auto border-0 h-[2px] bg-gradient-to-r from-transparent via-gray-400 to-transparent opacity-50" />
+                      </>
+                    )}
+                  </div>
+                )}
+                {selected === 'fun' && (sectionTitleFun || sectionDescriptionFun) && (
+                  <div className="max-w-[1200px] mx-auto px-[4vw] pt-20 text-center">
+                    {sectionTitleFun && <h2 className="mb-12 font-medium">{sectionTitleFun}</h2>}
+                    {sectionDescriptionFun && (
+                      <>
+                        <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide text-base/7 mb-8">
+                          {sectionDescriptionFun}
+                        </p>
+                        <hr className="max-w-md mx-auto border-0 h-[2px] bg-gradient-to-r from-transparent via-gray-400 to-transparent opacity-50" />
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {filteredWhyChooseUs.map((item, index) => (
+                  <WhyChooseUsSection key={index} item={item} />
+                ))}
+              </div>
+            )}
+
+            {/* Featured Campers/Machines Section */}
+            {featuredSection && (
+              <FeaturedCampersSection featuredCampers={featuredSection} />
+            )}
+          </div>
+        )}
+      </>
+    )
+  }
+
+  // No hero data - return null
+  return null
 }

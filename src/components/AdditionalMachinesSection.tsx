@@ -1,7 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
+import { Eye } from 'lucide-react';
+import MachineDetailsModal from './MachineDetailsModal';
+import { mediaURL } from '@/lib/images';
 
 interface AdditionalMachine {
   machine: any;
@@ -16,7 +20,6 @@ interface AdditionalMachinesSectionProps {
   endDate: string;
   onAdd: (machine: any) => void;
   onRemove: (machineId: string) => void;
-  onQuantityChange: (machineId: string, quantity: number) => void;
 }
 
 export default function AdditionalMachinesSection({
@@ -26,11 +29,23 @@ export default function AdditionalMachinesSection({
   startDate,
   endDate,
   onAdd,
-  onRemove,
-  onQuantityChange
+  onRemove
 }: AdditionalMachinesSectionProps) {
+  const [selectedMachineForModal, setSelectedMachineForModal] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), 'd MMMM yyyy', { locale: pl });
+  };
+
+  const handleShowDetails = (machine: any) => {
+    setSelectedMachineForModal(machine);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedMachineForModal(null);
   };
 
   return (
@@ -50,47 +65,45 @@ export default function AdditionalMachinesSection({
             {selectedMachines.map((item) => {
               const machineAttrs = item.machine.attributes || item.machine;
               const cardPhoto = machineAttrs.cardPhoto?.data?.attributes || machineAttrs.cardPhoto;
+              const cardPhotoUrl = mediaURL(cardPhoto);
 
               return (
                 <div key={item.machine.documentId} className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
-                  {/* Machine Image */}
-                  {cardPhoto?.url && (
+                  {/* Machine Image - Clickable */}
+                  {cardPhotoUrl && (
                     <img
-                      src={cardPhoto.url}
+                      src={cardPhotoUrl}
                       alt={machineAttrs.name}
-                      className="w-20 h-20 object-cover rounded"
+                      className="w-20 h-20 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity"
+                      onClick={() => handleShowDetails(item.machine)}
                     />
                   )}
 
                   {/* Machine Info */}
                   <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900">
+                    <h4
+                      className="font-semibold text-gray-900 cursor-pointer hover:text-[#253551] transition-colors"
+                      onClick={() => handleShowDetails(item.machine)}
+                    >
                       {machineAttrs.name}
                     </h4>
                     <p className="text-sm text-gray-600">
-                      {machineAttrs.basePricePerDay} zł/dzień × {daysCount} dni × {item.quantity} szt.
+                      {machineAttrs.basePricePerDay} zł/dzień × {daysCount} dni
                     </p>
                     <p className="text-sm font-semibold text-[#253551]">
-                      Suma: {(machineAttrs.basePricePerDay * daysCount * item.quantity).toFixed(2)} zł
+                      Suma: {(machineAttrs.basePricePerDay * daysCount).toFixed(2)} zł
                     </p>
                   </div>
 
-                {/* Quantity Controls */}
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => onQuantityChange(item.machine.documentId, Math.max(1, item.quantity - 1))}
-                    className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100"
-                  >
-                    -
-                  </button>
-                  <span className="w-8 text-center font-medium">{item.quantity}</span>
-                  <button
-                    onClick={() => onQuantityChange(item.machine.documentId, Math.min(5, item.quantity + 1))}
-                    className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100"
-                  >
-                    +
-                  </button>
-                </div>
+                {/* View Details Button */}
+                <button
+                  onClick={() => handleShowDetails(item.machine)}
+                  className="text-[#253551] hover:text-[#1a2840] px-3 py-1 text-sm font-medium flex items-center gap-1"
+                  title="Zobacz szczegóły"
+                >
+                  <Eye className="w-4 h-4" />
+                  <span className="hidden sm:inline">Szczegóły</span>
+                </button>
 
                 {/* Remove Button */}
                 <button
@@ -118,20 +131,25 @@ export default function AdditionalMachinesSection({
               .map((machine) => {
                 const machineAttrs = machine.attributes || machine;
                 const cardPhoto = machineAttrs.cardPhoto?.data?.attributes || machineAttrs.cardPhoto;
+                const cardPhotoUrl = mediaURL(cardPhoto);
 
                 return (
                   <div key={machine.documentId} className="border border-gray-200 rounded-lg p-4 hover:border-[#253551] transition-colors">
-                    {/* Machine Image */}
-                    {cardPhoto?.url && (
+                    {/* Machine Image - Clickable */}
+                    {cardPhotoUrl && (
                       <img
-                        src={cardPhoto.url}
+                        src={cardPhotoUrl}
                         alt={machineAttrs.name}
-                        className="w-full h-32 object-cover rounded mb-3"
+                        className="w-full h-32 object-cover rounded mb-3 cursor-pointer hover:opacity-80 transition-opacity"
+                        onClick={() => handleShowDetails(machine)}
                       />
                     )}
 
                     {/* Machine Info */}
-                    <h4 className="font-semibold text-gray-900 mb-1">
+                    <h4
+                      className="font-semibold text-gray-900 mb-1 cursor-pointer hover:text-[#253551] transition-colors"
+                      onClick={() => handleShowDetails(machine)}
+                    >
                       {machineAttrs.name}
                     </h4>
                     <p className="text-sm text-gray-600 mb-1">
@@ -141,19 +159,35 @@ export default function AdditionalMachinesSection({
                       {machineAttrs.basePricePerDay} zł/dzień
                     </p>
 
-                    {/* Add Button */}
-                    <button
-                      onClick={() => onAdd(machine)}
-                      className="w-full bg-[#253551] text-white py-2 rounded-lg hover:bg-[#1a2840] transition-colors text-sm font-medium"
-                    >
-                      Dodaj do rezerwacji
-                    </button>
+                    {/* Buttons */}
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleShowDetails(machine)}
+                        className="flex-1 bg-gray-100 text-[#253551] py-2 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium flex items-center justify-center gap-1"
+                      >
+                        <Eye className="w-4 h-4" />
+                        <span>Szczegóły</span>
+                      </button>
+                      <button
+                        onClick={() => onAdd(machine)}
+                        className="flex-1 bg-[#253551] text-white py-2 rounded-lg hover:bg-[#1a2840] transition-colors text-sm font-medium"
+                      >
+                        Dodaj
+                      </button>
+                    </div>
                   </div>
                 );
               })}
           </div>
         )}
       </div>
+
+      {/* Machine Details Modal */}
+      <MachineDetailsModal
+        machine={selectedMachineForModal}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 }

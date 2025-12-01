@@ -22,6 +22,8 @@ export function fromStrapiSiteSettings(e: any): SiteSettings {
     contactAddress: a.contactAddress ?? undefined,
     bankName: a.bankName ?? undefined,
     bankNumber: a.bankNumber ?? undefined,
+    defaultPickupTime: a.defaultPickupTime ?? undefined,
+    defaultReturnTime: a.defaultReturnTime ?? undefined,
     navbarLinks: extractLinks(a.navbarLinks),
     socialLinks: extractLinks(a.socialLinks),
     footerLinks: extractLinks(a.footerLinks),

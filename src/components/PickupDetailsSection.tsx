@@ -3,7 +3,9 @@
 interface PickupDetailsSectionProps {
   pickupAddress: string;
   pickupTime: string;
-  onTimeChange: (time: string) => void;
+  returnTime: string;
+  onPickupTimeChange: (time: string) => void;
+  onReturnTimeChange: (time: string) => void;
   specialInstructions: string;
   onInstructionsChange: (instructions: string) => void;
 }
@@ -11,7 +13,9 @@ interface PickupDetailsSectionProps {
 export default function PickupDetailsSection({
   pickupAddress,
   pickupTime,
-  onTimeChange,
+  returnTime,
+  onPickupTimeChange,
+  onReturnTimeChange,
   specialInstructions,
   onInstructionsChange
 }: PickupDetailsSectionProps) {
@@ -42,8 +46,24 @@ export default function PickupDetailsSection({
           </label>
           <input
             type="time"
-            value={pickupTime}
-            onChange={(e) => onTimeChange(e.target.value)}
+            value={pickupTime ? pickupTime.slice(0, 5) : ''}
+            onChange={(e) => onPickupTimeChange(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#253551] focus:border-transparent"
+          />
+          <p className="mt-1 text-xs text-gray-500">
+            Skontaktujemy się z Tobą, aby potwierdzić dokładną godzinę
+          </p>
+        </div>
+
+        {/* Return Time */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Preferowana godzina zwrotu
+          </label>
+          <input
+            type="time"
+            value={returnTime ? returnTime.slice(0, 5) : ''}
+            onChange={(e) => onReturnTimeChange(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#253551] focus:border-transparent"
           />
           <p className="mt-1 text-xs text-gray-500">

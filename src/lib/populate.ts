@@ -9,7 +9,7 @@ export const POP_FAQ = {
 };
 
 export const POP_SITE_SETTINGS = {
-  fields: ['siteTitle', 'tagline', 'contactEmail', 'contactPhone', 'contactAddress', 'bankName', 'bankNumber'],
+  fields: ['siteTitle', 'tagline', 'contactEmail', 'contactPhone', 'contactAddress', 'bankName', 'bankNumber', 'defaultPickupTime', 'defaultReturnTime'],
   populate: {
     logo: {
       fields: ['url', 'alternativeText'],
@@ -112,15 +112,7 @@ export const POP_HOME = {
     sections: {
       on: {
         'home.hero': {
-          fields: ['title', 'subtitle', 'sub_subtitle', 'description', 'primaryButtonLabel', 'primaryButtonUrl', 'secondaryButtonLabel', 'secondaryButtonUrl'],
-          populate: {
-            backgroundImage: {
-              fields: ['url', 'alternativeText'],
-            },
-          },
-        },
-        'home.ride-selector': {
-          fields: ['header', 'description', 'freeHeader', 'freeDescription', 'funHeader', 'funDescription'],
+          fields: ['freeHeader', 'freeDescription', 'funHeader', 'funDescription'],
           populate: {
             freeImage: {
               fields: ['url', 'alternativeText'],
