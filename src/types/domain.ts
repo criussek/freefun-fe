@@ -49,6 +49,7 @@ export interface Machine {
   basepriceperday?: number;
   serviceFee?: number;
   depositFee?: number;
+  minrentaldays?: number;
   isActive?: boolean;
   gallery?: string[];
   features?: MachineFeature[];

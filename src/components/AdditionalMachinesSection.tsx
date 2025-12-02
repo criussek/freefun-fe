@@ -6,6 +6,7 @@ import { pl } from 'date-fns/locale';
 import { Eye } from 'lucide-react';
 import MachineDetailsModal from './MachineDetailsModal';
 import { mediaURL } from '@/lib/images';
+import { Season, Machine, calculateTotalPrice } from '@/lib/seasons';
 
 interface AdditionalMachine {
   machine: any;
@@ -18,6 +19,7 @@ interface AdditionalMachinesSectionProps {
   daysCount: number;
   startDate: string;
   endDate: string;
+  seasons: Season[];
   onAdd: (machine: any) => void;
   onRemove: (machineId: string) => void;
 }
@@ -28,6 +30,7 @@ export default function AdditionalMachinesSection({
   daysCount,
   startDate,
   endDate,
+  seasons,
   onAdd,
   onRemove
 }: AdditionalMachinesSectionProps) {
@@ -36,6 +39,26 @@ export default function AdditionalMachinesSection({
 
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), 'd MMMM yyyy', { locale: pl });
+  };
+
+  // Helper to calculate season-aware price for a machine
+  const calculateMachinePrice = (machine: any): number => {
+    const machineAttrs = machine.attributes || machine;
+    const machineObj: Machine = {
+      documentId: machine.documentId,
+      name: machineAttrs.name,
+      basePricePerDay: machineAttrs.basePricePerDay,
+      minRentalDays: machineAttrs.minRentalDays
+    };
+
+    const pricing = calculateTotalPrice(
+      [machineObj],
+      new Date(startDate),
+      new Date(endDate),
+      seasons
+    );
+
+    return pricing.totalPrice;
   };
 
   const handleShowDetails = (machine: any) => {
@@ -88,10 +111,10 @@ export default function AdditionalMachinesSection({
                       {machineAttrs.name}
                     </h4>
                     <p className="text-sm text-gray-600">
-                      {machineAttrs.basePricePerDay} zł/dzień × {daysCount} dni
+                      Wynajem ({daysCount} {daysCount === 1 ? 'dzień' : daysCount < 5 ? 'dni' : 'dni'})
                     </p>
                     <p className="text-sm font-semibold text-[#253551]">
-                      Suma: {(machineAttrs.basePricePerDay * daysCount).toFixed(2)} zł
+                      Suma: {calculateMachinePrice(item.machine).toFixed(2)} zł
                     </p>
                   </div>
 
@@ -156,7 +179,7 @@ export default function AdditionalMachinesSection({
                       {machineAttrs.type}
                     </p>
                     <p className="text-sm font-semibold text-[#253551] mb-3">
-                      {machineAttrs.basePricePerDay} zł/dzień
+                      {calculateMachinePrice(machine).toFixed(2)} zł za wynajem
                     </p>
 
                     {/* Buttons */}

@@ -5,6 +5,14 @@ import DatePicker, { registerLocale } from 'react-datepicker'
 import { addMonths, subMonths, differenceInDays } from 'date-fns'
 import { pl } from 'date-fns/locale'
 import 'react-datepicker/dist/react-datepicker.css'
+import {
+  Season,
+  Machine,
+  getMinimumEndDate,
+  getSeasonForDate,
+  calculateTotalPrice,
+  getMinimumDaysRequired
+} from '@/lib/seasons'
 
 // Register Polish locale
 registerLocale('pl', pl)
@@ -15,6 +23,7 @@ interface MachineDatePickerProps {
   pricePerDay?: number
   serviceFee?: number
   depositFee?: number
+  minRentalDays?: number
 }
 
 interface FormData {
@@ -31,12 +40,14 @@ interface FormErrors {
   phone?: string
 }
 
-export default function MachineDatePicker({ machineId, machineName, pricePerDay, serviceFee, depositFee }: MachineDatePickerProps) {
+export default function MachineDatePicker({ machineId, machineName, pricePerDay, serviceFee, depositFee, minRentalDays }: MachineDatePickerProps) {
   const [startDate, setStartDate] = useState<Date | null>(null)
   const [endDate, setEndDate] = useState<Date | null>(null)
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [excludedDates, setExcludedDates] = useState<Date[]>([])
   const [isLoadingDates, setIsLoadingDates] = useState(true)
+  const [seasons, setSeasons] = useState<Season[]>([])
+  const [isLoadingSeasons, setIsLoadingSeasons] = useState(true)
   const [formData, setFormData] = useState<FormData>({
     firstname: '',
     lastname: '',
@@ -71,6 +82,59 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
 
     fetchUnavailableDates()
   }, [machineId])
+
+  // Fetch seasons when component mounts
+  useEffect(() => {
+    const fetchSeasons = async () => {
+      try {
+        setIsLoadingSeasons(true)
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/seasons`
+        )
+
+        if (response.ok) {
+          const data = await response.json()
+          setSeasons(data.data || [])
+        }
+      } catch (error) {
+        console.error('Error fetching seasons:', error)
+      } finally {
+        setIsLoadingSeasons(false)
+      }
+    }
+
+    fetchSeasons()
+  }, [])
+
+  // Create machine object for season calculations
+  const machine: Machine = {
+    documentId: machineId,
+    name: machineName,
+    basePricePerDay: pricePerDay || 0,
+    minRentalDays: minRentalDays
+  }
+
+  // Filter function to disable invalid end dates based on minimum days
+  const filterDate = (date: Date): boolean => {
+    // Allow all dates if no start date selected yet
+    if (!startDate) return true
+
+    // Allow all dates if range is already complete (both dates selected)
+    // This allows user to select a new range
+    if (endDate) return true
+
+    // Normalize dates to midnight for comparison (ignore time)
+    const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+    const startDateOnly = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())
+
+    // If date is before or equal to start date, allow it (user can change start date)
+    if (dateOnly <= startDateOnly) return true
+
+    // If date is after start date, enforce minimum days requirement for end date
+    const minEndDate = getMinimumEndDate(startDate, seasons, [machine])
+    const minEndDateOnly = new Date(minEndDate.getFullYear(), minEndDate.getMonth(), minEndDate.getDate())
+    return dateOnly >= minEndDateOnly
+  }
 
   const onChange = (dates: [Date | null, Date | null]) => {
     const [start, end] = dates
@@ -158,11 +222,23 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
     return differenceInDays(endDate, startDate) + 1
   }
 
-  // Calculate prices
+  // Calculate prices with season awareness
   const days = calculateDays()
-  const rentalPrice = pricePerDay ? pricePerDay * days : 0
+  let rentalPrice = 0
+  let activeSeason: Season | null = null
+
+  if (startDate && endDate && pricePerDay) {
+    const pricing = calculateTotalPrice([machine], startDate, endDate, seasons)
+    rentalPrice = pricing.totalPrice
+    // Check if start date is in a season for display
+    activeSeason = getSeasonForDate(startDate, seasons)
+  }
+
   const totalPrice = rentalPrice + (serviceFee || 0)
   const depositAmount = totalPrice * 0.5 // 50% deposit
+
+  // Get minimum days required for validation message
+  const minDaysRequired = startDate ? getMinimumDaysRequired(startDate, seasons, [machine]) : 1
 
   // Calculate payment due date (today + 7 days)
   const paymentDueDate = new Date()
@@ -277,6 +353,7 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
               monthsShown={2}
               minDate={new Date()}
               excludeDates={excludedDates}
+              filterDate={filterDate}
               openToDate={currentMonth}
               calendarClassName="custom-calendar"
               locale="pl"
@@ -324,10 +401,29 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
                   Podsumowanie kosztów:
                 </h3>
 
+                {/* Season information */}
+                {activeSeason && (
+                  <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-center gap-2 text-blue-800 text-sm">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 16v-4"></path>
+                        <path d="M12 8h.01"></path>
+                      </svg>
+                      <span className="font-medium">{activeSeason.name}</span>
+                    </div>
+                    {minDaysRequired > 1 && (
+                      <div className="text-xs text-blue-700 mt-1">
+                        Minimalny czas wynajmu: {minDaysRequired} {minDaysRequired === 1 ? 'dzień' : minDaysRequired < 5 ? 'dni' : 'dni'}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* Price breakdown */}
                 <div className="space-y-3 mb-4">
                   <div className="flex justify-between items-center text-gray-700">
-                    <span>{pricePerDay.toFixed(2)} zł × {days} {days === 1 ? 'dzień' : days < 5 ? 'dni' : 'dni'}</span>
+                    <span>Wynajem ({days} {days === 1 ? 'dzień' : days < 5 ? 'dni' : 'dni'})</span>
                     <span className="font-semibold">{rentalPrice.toFixed(2)} zł</span>
                   </div>
                   {serviceFee !== undefined && serviceFee > 0 && (

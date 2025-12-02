@@ -222,6 +222,7 @@ export default async function MachinePage({ params }: MachinePageProps) {
             pricePerDay={machine.basepriceperday}
             serviceFee={machine.serviceFee}
             depositFee={machine.depositFee}
+            minRentalDays={machine.minrentaldays}
           />
 
         </div>

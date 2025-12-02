@@ -57,6 +57,7 @@ export function fromStrapiMachine(e: StrapiEntity<any>): Machine {
     basepriceperday: a.basePricePerDay ? Number(a.basePricePerDay) : undefined,
     serviceFee: a.serviceFee ? Number(a.serviceFee) : undefined,
     depositFee: a.depositFee ? Number(a.depositFee) : undefined,
+    minrentaldays: a.minRentalDays ? Number(a.minRentalDays) : undefined,
     isActive: a.isActive ?? true,
     gallery,
     features,

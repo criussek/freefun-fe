@@ -101,29 +101,79 @@ export default function BookingSummaryComponent({
       <div className="min-h-screen bg-gray-50 pb-12" style={{ paddingTop: '40px' }}>
       <div className="max-w-4xl mx-auto px-4">
         {/* Success Banner */}
-        <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6 mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <svg
-              className="w-8 h-8 text-green-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <h1 className="text-2xl font-bold text-green-900">
-              Rezerwacja złożona!
-            </h1>
+        {attributes.bookingStatus === 'confirmed' ? (
+          <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6 mb-8">
+            <div className="flex items-center gap-3 mb-2">
+              <svg
+                className="w-8 h-8 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <h1 className="text-2xl font-bold text-green-900">
+                Rezerwacja potwierdzona!
+              </h1>
+            </div>
+            <p className="text-green-800">
+              Twoja rezerwacja została potwierdzona. Sprawdź swój email z potwierdzeniem i szczegółami rezerwacji.
+            </p>
           </div>
-          <p className="text-green-800">
-            Dziękujemy za złożenie rezerwacji. Sprawdź swój email, aby uzyskać szczegóły płatności.
-          </p>
-        </div>
+        ) : attributes.bookingStatus === 'cancelled' ? (
+          <div className="bg-red-50 border-2 border-red-200 rounded-lg p-6 mb-8">
+            <div className="flex items-center gap-3 mb-2">
+              <svg
+                className="w-8 h-8 text-red-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <h1 className="text-2xl font-bold text-red-900">
+                Rezerwacja anulowana
+              </h1>
+            </div>
+            <p className="text-red-800">
+              Ta rezerwacja została anulowana. Jeśli masz pytania, skontaktuj się z nami.
+            </p>
+          </div>
+        ) : (
+          <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6 mb-8">
+            <div className="flex items-center gap-3 mb-2">
+              <svg
+                className="w-8 h-8 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <h1 className="text-2xl font-bold text-green-900">
+                Rezerwacja złożona!
+              </h1>
+            </div>
+            <p className="text-green-800">
+              Dziękujemy za złożenie rezerwacji. Sprawdź swój email, aby uzyskać szczegóły płatności.
+            </p>
+          </div>
+        )}
 
         {/* Booking Reference */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
@@ -138,14 +188,27 @@ export default function BookingSummaryComponent({
             </div>
             <div className="text-right">
               <h2 className="text-sm font-medium text-gray-600 mb-1">Status</h2>
-              <span className="inline-block px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg font-semibold">
-                Oczekuje na wpłatę
-              </span>
+              {attributes.bookingStatus === 'confirmed' && (
+                <span className="inline-block px-4 py-2 bg-green-100 text-green-800 rounded-lg font-semibold">
+                  ✅ Potwierdzona
+                </span>
+              )}
+              {attributes.bookingStatus === 'cancelled' && (
+                <span className="inline-block px-4 py-2 bg-red-100 text-red-800 rounded-lg font-semibold">
+                  ❌ Anulowana
+                </span>
+              )}
+              {(!attributes.bookingStatus || attributes.bookingStatus === 'pending') && (
+                <span className="inline-block px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg font-semibold">
+                  Oczekuje na wpłatę
+                </span>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Payment Instructions */}
+        {/* Payment Instructions - Only show for pending bookings */}
+        {(!attributes.bookingStatus || attributes.bookingStatus === 'pending') && (
         <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-6 mb-6">
           <h2 className="text-lg font-bold text-yellow-900 mb-3 flex items-center gap-2">
             <svg
@@ -262,6 +325,7 @@ export default function BookingSummaryComponent({
             </div>
           )}
         </div>
+        )}
 
         {/* Booking Details */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
@@ -311,56 +375,48 @@ export default function BookingSummaryComponent({
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               {machines.length === 1 ? 'Kamper' : 'Wynajęte pojazdy i maszyny'}
             </h3>
-            <div className="space-y-6">
+            <div className="space-y-3">
               {machines.map((machine: any, idx: number) => {
                 const machineAttrs = machine.attributes || machine;
                 const cardPhotoUrl = mediaURL(machineAttrs.cardPhoto);
-                const specifications = machineAttrs.specifications?.data || machineAttrs.specifications || [];
-                const firstFiveSpecs = specifications.slice(0, 5);
                 const isPrimary = idx === 0;
 
-                return (
-                  <div key={machine.documentId || idx} className={idx > 0 ? 'pt-4 border-t border-gray-200' : ''}>
-                    {machines.length > 1 && (
-                      <p className="text-xs text-gray-500 mb-2">
-                        {isPrimary ? 'Kamper główny' : 'Dodatkowa maszyna'}
-                      </p>
-                    )}
-                    <div className="space-y-4">
-                      <div className="flex gap-4">
-                        {cardPhotoUrl && (
-                          <img
-                            src={cardPhotoUrl}
-                            alt={machineAttrs.name}
-                            className="w-24 h-24 object-cover rounded flex-shrink-0"
-                          />
-                        )}
-                        <div className="flex-1">
-                          <p className="font-semibold text-gray-900 mb-2">
-                            {machineAttrs.name}
-                          </p>
-                          {machineAttrs.overview && (
-                            <p className="text-sm text-gray-600">
-                              {machineAttrs.overview}
-                            </p>
-                          )}
-                        </div>
-                      </div>
+                // Calculate total from priceSnapshot (prices are already locked with season multiplier)
+                // Match by machine name since documentId might not be populated
+                const machineName = machineAttrs.name;
+                const machinePrices = attributes.priceSnapshot?.filter(
+                  (snapshot: any) => snapshot.machineName === machineName
+                ) || [];
+                const machineTotal = machinePrices.reduce((sum: number, snapshot: any) => sum + snapshot.pricePerDay, 0);
+                const avgPricePerDay = machinePrices.length > 0 ? machineTotal / machinePrices.length : 0;
 
-                      {/* Specifications */}
-                      {firstFiveSpecs.length > 0 && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                          {firstFiveSpecs.map((spec: any, index: number) => {
-                            const specAttrs = spec.attributes || spec;
-                            return (
-                              <div key={index} className="flex items-center gap-2 text-gray-700">
-                                <span className="font-medium">{specAttrs.label}:</span>
-                                <span>{specAttrs.value}</span>
-                              </div>
-                            );
-                          })}
-                        </div>
+                return (
+                  <div key={machine.documentId || idx} className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
+                    {/* Machine Image */}
+                    {cardPhotoUrl && (
+                      <img
+                        src={cardPhotoUrl}
+                        alt={machineAttrs.name}
+                        className="w-20 h-20 object-cover rounded flex-shrink-0"
+                      />
+                    )}
+
+                    {/* Machine Info */}
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900">
+                        {machineAttrs.name}
+                      </h4>
+                      {machines.length > 1 && (
+                        <p className="text-xs text-gray-500">
+                          {isPrimary ? 'Kamper główny' : 'Dodatkowa maszyna'}
+                        </p>
                       )}
+                      <p className="text-sm text-gray-600">
+                        {avgPricePerDay.toFixed(2)} zł/dzień × {attributes.daysCount} dni
+                      </p>
+                      <p className="text-sm font-semibold text-[#253551]">
+                        Suma: {machineTotal.toFixed(2)} zł
+                      </p>
                     </div>
                   </div>
                 );

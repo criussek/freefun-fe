@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import GuestDetailsSection from './GuestDetailsSection';
 import DriverDetailsSection from './DriverDetailsSection';
@@ -9,6 +9,7 @@ import AdditionalServicesSection from './AdditionalServicesSection';
 import PickupDetailsSection from './PickupDetailsSection';
 import TermsSection from './TermsSection';
 import BookingSummaryCard from './BookingSummaryCard';
+import { Season, Machine, calculateTotalPrice } from '@/lib/seasons';
 
 interface Guest {
   fullName: string;
@@ -70,6 +71,27 @@ export default function CheckoutPageComponent({
   const [agreedToCancellation, setAgreedToCancellation] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [seasons, setSeasons] = useState<Season[]>([]);
+  const [isLoadingSeasons, setIsLoadingSeasons] = useState(true);
+
+  // Fetch seasons on mount
+  useEffect(() => {
+    const fetchSeasons = async () => {
+      try {
+        setIsLoadingSeasons(true);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/seasons`);
+        if (response.ok) {
+          const data = await response.json();
+          setSeasons(data.data || []);
+        }
+      } catch (error) {
+        console.error('Error fetching seasons:', error);
+      } finally {
+        setIsLoadingSeasons(false);
+      }
+    };
+    fetchSeasons();
+  }, []);
 
   // Calculations
   // bookingTotal already includes primary machines + their service fees
@@ -90,10 +112,27 @@ export default function CheckoutPageComponent({
     return sum + (machineAttrs.depositFee || 0);
   }, 0);
 
-  // Additional machines total + their fees
+  // Additional machines total + their fees (with season-aware pricing)
   const additionalMachinesTotal = selectedAdditionalMachines.reduce((sum, item) => {
     const machineAttrs = item.machine.attributes || item.machine;
-    return sum + (machineAttrs.basePricePerDay * attributes.daysCount * item.quantity);
+
+    // Create machine object for season calculations
+    const machine: Machine = {
+      documentId: item.machine.documentId,
+      name: machineAttrs.name,
+      basePricePerDay: machineAttrs.basePricePerDay,
+      minRentalDays: machineAttrs.minRentalDays
+    };
+
+    // Calculate season-aware price for this machine
+    const pricing = calculateTotalPrice(
+      [machine],
+      new Date(attributes.startDate),
+      new Date(attributes.endDate),
+      seasons
+    );
+
+    return sum + (pricing.totalPrice * item.quantity);
   }, 0);
 
   const additionalServiceFees = selectedAdditionalMachines.reduce((sum, item) => {
@@ -253,6 +292,7 @@ export default function CheckoutPageComponent({
             daysCount={attributes.daysCount}
             startDate={attributes.startDate}
             endDate={attributes.endDate}
+            seasons={seasons}
             onAdd={(machine) => {
               setSelectedAdditionalMachines([...selectedAdditionalMachines, { machine, quantity: 1 }]);
             }}
@@ -328,6 +368,7 @@ export default function CheckoutPageComponent({
             remaining={remaining}
             pickupTime={pickupTime}
             returnTime={returnTime}
+            seasons={seasons}
           />
         </div>
       </div>

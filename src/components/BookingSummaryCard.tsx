@@ -3,6 +3,7 @@
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
 import { mediaURL } from '@/lib/images';
+import { Season, Machine, calculateTotalPrice } from '@/lib/seasons';
 
 interface AdditionalMachine {
   machine: any;
@@ -27,6 +28,7 @@ interface BookingSummaryCardProps {
   remaining: number;
   pickupTime: string;
   returnTime: string;
+  seasons: Season[];
 }
 
 export default function BookingSummaryCard({
@@ -40,7 +42,8 @@ export default function BookingSummaryCard({
   deposit,
   remaining,
   pickupTime,
-  returnTime
+  returnTime,
+  seasons
 }: BookingSummaryCardProps) {
   // Handle both possible response structures (v4 vs v5)
   const attributes = booking.attributes || booking;
@@ -49,6 +52,26 @@ export default function BookingSummaryCard({
 
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), 'd MMMM yyyy', { locale: pl });
+  };
+
+  // Helper to calculate season-aware price for a machine
+  const calculateMachinePrice = (machine: any): number => {
+    const machineAttrs = machine.attributes || machine;
+    const machineObj: Machine = {
+      documentId: machine.documentId,
+      name: machineAttrs.name,
+      basePricePerDay: machineAttrs.basePricePerDay,
+      minRentalDays: machineAttrs.minRentalDays
+    };
+
+    const pricing = calculateTotalPrice(
+      [machineObj],
+      new Date(attributes.startDate),
+      new Date(attributes.endDate),
+      seasons
+    );
+
+    return pricing.totalPrice;
   };
 
   if (!primaryMachine) {
@@ -111,7 +134,7 @@ export default function BookingSummaryCard({
         <div className="flex justify-between">
           <span className="text-gray-600">Cena wynajmu:</span>
           <span className="font-medium text-gray-900">
-            {((primaryMachine.attributes || primaryMachine).basePricePerDay * daysCount).toFixed(2)} zł
+            {calculateMachinePrice(primaryMachine).toFixed(2)} zł
           </span>
         </div>
       </div>
@@ -122,6 +145,7 @@ export default function BookingSummaryCard({
           <h4 className="font-semibold text-gray-900 mb-3 text-sm">Dodatkowe maszyny:</h4>
           {additionalMachines.map((item) => {
             const machineAttrs = item.machine.attributes || item.machine;
+            const machinePrice = calculateMachinePrice(item.machine);
             return (
               <div key={item.machine.documentId} className="text-sm mb-2">
                 <div className="flex justify-between">
@@ -129,7 +153,7 @@ export default function BookingSummaryCard({
                     {machineAttrs.name}:
                   </span>
                   <span className="font-medium text-gray-900">
-                    {(machineAttrs.basePricePerDay * daysCount).toFixed(2)} zł
+                    {machinePrice.toFixed(2)} zł
                   </span>
                 </div>
               </div>
@@ -142,8 +166,7 @@ export default function BookingSummaryCard({
                 <span className="text-gray-600">Razem dodatkowe maszyny:</span>
                 <span className="font-medium text-gray-900">
                   {additionalMachines.reduce((sum, item) => {
-                    const machineAttrs = item.machine.attributes || item.machine;
-                    return sum + (machineAttrs.basePricePerDay * daysCount);
+                    return sum + calculateMachinePrice(item.machine);
                   }, 0).toFixed(2)} zł
                 </span>
               </div>
