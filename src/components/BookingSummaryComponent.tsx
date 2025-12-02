@@ -306,78 +306,67 @@ export default function BookingSummaryComponent({
             </div>
           </div>
 
-          {/* Primary Machine */}
+          {/* All Machines (Primary + Additional) */}
           <div className="mb-6 pb-6 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">
-              Kamper
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              {machines.length === 1 ? 'Kamper' : 'Wynajęte pojazdy i maszyny'}
             </h3>
-            {(() => {
-              const machineAttrs = primaryMachine.attributes || primaryMachine;
-              const cardPhotoUrl = mediaURL(machineAttrs.cardPhoto);
-              const specifications = machineAttrs.specifications?.data || machineAttrs.specifications || [];
-              const firstFiveSpecs = specifications.slice(0, 5);
+            <div className="space-y-6">
+              {machines.map((machine: any, idx: number) => {
+                const machineAttrs = machine.attributes || machine;
+                const cardPhotoUrl = mediaURL(machineAttrs.cardPhoto);
+                const specifications = machineAttrs.specifications?.data || machineAttrs.specifications || [];
+                const firstFiveSpecs = specifications.slice(0, 5);
+                const isPrimary = idx === 0;
 
-              return (
-                <div className="space-y-4">
-                  <div className="flex gap-4">
-                    {cardPhotoUrl && (
-                      <img
-                        src={cardPhotoUrl}
-                        alt={machineAttrs.name}
-                        className="w-24 h-24 object-cover rounded flex-shrink-0"
-                      />
-                    )}
-                    <div className="flex-1">
-                      <p className="font-semibold text-gray-900 mb-2">
-                        {machineAttrs.name}
+                return (
+                  <div key={machine.documentId || idx} className={idx > 0 ? 'pt-4 border-t border-gray-200' : ''}>
+                    {machines.length > 1 && (
+                      <p className="text-xs text-gray-500 mb-2">
+                        {isPrimary ? 'Kamper główny' : 'Dodatkowa maszyna'}
                       </p>
-                      {machineAttrs.overview && (
-                        <p className="text-sm text-gray-600">
-                          {machineAttrs.overview}
-                        </p>
+                    )}
+                    <div className="space-y-4">
+                      <div className="flex gap-4">
+                        {cardPhotoUrl && (
+                          <img
+                            src={cardPhotoUrl}
+                            alt={machineAttrs.name}
+                            className="w-24 h-24 object-cover rounded flex-shrink-0"
+                          />
+                        )}
+                        <div className="flex-1">
+                          <p className="font-semibold text-gray-900 mb-2">
+                            {machineAttrs.name}
+                          </p>
+                          {machineAttrs.overview && (
+                            <p className="text-sm text-gray-600">
+                              {machineAttrs.overview}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Specifications */}
+                      {firstFiveSpecs.length > 0 && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                          {firstFiveSpecs.map((spec: any, index: number) => {
+                            const specAttrs = spec.attributes || spec;
+                            return (
+                              <div key={index} className="flex items-center gap-2 text-gray-700">
+                                <span className="font-medium">{specAttrs.label}:</span>
+                                <span>{specAttrs.value}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
                       )}
                     </div>
                   </div>
-
-                  {/* Specifications */}
-                  {firstFiveSpecs.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                      {firstFiveSpecs.map((spec: any, index: number) => {
-                        const specAttrs = spec.attributes || spec;
-                        return (
-                          <div key={index} className="flex items-center gap-2 text-gray-700">
-                            <span className="font-medium">{specAttrs.label}:</span>
-                            <span>{specAttrs.value}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              );
-            })()}
+                );
+              })}
+            </div>
           </div>
-
-          {/* Additional Machines */}
-          {attributes.additionalMachines &&
-            JSON.parse(attributes.additionalMachines).length > 0 && (
-              <div className="mb-6 pb-6 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  Dodatkowe maszyny
-                </h3>
-                {JSON.parse(attributes.additionalMachines).map((machine: any, index: number) => (
-                  <div key={index} className="text-sm mb-2">
-                    <span className="font-medium text-gray-900">
-                      {machine.name}
-                    </span>{' '}
-                    -{' '}
-                    <span className="text-gray-600">
-                      {machine.total?.toFixed(2)} zł
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
 
           {/* Additional Services */}
           {attributes.additionalServices &&

@@ -247,23 +247,21 @@ export default function CheckoutPageComponent({
           />
 
           {/* Additional Machines Section */}
-          {availableMachines.length > 0 && (
-            <AdditionalMachinesSection
-              availableMachines={availableMachines}
-              selectedMachines={selectedAdditionalMachines}
-              daysCount={attributes.daysCount}
-              startDate={attributes.startDate}
-              endDate={attributes.endDate}
-              onAdd={(machine) => {
-                setSelectedAdditionalMachines([...selectedAdditionalMachines, { machine, quantity: 1 }]);
-              }}
-              onRemove={(machineId) => {
-                setSelectedAdditionalMachines(
-                  selectedAdditionalMachines.filter(m => m.machine.documentId !== machineId)
-                );
-              }}
-            />
-          )}
+          <AdditionalMachinesSection
+            availableMachines={availableMachines}
+            selectedMachines={selectedAdditionalMachines}
+            daysCount={attributes.daysCount}
+            startDate={attributes.startDate}
+            endDate={attributes.endDate}
+            onAdd={(machine) => {
+              setSelectedAdditionalMachines([...selectedAdditionalMachines, { machine, quantity: 1 }]);
+            }}
+            onRemove={(machineId) => {
+              setSelectedAdditionalMachines(
+                selectedAdditionalMachines.filter(m => m.machine.documentId !== machineId)
+              );
+            }}
+          />
 
           {/* Additional Services Section */}
           {additionalServices.length > 0 && (
