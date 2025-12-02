@@ -228,7 +228,7 @@ export default function BookingSummaryCard({
         <div className="flex justify-between text-sm gap-2 items-start">
           <div className="flex items-start gap-2 flex-1">
             <span className="text-gray-600">
-              Do zapłaty w ciągu 7 dni (zaliczka 50%):
+              Do zapłaty do {formatDate(attributes.paymentDeadline)} (zaliczka 50%):
             </span>
             <div className="relative group flex-shrink-0 mt-0.5">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500 cursor-help">
