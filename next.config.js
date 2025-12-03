@@ -5,6 +5,27 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  async rewrites() {
+    return [
+      // Polish URL aliases - serve English pages but keep Polish URLs
+      {
+        source: '/cennik',
+        destination: '/rate',
+      },
+      {
+        source: '/kontakt',
+        destination: '/contact',
+      },
+      {
+        source: '/flota',
+        destination: '/fleet',
+      },
+      {
+        source: '/flota/:slug',
+        destination: '/fleet/:slug',
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig
