@@ -40,7 +40,7 @@ export default function Navbar({ siteSettings, variant = 'transparent' }: Navbar
   )?.url || 'https://www.instagram.com/3FUN'
 
   const navClasses = variant === 'black'
-    ? "fixed top-0 left-0 right-0 z-50 bg-black shadow-md"
+    ? "fixed top-0 left-0 right-0 z-50 bg-black/80 shadow-md"
     : "absolute top-0 left-0 right-0 z-50"
 
   return (
