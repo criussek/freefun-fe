@@ -129,8 +129,19 @@ export default function Footer({ siteSettings }: FooterProps) {
             </div>
 
               {/* Copyright */}
-              <div className="mt-8 text-sm">
+              <div className="mt-8 text-sm space-y-1">
                 <p>© {currentYear} 3FUN</p>
+                <p>
+                  Stworzone przez:{' '}
+                  <a
+                    href="https://digital.bydefault.ovh"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:opacity-70 transition-opacity underline"
+                  >
+                    Digital by Default
+                  </a>
+                </p>
               </div>
             </div>
           </div>
