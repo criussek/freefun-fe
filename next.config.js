@@ -24,6 +24,18 @@ const nextConfig = {
         source: '/flota/:slug',
         destination: '/fleet/:slug',
       },
+      {
+        source: '/polityka-prywatnosci',
+        destination: '/privacy-policy',
+      },
+      {
+        source: '/polityka-cookies',
+        destination: '/cookies-policy',
+      },
+      {
+        source: '/regulamin-rezerwacji',
+        destination: '/terms-and-conditions',
+      },
     ]
   },
 }
