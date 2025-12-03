@@ -32,6 +32,7 @@ interface BookingEvent {
     phone: string
     email: string
     status: string
+    rentalType?: string
     machines: { name: string; documentId: string }[]
     pickupTime: string
     returnTime: string
@@ -95,14 +96,15 @@ export default function CalendarClient({ machines }: CalendarClientProps) {
     const machineNames = booking.machines?.map((m: any) => m.name).join(', ') || 'Brak pojazdu'
     const pickupTime = booking.pickupTime || '10:00'
     const returnTime = booking.returnTime || '18:00'
+    const isHourly = booking.rentalType === 'hourly'
 
     return {
       id: booking.documentId,
-      title: `${booking.bookingReference || '#' + booking.documentId.slice(0, 8)} - ${booking.customerName}`,
+      title: `${isHourly ? '⏱️ ' : ''}${booking.bookingReference || '#' + booking.documentId.slice(0, 8)} - ${booking.customerName}`,
       start: booking.startDate,
       end: booking.endDate,
-      backgroundColor: getColorByStatus(booking.bookingStatus),
-      borderColor: getColorByStatus(booking.bookingStatus),
+      backgroundColor: getColorByStatus(booking.bookingStatus, isHourly),
+      borderColor: getColorByStatus(booking.bookingStatus, isHourly),
       allDay: false,
       extendedProps: {
         bookingReference: booking.bookingReference,
@@ -110,6 +112,7 @@ export default function CalendarClient({ machines }: CalendarClientProps) {
         phone: booking.phone,
         email: booking.email,
         status: booking.bookingStatus,
+        rentalType: booking.rentalType,
         machines: booking.machines || [],
         pickupTime,
         returnTime,
@@ -118,12 +121,23 @@ export default function CalendarClient({ machines }: CalendarClientProps) {
     }
   }
 
-  function getColorByStatus(status: string) {
-    switch(status) {
-      case 'confirmed': return '#28a745'
-      case 'pending': return '#ffc107'
-      case 'cancelled': return '#dc3545'
-      default: return '#6c757d'
+  function getColorByStatus(status: string, isHourly: boolean = false) {
+    if (isHourly) {
+      // Different colors for hourly rentals
+      switch(status) {
+        case 'confirmed': return '#17a2b8' // cyan/teal
+        case 'pending': return '#fd7e14' // orange
+        case 'cancelled': return '#e83e8c' // pink
+        default: return '#6c757d'
+      }
+    } else {
+      // Standard rental colors
+      switch(status) {
+        case 'confirmed': return '#28a745' // green
+        case 'pending': return '#ffc107' // yellow
+        case 'cancelled': return '#dc3545' // red
+        default: return '#6c757d'
+      }
     }
   }
 
@@ -265,18 +279,42 @@ export default function CalendarClient({ machines }: CalendarClientProps) {
       {/* Legend */}
       <div className="bg-white rounded-lg shadow p-4">
         <h3 className="font-semibold text-gray-700 mb-3">Legenda statusów:</h3>
-        <div className="flex flex-wrap gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-yellow-500"></div>
-            <span className="text-sm">Oczekuje na wpłatę</span>
+        <div className="space-y-3">
+          {/* Standard rentals */}
+          <div>
+            <h4 className="text-xs font-medium text-gray-600 mb-2">Rezerwacje standardowe:</h4>
+            <div className="flex flex-wrap gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded bg-yellow-500"></div>
+                <span className="text-sm">Oczekuje na wpłatę</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded bg-green-500"></div>
+                <span className="text-sm">Potwierdzona</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded bg-red-500"></div>
+                <span className="text-sm">Anulowana</span>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-green-500"></div>
-            <span className="text-sm">Potwierdzona</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-red-500"></div>
-            <span className="text-sm">Anulowana</span>
+          {/* Hourly rentals */}
+          <div>
+            <h4 className="text-xs font-medium text-gray-600 mb-2">⏱️ Wynajem godzinowy:</h4>
+            <div className="flex flex-wrap gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded" style={{ backgroundColor: '#fd7e14' }}></div>
+                <span className="text-sm">Oczekuje</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded" style={{ backgroundColor: '#17a2b8' }}></div>
+                <span className="text-sm">Potwierdzona</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded" style={{ backgroundColor: '#e83e8c' }}></div>
+                <span className="text-sm">Anulowana</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
