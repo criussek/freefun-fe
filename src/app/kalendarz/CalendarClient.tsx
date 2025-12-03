@@ -138,15 +138,17 @@ export default function CalendarClient({ machines }: CalendarClientProps) {
 
   function handleEventClick(info: any) {
     const bookingId = info.event.id
+    const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL?.replace(/\/$/, '') || ''
     window.open(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}/admin/content-manager/collection-types/api::booking.booking/${bookingId}`,
+      `${strapiUrl}/admin/content-manager/collection-types/api::booking.booking/${bookingId}`,
       '_blank'
     )
   }
 
   function handleAddBooking() {
+    const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL?.replace(/\/$/, '') || ''
     window.open(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}/admin/content-manager/collection-types/api::booking.booking/create`,
+      `${strapiUrl}/admin/content-manager/collection-types/api::booking.booking/create`,
       '_blank'
     )
   }
