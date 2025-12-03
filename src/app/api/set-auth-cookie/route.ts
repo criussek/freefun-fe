@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 
+export const runtime = 'nodejs'
+
 export async function POST(request: Request) {
   try {
-    const { token } = await request.json()
+    const body = await request.json()
+    const { token } = body
 
     if (!token) {
       return NextResponse.json({ error: 'Token required' }, { status: 400 })
@@ -16,10 +19,15 @@ export async function POST(request: Request) {
       path: '/',
       sameSite: 'lax',
       httpOnly: false, // Need to be readable by client
+      secure: process.env.NODE_ENV === 'production', // HTTPS only in production
     })
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to set cookie' }, { status: 500 })
+    console.error('Set auth cookie error:', error)
+    return NextResponse.json({
+      error: 'Failed to set cookie',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 })
   }
 }

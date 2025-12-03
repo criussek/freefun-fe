@@ -16,6 +16,7 @@ export default function KalendarzLoginPage() {
     setError('')
 
     try {
+      // Step 1: Login with Strapi
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_STRAPI_URL}/admin/login`,
         {
@@ -25,11 +26,17 @@ export default function KalendarzLoginPage() {
         }
       )
 
-      const data = await res.json()
-
       if (!res.ok) {
-        throw new Error(data.error?.message || data.message?.[0]?.messages?.[0]?.message || 'Błąd logowania')
+        const contentType = res.headers.get('content-type')
+        if (contentType && contentType.includes('application/json')) {
+          const data = await res.json()
+          throw new Error(data.error?.message || data.message?.[0]?.messages?.[0]?.message || 'Błąd logowania')
+        } else {
+          throw new Error(`Błąd serwera: ${res.status}`)
+        }
       }
+
+      const data = await res.json()
 
       // Store token in cookie (7 days)
       const token = data.data?.token || data.token
@@ -38,7 +45,7 @@ export default function KalendarzLoginPage() {
         throw new Error('Nie otrzymano tokenu autoryzacji')
       }
 
-      // Set cookie via API route (server-side)
+      // Step 2: Set cookie via API route (server-side)
       const cookieRes = await fetch('/api/set-auth-cookie', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -46,12 +53,19 @@ export default function KalendarzLoginPage() {
       })
 
       if (!cookieRes.ok) {
-        throw new Error('Failed to set authentication cookie')
+        const contentType = cookieRes.headers.get('content-type')
+        if (contentType && contentType.includes('application/json')) {
+          const cookieData = await cookieRes.json()
+          throw new Error(cookieData.error || 'Nie udało się ustawić cookie')
+        } else {
+          throw new Error(`Błąd API: ${cookieRes.status}`)
+        }
       }
 
       // Redirect to calendar using full page reload to ensure cookie is sent
       window.location.href = '/kalendarz'
     } catch (err) {
+      console.error('Login error:', err)
       setError(err instanceof Error ? err.message : 'Błąd logowania')
     } finally {
       setLoading(false)
