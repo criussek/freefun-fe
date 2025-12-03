@@ -1,0 +1,48 @@
+/* Custom theme overrides */
+:root {
+  --fc-border-color: #e5e7eb;
+  --fc-button-bg-color: #253551;
+  --fc-button-border-color: #253551;
+  --fc-button-hover-bg-color: #1a2a3f;
+  --fc-button-hover-border-color: #1a2a3f;
+  --fc-button-active-bg-color: #1a2a3f;
+  --fc-button-active-border-color: #1a2a3f;
+  --fc-today-bg-color: rgba(37, 53, 81, 0.1);
+}
+
+.fc-event {
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 2px 4px;
+}
+
+.fc-event:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+  transition: all 0.2s;
+}
+
+.fc-event-title {
+  font-weight: 600;
+}
+
+.fc-daygrid-event {
+  white-space: normal !important;
+}
+
+.fc-timegrid-event {
+  overflow: hidden;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .fc-header-toolbar {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .fc-toolbar-chunk {
+    display: flex;
+    justify-content: center;
+  }
+}

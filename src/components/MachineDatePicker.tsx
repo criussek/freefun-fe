@@ -48,6 +48,8 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
   const [isLoadingDates, setIsLoadingDates] = useState(true)
   const [seasons, setSeasons] = useState<Season[]>([])
   const [isLoadingSeasons, setIsLoadingSeasons] = useState(true)
+  const [defaultPickupTime, setDefaultPickupTime] = useState('10:00')
+  const [defaultReturnTime, setDefaultReturnTime] = useState('18:00')
   const [formData, setFormData] = useState<FormData>({
     firstname: '',
     lastname: '',
@@ -104,6 +106,29 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
     }
 
     fetchSeasons()
+  }, [])
+
+  // Fetch site settings for default times
+  useEffect(() => {
+    const fetchSiteSettings = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/site-setting`
+        )
+
+        if (response.ok) {
+          const data = await response.json()
+          if (data.data) {
+            setDefaultPickupTime(data.data.defaultPickupTime || '10:00')
+            setDefaultReturnTime(data.data.defaultReturnTime || '18:00')
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching site settings:', error)
+      }
+    }
+
+    fetchSiteSettings()
   }, [])
 
   // Create machine object for season calculations
@@ -265,6 +290,8 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
             customerName: `${formData.firstname} ${formData.lastname}`,
             email: formData.email,
             phone: formData.phone,
+            pickupTime: defaultPickupTime,
+            returnTime: defaultReturnTime,
             createdFrom: 'web'
           }
         })

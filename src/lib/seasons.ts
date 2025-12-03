@@ -50,13 +50,22 @@ export function calculatePricePerDay(
 
 /**
  * Get date range between start and end dates (inclusive)
+ * Normalizes dates to midnight to count calendar days, not time differences
  */
 export function getDateRange(startDate: Date, endDate: Date): Date[] {
   const dates: Date[] = [];
-  const days = differenceInDays(endDate, startDate) + 1;
+
+  // Normalize to midnight to count calendar days, not time difference
+  const start = new Date(startDate);
+  start.setHours(0, 0, 0, 0);
+
+  const end = new Date(endDate);
+  end.setHours(0, 0, 0, 0);
+
+  const days = differenceInDays(end, start) + 1;
 
   for (let i = 0; i < days; i++) {
-    dates.push(addDays(startDate, i));
+    dates.push(addDays(start, i));
   }
 
   return dates;

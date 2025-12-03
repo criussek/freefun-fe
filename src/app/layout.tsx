@@ -1,11 +1,10 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
 import { fetchStrapiOrNull } from '@/lib/strapi'
 import { StrapiSingle } from '@/types/strapi'
 import { fromStrapiSiteSettings } from '@/lib/adapters/site-setting'
 import { POP_SITE_SETTINGS } from '@/lib/populate'
+import LayoutWrapper from './LayoutWrapper'
 
 export const metadata: Metadata = {
   title: '3FUN - Premium Campervan Rentals',
@@ -36,9 +35,9 @@ export default async function RootLayout({
         />
       </head>
       <body>
-        <Navbar siteSettings={siteSettings} />
-        {children}
-        <Footer siteSettings={siteSettings} />
+        <LayoutWrapper siteSettings={siteSettings}>
+          {children}
+        </LayoutWrapper>
       </body>
     </html>
   )
