@@ -45,22 +45,11 @@ export default function KalendarzLoginPage() {
         throw new Error('Nie otrzymano tokenu autoryzacji')
       }
 
-      // Step 2: Set cookie via API route (server-side)
-      const cookieRes = await fetch('/api/set-auth-cookie', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token })
-      })
-
-      if (!cookieRes.ok) {
-        const contentType = cookieRes.headers.get('content-type')
-        if (contentType && contentType.includes('application/json')) {
-          const cookieData = await cookieRes.json()
-          throw new Error(cookieData.error || 'Nie udało się ustawić cookie')
-        } else {
-          throw new Error(`Błąd API: ${cookieRes.status}`)
-        }
-      }
+      // Step 2: Set cookie client-side
+      // Set cookie with 7 days expiration
+      const maxAge = 7 * 24 * 60 * 60 // 7 days in seconds
+      const secure = window.location.protocol === 'https:' ? '; Secure' : ''
+      document.cookie = `jwtToken=${token}; path=/; max-age=${maxAge}; SameSite=Lax${secure}`
 
       // Redirect to calendar using full page reload to ensure cookie is sent
       window.location.href = '/kalendarz'

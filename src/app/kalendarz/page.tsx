@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers'
 import CalendarClient from './CalendarClient'
+import LogoutButton from './LogoutButton'
 
 export default async function KalendarzPage() {
   // Get token from cookies (middleware already verified it)
@@ -36,14 +37,7 @@ export default async function KalendarzPage() {
               Panel admin →
             </a>
           </div>
-          <form action="/api/logout" method="POST">
-            <button
-              type="submit"
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded transition-colors"
-            >
-              Wyloguj
-            </button>
-          </form>
+          <LogoutButton />
         </div>
       </header>
 
