@@ -1,21 +1,23 @@
-import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
+import { NextRequest, NextResponse } from 'next/server'
 
-export const runtime = 'nodejs'
-
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    // Clear the jwtToken cookie
-    const cookieStore = await cookies()
-    cookieStore.delete('jwtToken')
-
-    // Redirect to login page using request URL origin
+    // Redirect to login page
     const url = new URL('/kalendarz/login', request.url)
-    return NextResponse.redirect(url)
+    const response = NextResponse.redirect(url)
+
+    // Clear the jwtToken cookie
+    response.cookies.delete('jwtToken')
+
+    return response
   } catch (error) {
     console.error('Logout error:', error)
     // Even if there's an error, redirect to login
     const url = new URL('/kalendarz/login', request.url)
     return NextResponse.redirect(url)
   }
+}
+
+export async function GET() {
+  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
 }
