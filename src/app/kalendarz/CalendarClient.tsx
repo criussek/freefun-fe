@@ -16,7 +16,6 @@ interface Machine {
 
 interface CalendarClientProps {
   machines: Machine[]
-  token: string | undefined // Admin token for auth check only
 }
 
 interface BookingEvent {
@@ -40,7 +39,7 @@ interface BookingEvent {
   }
 }
 
-export default function CalendarClient({ machines, token }: CalendarClientProps) {
+export default function CalendarClient({ machines }: CalendarClientProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const machineId = searchParams.get('machine') || ''
@@ -71,7 +70,7 @@ export default function CalendarClient({ machines, token }: CalendarClientProps)
 
         if (res.status === 401 || res.status === 403) {
           // Session expired - clear cookie and redirect to login
-          document.cookie = 'jwtToken=; path=/; max-age=0'
+          document.cookie = 'jwt=; path=/; max-age=0'
           window.location.href = '/kalendarz/login'
           return
         }
@@ -89,7 +88,7 @@ export default function CalendarClient({ machines, token }: CalendarClientProps)
     }
 
     fetchBookings()
-  }, [machineId, token])
+  }, [machineId])
 
   // Transform Strapi booking to FullCalendar event
   function transformBookingToEvent(booking: any): BookingEvent {

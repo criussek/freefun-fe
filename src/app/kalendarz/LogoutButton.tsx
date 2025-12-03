@@ -2,8 +2,8 @@
 
 export default function LogoutButton() {
   const handleLogout = () => {
-    // Clear the jwtToken cookie
-    document.cookie = 'jwtToken=; path=/; max-age=0'
+    // Clear the JWT cookie
+    document.cookie = 'jwt=; path=/; max-age=0'
     // Redirect to login page
     window.location.href = '/kalendarz/login'
   }

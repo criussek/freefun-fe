@@ -1,14 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 
 export default function KalendarzLoginPage() {
   const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
@@ -16,42 +14,34 @@ export default function KalendarzLoginPage() {
     setError('')
 
     try {
-      // Step 1: Login with Strapi using custom API endpoint
+      // Login using Strapi's Users & Permissions plugin
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/calendar-auth/login`,
+        `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/auth/local`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: identifier, password })
+          body: JSON.stringify({ identifier, password })
         }
       )
 
       if (!res.ok) {
-        const contentType = res.headers.get('content-type')
-        if (contentType && contentType.includes('application/json')) {
-          const data = await res.json()
-          throw new Error(data.error?.message || data.message?.[0]?.messages?.[0]?.message || 'Błąd logowania')
-        } else {
-          throw new Error(`Błąd serwera: ${res.status}`)
-        }
+        const data = await res.json()
+        throw new Error(data.error?.message || 'Nieprawidłowe dane logowania')
       }
 
       const data = await res.json()
-
-      // Store token in cookie (7 days)
-      const token = data.data?.token || data.token
+      const token = data.jwt
 
       if (!token) {
         throw new Error('Nie otrzymano tokenu autoryzacji')
       }
 
-      // Step 2: Set cookie client-side
-      // Set cookie with 7 days expiration
+      // Set cookie with JWT token
       const maxAge = 7 * 24 * 60 * 60 // 7 days in seconds
       const secure = window.location.protocol === 'https:' ? '; Secure' : ''
-      document.cookie = `jwtToken=${token}; path=/; max-age=${maxAge}; SameSite=Lax${secure}`
+      document.cookie = `jwt=${token}; path=/; max-age=${maxAge}; SameSite=Lax${secure}`
 
-      // Redirect to calendar using full page reload to ensure cookie is sent
+      // Redirect to calendar
       window.location.href = '/kalendarz'
     } catch (err) {
       console.error('Login error:', err)

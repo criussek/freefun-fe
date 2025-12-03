@@ -3,11 +3,7 @@ import CalendarClient from './CalendarClient'
 import LogoutButton from './LogoutButton'
 
 export default async function KalendarzPage() {
-  // Get token from cookies (middleware already verified it)
-  const cookieStore = await cookies()
-  const token = cookieStore.get('jwtToken')?.value
-
-  // Fetch machines list server-side using API token (not admin JWT)
+  // Fetch machines list server-side using API token
   const machinesRes = await fetch(
     `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/machines?filters[isActive]=true&fields[0]=name&fields[1]=documentId`,
     {
@@ -43,7 +39,7 @@ export default async function KalendarzPage() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <CalendarClient machines={machines} token={token} />
+        <CalendarClient machines={machines} />
       </main>
     </div>
   )

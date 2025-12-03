@@ -12,17 +12,16 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Get Strapi JWT token from cookies
-  const strapiToken = request.cookies.get('jwtToken')?.value
+  // Get JWT token from Users & Permissions
+  const jwt = request.cookies.get('jwt')?.value
 
-  if (!strapiToken) {
-    // No token - redirect to our login page
+  if (!jwt) {
+    // No token - redirect to login page
     return NextResponse.redirect(new URL('/kalendarz/login', request.url))
   }
 
   // Token exists - allow access
-  // The token was already verified during login by our custom endpoint
-  // We trust it since it was generated with the admin secret
+  // The token was verified during login via /api/auth/local
   return NextResponse.next()
 }
 
