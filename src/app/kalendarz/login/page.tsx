@@ -16,9 +16,9 @@ export default function KalendarzLoginPage() {
     setError('')
 
     try {
-      // Step 1: Login with Strapi
+      // Step 1: Login with Strapi using custom API endpoint
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_URL}/admin/login`,
+        `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/calendar-auth/login`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
