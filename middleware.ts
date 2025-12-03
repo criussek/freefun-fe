@@ -22,8 +22,9 @@ export async function middleware(request: NextRequest) {
 
   try {
     // Verify token with Strapi admin endpoint
+    const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL?.replace(/\/$/, '') || ''
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}/admin/users/me`,
+      `${strapiUrl}/admin/users/me`,
       {
         headers: {
           Authorization: `Bearer ${strapiToken}`,
