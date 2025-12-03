@@ -116,12 +116,6 @@ export default function Navbar({ siteSettings, variant = 'transparent' }: Navbar
                 {item.label}
               </Link>
             ))}
-            <Link
-              href="/contact"
-              className="bg-white text-black tracking-wider px-10 py-5 font-bold hover:bg-opacity-80 transition-all"
-            >
-              Rezerwuj
-            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -182,15 +176,6 @@ export default function Navbar({ siteSettings, variant = 'transparent' }: Navbar
                 {item.label}
               </Link>
             ))}
-
-            {/* Book Now Button */}
-            <Link
-              href="/contact"
-              className="block mt-8 bg-white text-black px-8 py-4 text-center font-bold hover:bg-opacity-90 transition-all"
-              onClick={() => setIsOpen(false)}
-            >
-              Rezerwuj
-            </Link>
           </div>
         </div>
       )}
