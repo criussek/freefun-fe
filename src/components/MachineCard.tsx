@@ -1,15 +1,23 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Machine } from '@/types/domain'
+import { Season, getLowestPricePerDay } from '@/lib/seasons'
 
 interface MachineCardProps {
   machine: Machine
+  seasons?: Season[]
 }
 
-export default function MachineCard({ machine }: MachineCardProps) {
+export default function MachineCard({ machine, seasons = [] }: MachineCardProps) {
   const specifications = machine.specification?.slice(0, 5) || []
-  const price = machine.basepriceperday
-    ? `Od ${machine.basepriceperday} zł dziennie`
+
+  // Calculate the lowest possible price considering all seasons
+  const lowestPrice = machine.basepriceperday
+    ? getLowestPricePerDay(machine.basepriceperday, seasons)
+    : null
+
+  const price = lowestPrice
+    ? `Od ${lowestPrice} zł dziennie`
     : ''
 
   return (

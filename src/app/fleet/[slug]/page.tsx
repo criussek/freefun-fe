@@ -1,11 +1,13 @@
 import { fetchStrapiOrNull } from '@/lib/strapi'
 import { StrapiList } from '@/types/strapi'
 import { fromStrapiMachine } from '@/lib/adapters/machine'
+import { fromStrapiSeason } from '@/lib/adapters/season'
 import { POP_MACHINES } from '@/lib/populate'
 import { notFound } from 'next/navigation'
 import PageHero from '@/components/walden/PageHero'
 import MachineGallery from '@/components/MachineGallery'
 import MachineDatePicker from '@/components/MachineDatePicker'
+import { getLowestPricePerDay } from '@/lib/seasons'
 
 interface MachinePageProps {
   params: Promise<{
@@ -57,6 +59,20 @@ export default async function MachinePage({ params }: MachinePageProps) {
 
   // Get documentId from raw Strapi data
   const machineId = (rawMachine as any).documentId
+
+  // Fetch seasons
+  const seasonsRes = await fetchStrapiOrNull<StrapiList<any>>('/api/seasons', {
+    revalidate: 3600,
+  })
+
+  const seasons = Array.isArray(seasonsRes?.data)
+    ? seasonsRes.data.map(fromStrapiSeason).filter(Boolean)
+    : []
+
+  // Calculate the lowest possible price
+  const lowestPrice = machine.basepriceperday
+    ? getLowestPricePerDay(machine.basepriceperday, seasons)
+    : machine.basepriceperday
 
   return (
     <main className="min-h-screen bg-white">
@@ -170,10 +186,10 @@ export default async function MachinePage({ params }: MachinePageProps) {
                 <span className="font-medium">Typ:</span>
                 <span>{machine.type}</span>
               </div>
-              {machine.basepriceperday && (
+              {lowestPrice && (
                 <div className="flex items-center gap-2">
                   <span className="font-medium">Od</span>
-                  <span className="font-bold text-[#253551]">{machine.basepriceperday} zł dziennie</span>
+                  <span className="font-bold text-[#253551]">{lowestPrice} zł dziennie</span>
                 </div>
               )}
             </div>

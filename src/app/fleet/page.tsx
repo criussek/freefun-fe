@@ -2,6 +2,7 @@ import { fetchStrapiOrNull } from '@/lib/strapi'
 import { StrapiList, StrapiSingle } from '@/types/strapi'
 import { fromStrapiMachine } from '@/lib/adapters/machine'
 import { fromStrapiFleetPage } from '@/lib/adapters/fleet-page'
+import { fromStrapiSeason } from '@/lib/adapters/season'
 import { POP_MACHINES, POP_FLEET_PAGE } from '@/lib/populate'
 import PageHero from '@/components/walden/PageHero'
 import FleetSelector from '@/components/FleetSelector'
@@ -31,6 +32,15 @@ export default async function FleetPage() {
   })
 
   const fleetPage = fleetPageRes?.data ? fromStrapiFleetPage(fleetPageRes.data) : undefined
+
+  // Fetch seasons
+  const seasonsRes = await fetchStrapiOrNull<StrapiList<any>>('/api/seasons', {
+    revalidate: 3600,
+  })
+
+  const seasons = Array.isArray(seasonsRes?.data)
+    ? seasonsRes.data.map(fromStrapiSeason).filter(Boolean)
+    : []
 
   return (
     <main className="min-h-screen bg-white">
@@ -70,6 +80,7 @@ export default async function FleetPage() {
             funDescription={fleetPage?.funDescription}
             freeMachines={freeMachines}
             funMachines={funMachines}
+            seasons={seasons}
           />
         </div>
       </section>

@@ -174,3 +174,24 @@ export function getMinimumEndDate(
   // Subtract 1 because the range is inclusive (start date + minDays - 1)
   return addDays(startDate, minDays - 1);
 }
+
+/**
+ * Calculate the lowest possible price per day for a machine
+ * considering all seasons (returns base price if no seasons or lowest multiplied price)
+ */
+export function getLowestPricePerDay(
+  basePricePerDay: number,
+  seasons: Season[]
+): number {
+  if (!seasons || seasons.length === 0) {
+    return basePricePerDay;
+  }
+
+  // Find the lowest price multiplier
+  const lowestMultiplier = Math.min(
+    ...seasons.map(season => season.priceMultiplier),
+    1 // Include 1 for periods outside of seasons
+  );
+
+  return Math.round(basePricePerDay * lowestMultiplier * 100) / 100;
+}

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Machine } from '@/types/domain'
+import { Season } from '@/lib/seasons'
 import MachineCard from './MachineCard'
 
 interface FleetSelectorProps {
@@ -13,6 +14,7 @@ interface FleetSelectorProps {
   funDescription?: string
   freeMachines: Machine[]
   funMachines: Machine[]
+  seasons: Season[]
 }
 
 type Selection = 'free' | 'fun' | null
@@ -25,7 +27,8 @@ export default function FleetSelector({
   funHeader,
   funDescription,
   freeMachines,
-  funMachines
+  funMachines,
+  seasons
 }: FleetSelectorProps) {
   const [selected, setSelected] = useState<Selection>(null)
 
@@ -122,7 +125,7 @@ export default function FleetSelector({
       {machines.length > 0 ? (
         <div className="flex flex-col gap-[114px]">
           {machines.map((machine, index) => (
-            <MachineCard key={machine.slug || index} machine={machine} />
+            <MachineCard key={machine.slug || index} machine={machine} seasons={seasons} />
           ))}
         </div>
       ) : (
