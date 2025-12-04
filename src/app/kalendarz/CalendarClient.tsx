@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -44,6 +44,7 @@ export default function CalendarClient({ machines }: CalendarClientProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const machineId = searchParams.get('machine') || ''
+  const calendarRef = useRef<FullCalendar>(null)
 
   const [events, setEvents] = useState<BookingEvent[]>([])
   const [loading, setLoading] = useState(true)
@@ -182,6 +183,22 @@ export default function CalendarClient({ machines }: CalendarClientProps) {
     )
   }
 
+  // Handle clicking on a day in month view - navigate to that day's view
+  function handleDateClick(arg: any) {
+    const calendarApi = calendarRef.current?.getApi()
+    if (calendarApi) {
+      calendarApi.changeView('timeGridDay', arg.date)
+    }
+  }
+
+  // Handle clicking on day headers in week view - navigate to that day
+  function handleNavLinkDayClick(date: Date) {
+    const calendarApi = calendarRef.current?.getApi()
+    if (calendarApi) {
+      calendarApi.changeView('timeGridDay', date)
+    }
+  }
+
   if (error) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -239,6 +256,7 @@ export default function CalendarClient({ machines }: CalendarClientProps) {
       {!loading && (
         <div className="bg-white rounded-lg shadow p-4">
           <FullCalendar
+            ref={calendarRef}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
             headerToolbar={{
@@ -255,6 +273,9 @@ export default function CalendarClient({ machines }: CalendarClientProps) {
             events={events}
             eventClick={handleEventClick}
             eventContent={renderEventContent}
+            dateClick={handleDateClick}
+            navLinks={true}
+            navLinkDayClick={handleNavLinkDayClick}
             locale={plLocale}
             firstDay={1}
             height="auto"
