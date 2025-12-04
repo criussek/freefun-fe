@@ -107,6 +107,24 @@ export const POP_CONTACT_PAGE = {
   },
 };
 
+export const POP_PARKING_PAGE = {
+  fields: ['pageTitle', 'pageDescription', 'pageOverview'],
+  populate: {
+    pageImage: {
+      fields: ['url', 'alternativeText'],
+    },
+  },
+};
+
+export const POP_PARTNERSHIP_PAGE = {
+  fields: ['pageTitle', 'pageDescription', 'pageOverview'],
+  populate: {
+    pageImage: {
+      fields: ['url', 'alternativeText'],
+    },
+  },
+};
+
 export const POP_HOME = {
   populate: {
     sections: {

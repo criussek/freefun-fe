@@ -166,3 +166,17 @@ export interface ContactPage {
   pageImage: string | null;
   pageOverview?: string;
 }
+
+export interface ParkingPage {
+  pageTitle?: string;
+  pageDescription?: string;
+  pageImage: string | null;
+  pageOverview?: string;
+}
+
+export interface PartnershipPage {
+  pageTitle?: string;
+  pageDescription?: string;
+  pageImage: string | null;
+  pageOverview?: string;
+}

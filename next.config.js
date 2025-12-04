@@ -36,6 +36,10 @@ const nextConfig = {
         source: '/regulamin-rezerwacji',
         destination: '/terms-and-conditions',
       },
+      {
+        source: '/wspolpraca',
+        destination: '/partnership',
+      },
     ]
   },
 }
