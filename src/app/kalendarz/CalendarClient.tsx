@@ -199,6 +199,22 @@ export default function CalendarClient({ machines }: CalendarClientProps) {
     }
   }
 
+  // Apply colors to events after they mount (especially for month view)
+  function handleEventDidMount(info: any) {
+    const { backgroundColor, borderColor } = info.event
+    if (backgroundColor) {
+      info.el.style.setProperty('background-color', backgroundColor, 'important')
+      // Also apply to any child elements that might override
+      const eventMain = info.el.querySelector('.fc-event-main')
+      if (eventMain) {
+        eventMain.style.setProperty('background-color', backgroundColor, 'important')
+      }
+    }
+    if (borderColor) {
+      info.el.style.setProperty('border-color', borderColor, 'important')
+    }
+  }
+
   if (error) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -273,6 +289,7 @@ export default function CalendarClient({ machines }: CalendarClientProps) {
             events={events}
             eventClick={handleEventClick}
             eventContent={renderEventContent}
+            eventDidMount={handleEventDidMount}
             dateClick={handleDateClick}
             navLinks={true}
             navLinkDayClick={handleNavLinkDayClick}

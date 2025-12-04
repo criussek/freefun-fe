@@ -39,6 +39,18 @@
   padding: 2px 4px;
 }
 
+/* Ensure text is readable on colored backgrounds */
+.fc-daygrid-event .fc-event-title,
+.fc-daygrid-event .fc-event-time,
+.fc-h-event .fc-event-main,
+.fc-h-event .fc-event-time {
+  color: white !important;
+}
+
+.fc-daygrid-event-harness {
+  margin-top: 1px;
+}
+
 .fc-timegrid-event {
   overflow: hidden;
 }
