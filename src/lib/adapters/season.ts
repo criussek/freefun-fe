@@ -10,5 +10,6 @@ export function fromStrapiSeason(strapiData: any): Season {
     endDate: attrs.endDate || new Date(),
     priceMultiplier: attrs.priceMultiplier || 1,
     minDays: attrs.minDays || 1,
+    machineTypes: attrs.machineTypes || [],
   }
 }

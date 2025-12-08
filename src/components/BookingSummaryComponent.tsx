@@ -176,30 +176,30 @@ export default function BookingSummaryComponent({
         )}
 
         {/* Booking Reference */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex items-center justify-between">
+        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
+          <div className="flex items-center justify-between gap-3">
             <div>
-              <h2 className="text-sm font-medium text-gray-600 mb-1">
+              <h2 className="text-xs sm:text-sm font-medium text-gray-600 mb-1">
                 Numer rezerwacji
               </h2>
-              <p className="text-2xl font-bold text-[#253551]">
+              <p className="text-lg sm:text-2xl font-bold text-[#253551]">
                 {attributes.bookingReference || booking.documentId}
               </p>
             </div>
             <div className="text-right">
-              <h2 className="text-sm font-medium text-gray-600 mb-1">Status</h2>
+              <h2 className="text-xs sm:text-sm font-medium text-gray-600 mb-1">Status</h2>
               {attributes.bookingStatus === 'confirmed' && (
-                <span className="inline-block px-4 py-2 bg-green-100 text-green-800 rounded-lg font-semibold">
+                <span className="inline-block px-2 py-1 sm:px-4 sm:py-2 bg-green-100 text-green-800 rounded-lg font-semibold text-xs sm:text-base">
                   ✅ Potwierdzona
                 </span>
               )}
               {attributes.bookingStatus === 'cancelled' && (
-                <span className="inline-block px-4 py-2 bg-red-100 text-red-800 rounded-lg font-semibold">
+                <span className="inline-block px-2 py-1 sm:px-4 sm:py-2 bg-red-100 text-red-800 rounded-lg font-semibold text-xs sm:text-base">
                   ❌ Anulowana
                 </span>
               )}
               {(!attributes.bookingStatus || attributes.bookingStatus === 'pending') && (
-                <span className="inline-block px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg font-semibold">
+                <span className="inline-block px-2 py-1 sm:px-4 sm:py-2 bg-yellow-100 text-yellow-800 rounded-lg font-semibold text-xs sm:text-base">
                   Oczekuje na wpłatę
                 </span>
               )}
@@ -241,12 +241,12 @@ export default function BookingSummaryComponent({
               </h3>
               <dl className="space-y-1 text-sm">
                 {bankName && (
-                  <div className="flex items-center">
-                    <dt className="font-medium text-gray-600 w-32">Nazwa banku:</dt>
-                    <dd className="text-gray-900 flex-1">{bankName}</dd>
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0">
+                    <dt className="font-medium text-gray-600 sm:w-32">Nazwa banku:</dt>
+                    <dd className="text-gray-900 flex-1 break-words">{bankName}</dd>
                     <button
                       onClick={() => handleCopy(bankName, 'bankName')}
-                      className="ml-2 p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors print:hidden"
+                      className="self-start sm:ml-2 p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors print:hidden"
                       title="Kopiuj nazwę banku"
                     >
                       {copiedField === 'bankName' ? (
@@ -261,12 +261,12 @@ export default function BookingSummaryComponent({
                     </button>
                   </div>
                 )}
-                <div className="flex items-center">
-                  <dt className="font-medium text-gray-600 w-32">Numer konta:</dt>
-                  <dd className="text-gray-900 flex-1">{bankNumber || '12 3456 7890 1234 5678 9012 3456'}</dd>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0">
+                  <dt className="font-medium text-gray-600 sm:w-32">Numer konta:</dt>
+                  <dd className="text-gray-900 flex-1 break-all">{bankNumber || '12 3456 7890 1234 5678 9012 3456'}</dd>
                   <button
                     onClick={() => handleCopy(bankNumber || '12 3456 7890 1234 5678 9012 3456', 'bankNumber')}
-                    className="ml-2 p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors print:hidden"
+                    className="self-start sm:ml-2 p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors print:hidden"
                     title="Kopiuj numer konta"
                   >
                     {copiedField === 'bankNumber' ? (
@@ -280,20 +280,20 @@ export default function BookingSummaryComponent({
                     )}
                   </button>
                 </div>
-                <div className="flex">
-                  <dt className="font-medium text-gray-600 w-32">Tytuł:</dt>
-                  <dd className="text-gray-900">
+                <div className="flex flex-col sm:flex-row gap-1 sm:gap-0">
+                  <dt className="font-medium text-gray-600 sm:w-32">Tytuł:</dt>
+                  <dd className="text-gray-900 break-words">
                     Rezerwacja {attributes.bookingReference || booking.documentId}
                   </dd>
                 </div>
-                <div className="flex">
-                  <dt className="font-medium text-gray-600 w-32">Kwota:</dt>
+                <div className="flex flex-col sm:flex-row gap-1 sm:gap-0">
+                  <dt className="font-medium text-gray-600 sm:w-32">Kwota:</dt>
                   <dd className="text-gray-900">
                     {depositAmount.toFixed(2)} zł
                   </dd>
                 </div>
-                <div className="flex">
-                  <dt className="font-medium text-gray-600 w-32">Odbiorca:</dt>
+                <div className="flex flex-col sm:flex-row gap-1 sm:gap-0">
+                  <dt className="font-medium text-gray-600 sm:w-32">Odbiorca:</dt>
                   <dd className="text-gray-900">Free & Fun Sp. z o.o.</dd>
                 </div>
               </dl>
@@ -551,9 +551,9 @@ export default function BookingSummaryComponent({
                         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                         <line x1="12" y1="17" x2="12.01" y2="17"></line>
                       </svg>
-                      <div className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                      <div className="absolute right-0 bottom-full mb-2 w-48 sm:w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
                         Ta opłata pokrywa przygotowanie i dezynfekcję jednostki przed każdym wynajmem.
-                        <div className="absolute left-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                        <div className="absolute right-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                       </div>
                     </div>
                   </dt>
@@ -592,9 +592,9 @@ export default function BookingSummaryComponent({
                       <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                       <line x1="12" y1="17" x2="12.01" y2="17"></line>
                     </svg>
-                    <div className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                    <div className="absolute right-0 bottom-full mb-2 w-48 sm:w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
                       Ta kwota musi być wpłacona przed tą datą, aby potwierdzić rezerwację. Jeśli nie zostanie wpłacona, rezerwacja zostanie usunięta.
-                      <div className="absolute left-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                      <div className="absolute right-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                     </div>
                   </div>
                 </dt>
@@ -633,9 +633,9 @@ export default function BookingSummaryComponent({
                         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                         <line x1="12" y1="17" x2="12.01" y2="17"></line>
                       </svg>
-                      <div className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                      <div className="absolute right-0 bottom-full mb-2 w-48 sm:w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
                         Kaucja zabezpieczająca pobierana z góry w celu pokrycia ewentualnych szkód podczas wynajmu. Jest w pełni zwracana po bezpiecznym zwrocie sprzętu.
-                        <div className="absolute left-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                        <div className="absolute right-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                       </div>
                     </div>
                   </dt>

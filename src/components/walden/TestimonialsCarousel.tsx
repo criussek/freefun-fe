@@ -77,9 +77,35 @@ export default function TestimonialsCarousel({ testimonials, hasHeader = false }
               <div style={{ fontSize: '1.2rem', lineHeight: '1.6', marginBottom: '1.5rem' }}>
                 <p>&quot;{testimonials[currentIndex].quote}&quot;</p>
               </div>
-              <h2 className="font-bold pb-10" style={{ fontSize: '2.2rem', lineHeight: '1.2' }}>
+              <h2 className="font-bold pb-4 lg:pb-10" style={{ fontSize: '2.2rem', lineHeight: '1.2' }}>
                 {testimonials[currentIndex].authorName}
               </h2>
+            </div>
+
+            {/* Mobile Arrows - Below Name (Outside transition) */}
+            <div className="lg:hidden flex justify-center gap-4 pb-6">
+              <button
+                onClick={prevTestimonial}
+                disabled={isTransitioning}
+                className="hover:opacity-70 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
+                aria-label="Previous"
+              >
+                <svg className="w-6 h-[14px]" viewBox="0 0 24 14" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7.87012 13L2.00021 7L7.87012 1" stroke="currentColor" strokeWidth="2" fill="none"/>
+                  <path d="M22.9653 7L3.03948 7" stroke="currentColor" strokeWidth="2" strokeLinecap="square" fill="none"/>
+                </svg>
+              </button>
+              <button
+                onClick={nextTestimonial}
+                disabled={isTransitioning}
+                className="hover:opacity-70 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
+                aria-label="Next"
+              >
+                <svg className="w-6 h-[14px]" viewBox="0 0 24 14" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16.1299 1L21.9998 7L16.1299 13" stroke="currentColor" strokeWidth="2" fill="none"/>
+                  <path d="M1.03472 7H20.9605" stroke="currentColor" strokeWidth="2" strokeLinecap="square" fill="none"/>
+                </svg>
+              </button>
             </div>
           </div>
 
@@ -95,32 +121,6 @@ export default function TestimonialsCarousel({ testimonials, hasHeader = false }
               <path d="M1.19088 9.16982H40.6755" stroke="currentColor" strokeWidth="2" fill="none"/>
             </svg>
           </button>
-
-          {/* Mobile Arrows */}
-          <div className="lg:hidden flex justify-center gap-4 mt-8">
-            <button
-              onClick={prevTestimonial}
-              disabled={isTransitioning}
-              className="hover:opacity-70 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label="Previous"
-            >
-              <svg className="w-6 h-[14px]" viewBox="0 0 24 14" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7.87012 13L2.00021 7L7.87012 1" stroke="currentColor" strokeWidth="2" fill="none"/>
-                <path d="M22.9653 7L3.03948 7" stroke="currentColor" strokeWidth="2" strokeLinecap="square" fill="none"/>
-              </svg>
-            </button>
-            <button
-              onClick={nextTestimonial}
-              disabled={isTransitioning}
-              className="hover:opacity-70 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label="Next"
-            >
-              <svg className="w-6 h-[14px]" viewBox="0 0 24 14" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16.1299 1L21.9998 7L16.1299 13" stroke="currentColor" strokeWidth="2" fill="none"/>
-                <path d="M1.03472 7H20.9605" stroke="currentColor" strokeWidth="2" strokeLinecap="square" fill="none"/>
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
     </section>

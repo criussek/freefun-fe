@@ -69,9 +69,9 @@ export default async function MachinePage({ params }: MachinePageProps) {
     ? seasonsRes.data.map(fromStrapiSeason).filter(Boolean)
     : []
 
-  // Calculate the lowest possible price
+  // Calculate the lowest possible price for this machine type
   const lowestPrice = machine.basepriceperday
-    ? getLowestPricePerDay(machine.basepriceperday, seasons)
+    ? getLowestPricePerDay(machine.basepriceperday, seasons, machine.type)
     : machine.basepriceperday
 
   return (

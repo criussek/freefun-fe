@@ -7,6 +7,7 @@ export interface Season {
   endDate: string | Date;
   priceMultiplier: number;
   minDays: number;
+  machineTypes?: string[]; // Optional: if empty, applies to all machine types
 }
 
 export interface Machine {
@@ -14,18 +15,40 @@ export interface Machine {
   name: string;
   basePricePerDay: number;
   minRentalDays?: number;
+  type?: string; // Machine type (e.g., 'camper', 'jet_ski', 'motocross', 'quad', 'other')
 }
 
 /**
- * Get applicable season for a specific date (or null if no season)
+ * Get applicable season for a specific date and machine type (or null if no season)
+ * If machineType is provided, only returns seasons that:
+ * 1. Have no machineTypes specified (applies to all), OR
+ * 2. Include the given machineType in their machineTypes array
  */
-export function getSeasonForDate(date: Date, seasons: Season[]): Season | null {
+export function getSeasonForDate(
+  date: Date,
+  seasons: Season[],
+  machineType?: string
+): Season | null {
   for (const season of seasons) {
     const seasonStart = new Date(season.startDate);
     const seasonEnd = new Date(season.endDate);
 
+    // Check if date is in range
     if (date >= seasonStart && date <= seasonEnd) {
-      return season;
+      // If season has no machineTypes specified, it applies to all machines
+      if (!season.machineTypes || season.machineTypes.length === 0) {
+        return season;
+      }
+
+      // If machineType is provided and season applies to that type
+      if (machineType && season.machineTypes.includes(machineType)) {
+        return season;
+      }
+
+      // If no machineType provided, return season (for backward compatibility)
+      if (!machineType) {
+        return season;
+      }
     }
   }
   return null;
@@ -33,13 +56,14 @@ export function getSeasonForDate(date: Date, seasons: Season[]): Season | null {
 
 /**
  * Calculate price per day for a machine on a specific date
+ * Takes into account machine type when finding applicable seasons
  */
 export function calculatePricePerDay(
   machine: Machine,
   date: Date,
   seasons: Season[]
 ): number {
-  const season = getSeasonForDate(date, seasons);
+  const season = getSeasonForDate(date, seasons, machine.type);
 
   if (!season) {
     return machine.basePricePerDay;
@@ -177,19 +201,39 @@ export function getMinimumEndDate(
 
 /**
  * Calculate the lowest possible price per day for a machine
- * considering all seasons (returns base price if no seasons or lowest multiplied price)
+ * considering all seasons that apply to the machine's type
+ * @param basePricePerDay - Base price per day for the machine
+ * @param seasons - All available seasons
+ * @param machineType - Machine type to filter applicable seasons
+ * @returns Lowest possible price per day
  */
 export function getLowestPricePerDay(
   basePricePerDay: number,
-  seasons: Season[]
+  seasons: Season[],
+  machineType?: string
 ): number {
   if (!seasons || seasons.length === 0) {
     return basePricePerDay;
   }
 
-  // Find the lowest price multiplier
+  // Filter seasons that apply to this machine type
+  const applicableSeasons = seasons.filter(season => {
+    // Season with no machineTypes applies to all
+    if (!season.machineTypes || season.machineTypes.length === 0) {
+      return true;
+    }
+    // Season with machineTypes only applies if machine type matches
+    return machineType && season.machineTypes.includes(machineType);
+  });
+
+  // If no applicable seasons, return base price
+  if (applicableSeasons.length === 0) {
+    return basePricePerDay;
+  }
+
+  // Find the lowest price multiplier among applicable seasons
   const lowestMultiplier = Math.min(
-    ...seasons.map(season => season.priceMultiplier),
+    ...applicableSeasons.map(season => season.priceMultiplier),
     1 // Include 1 for periods outside of seasons
   );
 

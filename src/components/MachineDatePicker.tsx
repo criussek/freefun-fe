@@ -50,6 +50,7 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
   const [isLoadingSeasons, setIsLoadingSeasons] = useState(true)
   const [defaultPickupTime, setDefaultPickupTime] = useState('10:00')
   const [defaultReturnTime, setDefaultReturnTime] = useState('18:00')
+  const [monthsShown, setMonthsShown] = useState(2)
   const [formData, setFormData] = useState<FormData>({
     firstname: '',
     lastname: '',
@@ -59,6 +60,17 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
   const [errors, setErrors] = useState<FormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+
+  // Update months shown based on screen size
+  useEffect(() => {
+    const updateMonthsShown = () => {
+      setMonthsShown(window.innerWidth < 768 ? 1 : 2)
+    }
+
+    updateMonthsShown()
+    window.addEventListener('resize', updateMonthsShown)
+    return () => window.removeEventListener('resize', updateMonthsShown)
+  }, [])
 
   // Fetch unavailable dates when component mounts
   useEffect(() => {
@@ -312,10 +324,10 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
   }
 
   return (
-    <div className="bg-gray-50 rounded-lg p-8">
-      <h2 className="text-2xl font-bold text-[#253551] mb-6">Wybierz daty rezerwacji:</h2>
+    <div className="bg-gray-50 rounded-lg p-4 md:p-8">
+      <h2 className="text-xl md:text-2xl font-bold text-[#253551] mb-4 md:mb-6">Wybierz daty rezerwacji:</h2>
 
-      <div className="bg-white rounded-lg p-6 shadow-sm">
+      <div className="bg-white rounded-lg p-4 md:p-6 shadow-sm">
         {/* Custom Header with Navigation */}
         <div className="flex items-center justify-between mb-4">
           <button
@@ -377,14 +389,14 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
               endDate={endDate}
               selectsRange
               inline
-              monthsShown={2}
+              monthsShown={monthsShown}
               minDate={new Date()}
               excludeDates={excludedDates}
               filterDate={filterDate}
               openToDate={currentMonth}
               calendarClassName="custom-calendar"
               locale="pl"
-              key={currentMonth.toISOString()}
+              key={`${currentMonth.toISOString()}-${monthsShown}`}
               dayClassName={(date) => {
                 // Check if this date is in the excluded dates
                 const isExcluded = excludedDates.some(
@@ -716,6 +728,20 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
         .react-datepicker__month-container:last-child {
           border-right: none;
           padding-right: 0;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+          .react-datepicker__month-container {
+            padding: 0;
+            border-right: none;
+          }
+
+          .react-datepicker__day-name,
+          .react-datepicker__day {
+            width: 2.25rem;
+            line-height: 2.25rem;
+          }
         }
 
         .react-datepicker__header {

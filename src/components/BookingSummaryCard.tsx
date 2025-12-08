@@ -227,9 +227,9 @@ export default function BookingSummaryCard({
                   <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                   <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
-                <div className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                <div className="absolute right-0 bottom-full mb-2 w-48 sm:w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
                   Ta opłata pokrywa przygotowanie i dezynfekcję jednostki przed każdym wynajmem.
-                  <div className="absolute left-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                  <div className="absolute right-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                 </div>
               </div>
             </div>
@@ -248,9 +248,9 @@ export default function BookingSummaryCard({
         </div>
 
         {/* Deposit (50% payment) */}
-        <div className="flex justify-between text-sm gap-2 items-start">
+        <div className="flex flex-col sm:flex-row sm:justify-between text-sm gap-2 sm:items-start">
           <div className="flex items-start gap-2 flex-1">
-            <span className="text-gray-600">
+            <span className="text-gray-600 break-words">
               Do zapłaty do {formatDate(attributes.paymentDeadline)} (zaliczka 50%):
             </span>
             <div className="relative group flex-shrink-0 mt-0.5">
@@ -259,13 +259,13 @@ export default function BookingSummaryCard({
                 <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                 <line x1="12" y1="17" x2="12.01" y2="17"></line>
               </svg>
-              <div className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+              <div className="absolute right-0 bottom-full mb-2 w-48 sm:w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
                 Ta kwota musi być wpłacona w ciągu 7 dni od złożenia rezerwacji, aby ją potwierdzić. Jeśli nie zostanie wpłacona, rezerwacja zostanie usunięta.
-                <div className="absolute left-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                <div className="absolute right-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
               </div>
             </div>
           </div>
-          <span className="font-semibold text-gray-900 whitespace-nowrap">
+          <span className="font-semibold text-gray-900">
             {deposit.toFixed(2)} zł
           </span>
         </div>
@@ -289,9 +289,9 @@ export default function BookingSummaryCard({
                   <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                   <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
-                <div className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                <div className="absolute right-0 bottom-full mb-2 w-48 sm:w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
                   Kaucja zabezpieczająca pobierana z góry w celu pokrycia ewentualnych szkód podczas wynajmu. Jest w pełni zwracana po bezpiecznym zwrocie sprzętu.
-                  <div className="absolute left-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                  <div className="absolute right-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                 </div>
               </div>
             </div>

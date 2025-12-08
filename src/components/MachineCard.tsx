@@ -11,9 +11,9 @@ interface MachineCardProps {
 export default function MachineCard({ machine, seasons = [] }: MachineCardProps) {
   const specifications = machine.specification?.slice(0, 5) || []
 
-  // Calculate the lowest possible price considering all seasons
+  // Calculate the lowest possible price considering all seasons applicable to this machine type
   const lowestPrice = machine.basepriceperday
-    ? getLowestPricePerDay(machine.basepriceperday, seasons)
+    ? getLowestPricePerDay(machine.basepriceperday, seasons, machine.type)
     : null
 
   const price = lowestPrice
