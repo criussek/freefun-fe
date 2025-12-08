@@ -68,9 +68,9 @@ export default function Navbar({ siteSettings, variant = 'transparent' }: Navbar
         </div>
 
         {/* Desktop Layout */}
-        <div className="hidden lg:flex items-start justify-between">
+        <div className="hidden lg:flex items-center justify-between">
           {/* Left Side - Social Icons and Phone (Desktop Only) */}
-          <div className="flex items-center space-x-6 flex-1 pt-4">
+          <div className="flex items-center space-x-6 flex-1">
             {/* Social Icons */}
             <div className="flex items-center space-x-4">
               <a
@@ -128,7 +128,7 @@ export default function Navbar({ siteSettings, variant = 'transparent' }: Navbar
           </div>
 
           {/* Right Side - Navigation Menu (Desktop Only) */}
-          <div className="flex items-center justify-end space-x-8 flex-1 pt-4">
+          <div className="flex items-center justify-end space-x-8 flex-1">
             {navigation.map((item) => (
               <Link
                 key={item.label}
