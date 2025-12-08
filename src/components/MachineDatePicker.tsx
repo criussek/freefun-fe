@@ -405,7 +405,7 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
                     excludedDate.getMonth() === date.getMonth() &&
                     excludedDate.getDate() === date.getDate()
                 )
-                return isExcluded ? 'booked-date' : null
+                return isExcluded ? 'booked-date' : ''
               }}
             />
           )}
