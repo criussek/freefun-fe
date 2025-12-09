@@ -1,23 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
-import sgMail from '@sendgrid/mail'
-
-// Initialize SendGrid
-const apiKey = process.env.SENDGRID_API_KEY
-if (apiKey) {
-  sgMail.setApiKey(apiKey)
-}
 
 export async function POST(request: NextRequest) {
   try {
-    // Check if SendGrid is configured
+    // Check if Sender.net is configured
+    const apiKey = process.env.SENDER_API_KEY
     if (!apiKey) {
       return NextResponse.json(
-        { error: 'SendGrid is not configured' },
+        { error: 'Sender.net is not configured' },
         { status: 500 }
       )
     }
 
     const contactEmail = process.env.CONTACT_EMAIL
+    const fromEmail = process.env.EMAIL_DEFAULT_FROM || 'services@3fun.pl'
+    const replyToEmail = process.env.EMAIL_DEFAULT_REPLYTO || fromEmail
+
     if (!contactEmail) {
       return NextResponse.json(
         { error: 'Contact email is not configured' },
@@ -46,10 +43,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Prepare email
-    const msg = {
-      to: contactEmail,
-      from: process.env.SENDGRID_FROM_EMAIL || contactEmail,
+    // Prepare email payload for Sender.net API (transactional email)
+    const emailPayload = {
+      from: {
+        email: fromEmail,
+        name: '3FUN - Formularz Kontaktowy'
+      },
+      to: {
+        email: contactEmail,
+        name: contactEmail.split('@')[0]
+      },
       subject: `Nowa wiadomość kontaktowa od ${firstname} ${lastname}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -66,6 +69,13 @@ export async function POST(request: NextRequest) {
             <h3 style="color: #253551;">Wiadomość:</h3>
             <p style="white-space: pre-wrap;">${description}</p>
           </div>
+
+          <hr style="margin: 30px 0; border: 0; height: 1px; background: #eee;">
+          <p style="color: #999; font-size: 12px; text-align: center;">
+            <strong>3FUN</strong><br>
+            Wynajem kamperów i pojazdów rekreacyjnych<br>
+            kontakt@3fun.pl
+          </p>
         </div>
       `,
       text: `
@@ -78,23 +88,35 @@ Email: ${email}
 
 Wiadomość:
 ${description}
-      `,
+      `
     }
 
-    // Send email
-    await sgMail.send(msg)
+    // Send email via Sender.net transactional API
+    const response = await fetch('https://api.sender.net/v2/message/send', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(emailPayload)
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      console.error('Sender.net API error:', response.status, errorData)
+      throw new Error(`Sender.net API returned ${response.status}`)
+    }
+
+    const result = await response.json()
+    console.log('Email sent successfully via Sender.net:', result)
 
     return NextResponse.json(
       { success: true, message: 'Email sent successfully' },
       { status: 200 }
     )
   } catch (error: any) {
-    console.error('SendGrid error:', error)
-
-    // Return more specific error if available
-    if (error.response) {
-      console.error('SendGrid response error:', error.response.body)
-    }
+    console.error('Sender.net error:', error)
 
     return NextResponse.json(
       { error: 'Failed to send email', details: error.message },
