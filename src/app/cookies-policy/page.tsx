@@ -4,7 +4,7 @@ export default function CookiesPolicyPage() {
       <section className="pt-[450px] pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold mb-2 text-forest">Polityka cookies</h1>
-          <p className="text-sm text-gray-600 mb-8">Ostatnia aktualizacja: 3 grudnia 2024 r.</p>
+          <p className="text-sm text-gray-600 mb-8">Ostatnia aktualizacja: 15 grudnia 2024 r.</p>
 
           {/* Section 1 */}
           <h2 className="text-xl font-semibold mb-3 text-forest">1. Czym są cookies i podobne technologie</h2>
@@ -53,8 +53,16 @@ export default function CookiesPolicyPage() {
 
           {/* Section 6 */}
           <h2 className="text-xl font-semibold mb-3 text-forest">6. Zmiany polityki cookies</h2>
-          <p className="text-gray-700 leading-relaxed">
+          <p className="text-gray-700 leading-relaxed mb-6">
             Polityka może być aktualizowana wraz ze zmianami technicznymi serwisu i integracji. O istotnych zmianach poinformujemy w serwisie.
+          </p>
+
+          {/* Contact */}
+          <h2 className="text-xl font-semibold mb-3 text-forest">7. Kontakt</h2>
+          <p className="text-gray-700 leading-relaxed">
+            MCJ KAROLINA KAMIŃSKA, Al. Krakowska 17, 05-090 Janki<br />
+            NIP: 5342428850, REGON: 369756858<br />
+            E-mail: kontakt@3fun.pl, tel. +48 780 780 160
           </p>
         </div>
       </section>

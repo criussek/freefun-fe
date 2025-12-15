@@ -4,13 +4,13 @@ export default function PrivacyPolicyPage() {
       <section className="pt-[450px] pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold mb-2 text-forest">Polityka prywatności</h1>
-          <p className="text-sm text-gray-600 mb-8">Ostatnia aktualizacja: 3 grudnia 2024 r.</p>
+          <p className="text-sm text-gray-600 mb-8">Ostatnia aktualizacja: 15 grudnia 2024 r.</p>
 
           {/* Administrator */}
           <h2 className="text-xl font-semibold mb-3 text-forest">1. Administrator danych</h2>
           <p className="text-gray-700 leading-relaxed mb-6">
-            Administratorem Twoich danych osobowych jest ..., z siedzibą pod adresem ..., NIP: ....
-            Kontakt: ..., tel. ....
+            Administratorem Twoich danych osobowych jest MCJ KAROLINA KAMIŃSKA, z siedzibą pod adresem Al. Krakowska 17, 05-090 Janki, NIP: 5342428850, REGON: 369756858.
+            Kontakt: kontakt@3fun.pl, tel. +48 780 780 160.
           </p>
 
           {/* Scope */}
@@ -80,7 +80,7 @@ export default function PrivacyPolicyPage() {
           {/* Contact */}
           <h2 className="text-xl font-semibold mb-3 text-forest">10. Kontakt w sprawach RODO</h2>
           <p className="text-gray-700 leading-relaxed mb-6">
-            E-mail: ..., adres korespondencyjny: .... Inspektor Ochrony Danych: ....
+            E-mail: kontakt@3fun.pl, tel. +48 780 780 160, adres korespondencyjny: Al. Krakowska 17, 05-090 Janki.
           </p>
 
           {/* Changes */}
