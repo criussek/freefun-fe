@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import Turnstile from '@marsidev/react-turnstile'
+import { Turnstile } from '@marsidev/react-turnstile'
 
 interface FormData {
   firstname: string
