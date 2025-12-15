@@ -34,41 +34,36 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Verify Turnstile token
-    if (!turnstileToken) {
-      return NextResponse.json(
-        { error: 'Bot verification required' },
-        { status: 400 }
-      )
-    }
-
+    // Verify Turnstile token only if Turnstile is configured
     const turnstileSecret = process.env.TURNSTILE_SECRET_KEY
-    if (!turnstileSecret) {
-      return NextResponse.json(
-        { error: 'Turnstile is not configured' },
-        { status: 500 }
-      )
-    }
+    if (turnstileSecret) {
+      if (!turnstileToken) {
+        return NextResponse.json(
+          { error: 'Bot verification required' },
+          { status: 400 }
+        )
+      }
 
-    // Verify the token with Cloudflare
-    const turnstileResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        secret: turnstileSecret,
-        response: turnstileToken,
-      }),
-    })
+      // Verify the token with Cloudflare
+      const turnstileResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          secret: turnstileSecret,
+          response: turnstileToken,
+        }),
+      })
 
-    const turnstileResult = await turnstileResponse.json()
+      const turnstileResult = await turnstileResponse.json()
 
-    if (!turnstileResult.success) {
-      return NextResponse.json(
-        { error: 'Bot verification failed' },
-        { status: 400 }
-      )
+      if (!turnstileResult.success) {
+        return NextResponse.json(
+          { error: 'Bot verification failed' },
+          { status: 400 }
+        )
+      }
     }
 
     // Validate email format

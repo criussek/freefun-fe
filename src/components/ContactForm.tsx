@@ -106,8 +106,8 @@ export default function ContactForm() {
       return
     }
 
-    // Check Turnstile token
-    if (!turnstileToken) {
+    // Check Turnstile token only if Turnstile is enabled
+    if (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && !turnstileToken) {
       setStatus('error')
       setErrorMessage('Proszę zweryfikować, że nie jesteś robotem')
       return
@@ -284,19 +284,21 @@ export default function ContactForm() {
       </div>
 
       {/* Cloudflare Turnstile */}
-      <div className="flex justify-center">
-        <Turnstile
-          ref={turnstileRef}
-          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''}
-          onSuccess={(token) => setTurnstileToken(token)}
-          onError={() => {
-            setTurnstileToken('')
-            setStatus('error')
-            setErrorMessage('Weryfikacja nie powiodła się. Spróbuj ponownie.')
-          }}
-          onExpire={() => setTurnstileToken('')}
-        />
-      </div>
+      {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
+        <div className="flex justify-center">
+          <Turnstile
+            ref={turnstileRef}
+            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+            onSuccess={(token) => setTurnstileToken(token)}
+            onError={() => {
+              setTurnstileToken('')
+              setStatus('error')
+              setErrorMessage('Weryfikacja nie powiodła się. Spróbuj ponownie.')
+            }}
+            onExpire={() => setTurnstileToken('')}
+          />
+        </div>
+      )}
 
       {/* Status Messages */}
       {status === 'sending' && (
