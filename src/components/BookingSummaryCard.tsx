@@ -54,6 +54,10 @@ export default function BookingSummaryCard({
     return format(new Date(dateString), 'd MMMM yyyy', { locale: pl });
   };
 
+  const formatDateTime = (dateString: string) => {
+    return format(new Date(dateString), 'dd.MM.yyyy HH:mm', { locale: pl });
+  };
+
   // Helper to calculate season-aware price for a machine
   const calculateMachinePrice = (machine: any): number => {
     const machineAttrs = machine.attributes || machine;
@@ -251,7 +255,7 @@ export default function BookingSummaryCard({
         <div className="flex flex-col sm:flex-row sm:justify-between text-sm gap-2 sm:items-start">
           <div className="flex items-start gap-2 flex-1">
             <span className="text-gray-600 break-words">
-              Do zapłaty do {formatDate(attributes.paymentDeadline)} (zaliczka 50%):
+              Do zapłaty do {formatDateTime(attributes.paymentDeadline)} (zaliczka 50%):
             </span>
             <div className="relative group flex-shrink-0 mt-0.5">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500 cursor-help">
@@ -260,7 +264,7 @@ export default function BookingSummaryCard({
                 <line x1="12" y1="17" x2="12.01" y2="17"></line>
               </svg>
               <div className="absolute right-0 bottom-full mb-2 w-48 sm:w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                Ta kwota musi być wpłacona w ciągu 7 dni od złożenia rezerwacji, aby ją potwierdzić. Jeśli nie zostanie wpłacona, rezerwacja zostanie usunięta.
+                Ta kwota musi być wpłacona w ciągu 24 godzin od złożenia rezerwacji, aby ją potwierdzić. Jeśli nie zostanie wpłacona, rezerwacja zostanie usunięta.
                 <div className="absolute right-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
               </div>
             </div>

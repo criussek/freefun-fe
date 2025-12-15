@@ -74,8 +74,8 @@ export default function TermsSection({
         </h3>
         <ul className="text-sm text-blue-800 space-y-1">
           <li>• Rezerwacja wymaga wpłaty zaliczki w wysokości 50% wartości</li>
-          <li>• Wpłatę należy dokonać w ciągu 7 dni</li>
-          <li>• Możesz anulować rezerwację bez opłat do 14 dni przed odbiorem</li>
+          <li>• Wpłatę zaliczki 50% należy dokonać w ciągu 24 godzin</li>
+          <li>• Kaucja zwrotna płatna jest przy odbiorze pojazdu</li>
           <li>• Pozostała kwota płatna jest przy odbiorze pojazdu</li>
         </ul>
       </div>

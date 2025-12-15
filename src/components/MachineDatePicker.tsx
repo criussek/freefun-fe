@@ -277,9 +277,9 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
   // Get minimum days required for validation message
   const minDaysRequired = startDate ? getMinimumDaysRequired(startDate, seasons, [machine]) : 1
 
-  // Calculate payment due date (today + 7 days)
+  // Calculate payment due date (today + 24 hours)
   const paymentDueDate = new Date()
-  paymentDueDate.setDate(paymentDueDate.getDate() + 7)
+  paymentDueDate.setDate(paymentDueDate.getDate() + 1)
 
   // Handle booking submission
   const handleSubmit = async () => {
@@ -509,7 +509,7 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
                 <div className="mt-4 pt-4 border-t border-gray-200">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
-                      <span className="text-gray-700">Do zapłaty do {paymentDueDate.toLocaleDateString('pl-PL', { day: 'numeric', month: 'long' })} (zaliczka 50%)</span>
+                      <span className="text-gray-700">Do zapłaty do {paymentDueDate.toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' }).split('.').join('.')} {paymentDueDate.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })} (zaliczka 50%)</span>
                       <div className="relative group">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"

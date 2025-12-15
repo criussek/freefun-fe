@@ -46,7 +46,7 @@ export default function BookingSummaryComponent({
   };
 
   const formatDateTime = (dateString: string) => {
-    return format(new Date(dateString), 'd MMMM yyyy, HH:mm', { locale: pl });
+    return format(new Date(dateString), 'dd.MM.yyyy HH:mm', { locale: pl });
   };
 
   const handlePrint = () => {
@@ -230,7 +230,7 @@ export default function BookingSummaryComponent({
           <p className="mb-4 text-yellow-900">
             Aby potwierdzić rezerwację, wpłać zaliczkę w wysokości{' '}
             <strong className="text-lg">{depositAmount.toFixed(2)} zł</strong>{' '}
-            w ciągu 7 dni (do {formatDate(attributes.paymentDeadline)}).
+            w ciągu 24 godzin (do {formatDateTime(attributes.paymentDeadline)}).
           </p>
 
           <div className="space-y-4">
@@ -314,7 +314,7 @@ export default function BookingSummaryComponent({
 
           <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded text-sm text-red-800">
             <strong>⚠️ Ważne:</strong> Jeśli nie otrzymamy wpłaty do{' '}
-            {formatDate(attributes.paymentDeadline)}, rezerwacja zostanie automatycznie anulowana.
+            {formatDateTime(attributes.paymentDeadline)}, rezerwacja zostanie automatycznie anulowana.
           </div>
 
           {/* Refundable Deposit Info */}
@@ -574,7 +574,7 @@ export default function BookingSummaryComponent({
               {/* Deposit (50%) */}
               <div className="flex justify-between">
                 <dt className="flex items-center gap-2 text-gray-600">
-                  <span>Do zapłaty do {formatDate(attributes.paymentDeadline)} (zaliczka 50%):</span>
+                  <span>Do zapłaty do {formatDateTime(attributes.paymentDeadline)} (zaliczka 50%):</span>
                   <div className="relative group">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -653,19 +653,27 @@ export default function BookingSummaryComponent({
           <h2 className="text-xl font-semibold text-[#253551] mb-3">
             Polityka anulowania
           </h2>
-          <p className="text-sm text-gray-700">
-            Możesz anulować rezerwację bez opłat do 14 dni przed datą odbioru. W
-            przypadku anulowania w okresie krótszym niż 14 dni, wpłacona zaliczka nie
-            podlega zwrotowi.
+          <p className="text-sm text-gray-700 mb-3">
+            Możesz odstąpić od rezerwacji w każdym czasie składając pisemne oświadczenie. W przypadku anulowania rezerwacji obowiązują następujące opłaty:
           </p>
-          <p className="text-sm text-gray-700 mt-2">
-            <a
-              href="/polityka-anulowania"
-              className="text-[#253551] underline hover:text-[#1a2840]"
-            >
-              Zobacz pełną politykę anulowania
-            </a>
-          </p>
+          <ul className="space-y-2 text-sm text-gray-700">
+            <li className="flex items-start">
+              <span className="text-green-600 mr-2 font-bold">•</span>
+              <span><strong>61 dni lub wcześniej przed odbiorem:</strong> zatrzymujemy 25% zaliczki (zwrot 75%)</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-yellow-600 mr-2 font-bold">•</span>
+              <span><strong>60-31 dni przed odbiorem:</strong> zatrzymujemy 50% zaliczki (zwrot 50%)</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-orange-600 mr-2 font-bold">•</span>
+              <span><strong>30-8 dni przed odbiorem:</strong> zatrzymujemy 100% zaliczki (brak zwrotu)</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-red-600 mr-2 font-bold">•</span>
+              <span><strong>Mniej niż 8 dni przed odbiorem:</strong> należy zapłacić 100% opłaty za najem (dodatkowo pozostałe 50%)</span>
+            </li>
+          </ul>
         </div>
 
         {/* Actions */}
