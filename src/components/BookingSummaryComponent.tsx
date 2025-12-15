@@ -711,10 +711,10 @@ export default function BookingSummaryComponent({
           <p className="mt-1">
             📧 Email:{' '}
             <a
-              href={`mailto:${contactEmail || 'kontakt@freeandfun.pl'}`}
+              href={`mailto:${contactEmail || 'kontakt@3fun.pl'}`}
               className="text-[#253551] underline"
             >
-              {contactEmail || 'kontakt@freeandfun.pl'}
+              {contactEmail || 'kontakt@3fun.pl'}
             </a>
             {' | '}
             📞 Telefon: {contactPhone || '+48 123 456 789'}
