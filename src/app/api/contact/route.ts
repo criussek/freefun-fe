@@ -24,12 +24,49 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json()
-    const { firstname, lastname, phone, email, description } = body
+    const { firstname, lastname, phone, email, description, turnstileToken } = body
 
     // Validate required fields
     if (!firstname || !lastname || !phone || !email || !description) {
       return NextResponse.json(
         { error: 'All fields are required' },
+        { status: 400 }
+      )
+    }
+
+    // Verify Turnstile token
+    if (!turnstileToken) {
+      return NextResponse.json(
+        { error: 'Bot verification required' },
+        { status: 400 }
+      )
+    }
+
+    const turnstileSecret = process.env.TURNSTILE_SECRET_KEY
+    if (!turnstileSecret) {
+      return NextResponse.json(
+        { error: 'Turnstile is not configured' },
+        { status: 500 }
+      )
+    }
+
+    // Verify the token with Cloudflare
+    const turnstileResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        secret: turnstileSecret,
+        response: turnstileToken,
+      }),
+    })
+
+    const turnstileResult = await turnstileResponse.json()
+
+    if (!turnstileResult.success) {
+      return NextResponse.json(
+        { error: 'Bot verification failed' },
         { status: 400 }
       )
     }

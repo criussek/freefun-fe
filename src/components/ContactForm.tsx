@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import Turnstile from '@marsidev/react-turnstile'
 
 interface FormData {
   firstname: string
@@ -32,6 +33,8 @@ export default function ContactForm() {
   const [errors, setErrors] = useState<FormErrors>({})
   const [status, setStatus] = useState<FormStatus>('idle')
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const [turnstileToken, setTurnstileToken] = useState<string>('')
+  const turnstileRef = useRef<any>(null)
 
   // Real-time validation
   const validateField = (name: keyof FormData, value: string): string | undefined => {
@@ -103,6 +106,13 @@ export default function ContactForm() {
       return
     }
 
+    // Check Turnstile token
+    if (!turnstileToken) {
+      setStatus('error')
+      setErrorMessage('Proszę zweryfikować, że nie jesteś robotem')
+      return
+    }
+
     setStatus('sending')
     setErrorMessage('')
 
@@ -112,7 +122,10 @@ export default function ContactForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          turnstileToken,
+        }),
       })
 
       const data = await response.json()
@@ -128,13 +141,28 @@ export default function ContactForm() {
           description: '',
         })
         setErrors({})
+        setTurnstileToken('')
+        // Reset Turnstile widget
+        if (turnstileRef.current) {
+          turnstileRef.current.reset()
+        }
       } else {
         setStatus('error')
         setErrorMessage(data.error || 'Nie udało się wysłać wiadomości')
+        // Reset Turnstile on error
+        setTurnstileToken('')
+        if (turnstileRef.current) {
+          turnstileRef.current.reset()
+        }
       }
     } catch (error) {
       setStatus('error')
       setErrorMessage('Wystąpił błąd podczas wysyłania wiadomości')
+      // Reset Turnstile on error
+      setTurnstileToken('')
+      if (turnstileRef.current) {
+        turnstileRef.current.reset()
+      }
     }
   }
 
@@ -253,6 +281,21 @@ export default function ContactForm() {
         {errors.description && (
           <p className="mt-1 text-sm text-red-600">{errors.description}</p>
         )}
+      </div>
+
+      {/* Cloudflare Turnstile */}
+      <div className="flex justify-center">
+        <Turnstile
+          ref={turnstileRef}
+          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''}
+          onSuccess={(token) => setTurnstileToken(token)}
+          onError={() => {
+            setTurnstileToken('')
+            setStatus('error')
+            setErrorMessage('Weryfikacja nie powiodła się. Spróbuj ponownie.')
+          }}
+          onExpire={() => setTurnstileToken('')}
+        />
       </div>
 
       {/* Status Messages */}
