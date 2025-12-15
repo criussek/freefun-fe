@@ -4,7 +4,7 @@ export default function PrivacyPolicyPage() {
       <section className="pt-[450px] pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold mb-2 text-forest">Polityka prywatności</h1>
-          <p className="text-sm text-gray-600 mb-8">Ostatnia aktualizacja: 15 grudnia 2024 r.</p>
+          <p className="text-sm text-gray-600 mb-8">Ostatnia aktualizacja: 15 grudnia 2025 r.</p>
 
           {/* Administrator */}
           <h2 className="text-xl font-semibold mb-3 text-forest">1. Administrator danych</h2>
