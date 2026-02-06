@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { FeaturedCampers } from '@/types/domain'
 import MachinesCarousel from './MachinesCarousel'
+import Text from '@/components/Text'
 
 interface FeaturedCampersSectionProps {
   featuredCampers: FeaturedCampers
@@ -25,9 +26,9 @@ export default function FeaturedCampersSection({ featuredCampers }: FeaturedCamp
             <h2 className="mb-12 font-medium text-white">{sectionTitle}</h2>
             {sectionDescription && (
               <>
-                <p className="text-xl text-white max-w-3xl mx-auto tracking-wide text-base/7 mb-8">
+                <Text className="text-xl text-white max-w-3xl mx-auto tracking-wide text-base/7 mb-8">
                   {sectionDescription}
-                </p>
+                </Text>
                 <hr className="max-w-md mx-auto border-0 h-[2px] bg-gradient-to-r from-transparent via-white to-transparent opacity-50" />
               </>
             )}

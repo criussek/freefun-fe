@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Machine } from '@/types/domain'
 import { Season, getLowestPricePerDay } from '@/lib/seasons'
+import Text from '@/components/Text'
 
 interface MachineCardProps {
   machine: Machine
@@ -34,7 +35,7 @@ export default function MachineCard({ machine, seasons = [] }: MachineCardProps)
             {/* Overview */}
             {machine.fleetOverview && (
               <div className="text-[18px] font-light leading-[28.8px] text-gray-700" style={{ fontFamily: 'Poppins' }}>
-                <p>{machine.fleetOverview}</p>
+                <Text>{machine.fleetOverview}</Text>
               </div>
             )}
 

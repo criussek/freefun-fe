@@ -4,6 +4,7 @@ import { X } from 'lucide-react';
 import { useEffect } from 'react';
 import MachineGallery from './MachineGallery';
 import { mediaURL } from '@/lib/images';
+import Text from '@/components/Text';
 
 interface MachineDetailsModalProps {
   machine: any;
@@ -86,9 +87,9 @@ export default function MachineDetailsModal({ machine, isOpen, onClose }: Machin
             {/* Fleet Overview */}
             {machineAttrs.fleetOverview && (
               <div className="mb-8">
-                <p className="text-lg text-gray-700 leading-relaxed">
+                <Text className="text-lg text-gray-700 leading-relaxed">
                   {machineAttrs.fleetOverview}
-                </p>
+                </Text>
               </div>
             )}
 

@@ -1,5 +1,7 @@
 'use client';
 
+import Text from '@/components/Text';
+
 interface AdditionalService {
   id: number;
   itemHeader: string;
@@ -69,9 +71,9 @@ export default function AdditionalServicesSection({
                       <h3 className="font-semibold text-gray-900 mb-1 text-base">
                         {service.itemHeader}
                       </h3>
-                      <p className="text-sm text-gray-600 mb-2">
+                      <Text className="text-sm text-gray-600 mb-2">
                         {service.itemDescription}
-                      </p>
+                      </Text>
                     </div>
 
                     {/* Price */}

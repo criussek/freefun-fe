@@ -4,6 +4,7 @@ import { fromStrapiTestimonial } from '@/lib/adapters/testimonial'
 import { POP_TESTIMONIALS } from '@/lib/populate'
 import { Testimonial } from '@/types/domain'
 import TestimonialsCarousel from './TestimonialsCarousel'
+import Text from '@/components/Text'
 
 interface TestimonialsSectionProps {
   testimonials?: Testimonial[]
@@ -44,9 +45,9 @@ export default async function TestimonialsSection({
             <h2 className="mb-12 font-medium">{sectionTitle}</h2>
             {sectionDescription && (
               <>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide text-base/7 mb-8">
+                <Text className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide text-base/7 mb-8">
                   {sectionDescription}
-                </p>
+                </Text>
                 <hr className="max-w-md mx-auto border-0 h-[2px] bg-gradient-to-r from-transparent via-gray-400 to-transparent opacity-50" />
               </>
             )}

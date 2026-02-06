@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { BookNow } from '@/types/domain'
+import Text from '@/components/Text'
 
 interface BookNowSectionProps {
   bookNow: BookNow
@@ -34,9 +35,9 @@ export default function BookNowSection({ bookNow }: BookNowSectionProps) {
             <h2 className="mb-12 font-medium text-white">{sectionTitle}</h2>
             {sectionDescription && (
               <>
-                <p className="text-xl text-white max-w-3xl mx-auto tracking-wide text-base/7 mb-8">
+                <Text className="text-xl text-white max-w-3xl mx-auto tracking-wide text-base/7 mb-8">
                   {sectionDescription}
-                </p>
+                </Text>
                 <hr className="max-w-md mx-auto border-0 h-[2px] bg-gradient-to-r from-transparent via-white to-transparent opacity-50" />
               </>
             )}

@@ -8,6 +8,7 @@ import PageHero from '@/components/walden/PageHero'
 import MachineGallery from '@/components/MachineGallery'
 import MachineDatePicker from '@/components/MachineDatePicker'
 import { getLowestPricePerDay } from '@/lib/seasons'
+import Text from '@/components/Text'
 
 interface MachinePageProps {
   params: Promise<{
@@ -198,14 +199,14 @@ export default async function MachinePage({ params }: MachinePageProps) {
           {/* Fleet Overview */}
           {machine.fleetOverview && (
             <div className="mb-12">
-              <p className="text-lg text-gray-700" style={{
+              <Text className="text-lg text-gray-700" style={{
                 fontFamily: 'Poppins',
                 fontSize: '18px',
                 fontWeight: 300,
                 lineHeight: '28.8px'
               }}>
                 {machine.fleetOverview}
-              </p>
+              </Text>
             </div>
           )}
 

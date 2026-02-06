@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Machine } from '@/types/domain'
+import Text from '@/components/Text'
 
 interface MachinesCarouselProps {
   machines: Machine[]
@@ -91,7 +92,7 @@ export default function MachinesCarousel({ machines }: MachinesCarouselProps) {
                     {machine.name}
                   </h2>
                   <div className="text-base mb-[8%] max-w-[100%] mx-auto">
-                    <p>{machine.overview}</p>
+                    <Text>{machine.overview}</Text>
                   </div>
                   <div className="max-w-[100%] mx-auto mb-4 lg:mb-0">
                     <Link

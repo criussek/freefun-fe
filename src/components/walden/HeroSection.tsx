@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Hero, WhyChooseUs, FeaturedCampers } from '@/types/domain'
 import WhyChooseUsSection from '@/components/walden/WhyChooseUsSection'
 import FeaturedCampersSection from '@/components/walden/FeaturedCampersSection'
+import Text from '@/components/Text'
 
 interface HeroSectionProps {
   hero?: Hero;
@@ -73,7 +74,7 @@ export default function HeroSection({
               <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8 text-center">
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">{hero?.freeHeader || 'FREE'}</h2>
                 {hero?.freeDescription && (
-                  <p className="text-lg md:text-xl lg:text-2xl max-w-md">{hero.freeDescription}</p>
+                  <Text className="text-lg md:text-xl lg:text-2xl max-w-md">{hero.freeDescription}</Text>
                 )}
               </div>
             </div>
@@ -97,7 +98,7 @@ export default function HeroSection({
               <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8 text-center">
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">{hero?.funHeader || 'FUN'}</h2>
                 {hero?.funDescription && (
-                  <p className="text-lg md:text-xl lg:text-2xl max-w-md">{hero.funDescription}</p>
+                  <Text className="text-lg md:text-xl lg:text-2xl max-w-md">{hero.funDescription}</Text>
                 )}
               </div>
             </div>
@@ -116,9 +117,9 @@ export default function HeroSection({
                     {sectionTitleFree && <h2 className="mb-12 font-medium">{sectionTitleFree}</h2>}
                     {sectionDescriptionFree && (
                       <>
-                        <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide text-base/7 mb-8">
+                        <Text className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide text-base/7 mb-8">
                           {sectionDescriptionFree}
-                        </p>
+                        </Text>
                         <hr className="max-w-md mx-auto border-0 h-[2px] bg-gradient-to-r from-transparent via-gray-400 to-transparent opacity-50" />
                       </>
                     )}
@@ -129,9 +130,9 @@ export default function HeroSection({
                     {sectionTitleFun && <h2 className="mb-12 font-medium">{sectionTitleFun}</h2>}
                     {sectionDescriptionFun && (
                       <>
-                        <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide text-base/7 mb-8">
+                        <Text className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide text-base/7 mb-8">
                           {sectionDescriptionFun}
-                        </p>
+                        </Text>
                         <hr className="max-w-md mx-auto border-0 h-[2px] bg-gradient-to-r from-transparent via-gray-400 to-transparent opacity-50" />
                       </>
                     )}

@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import Text from '@/components/Text'
 
 interface Testimonial {
   quote: string;
@@ -75,7 +76,7 @@ export default function TestimonialsCarousel({ testimonials, hasHeader = false }
               }`}
             >
               <div style={{ fontSize: '1.2rem', lineHeight: '1.6', marginBottom: '1.5rem' }}>
-                <p>&quot;{testimonials[currentIndex].quote}&quot;</p>
+                <Text>&quot;{testimonials[currentIndex].quote}&quot;</Text>
               </div>
               <h2 className="font-bold pb-4 lg:pb-10" style={{ fontSize: '2.2rem', lineHeight: '1.2' }}>
                 {testimonials[currentIndex].authorName}

@@ -1,4 +1,5 @@
 import bgHero from '@/media/bg-hero.png'
+import Text from '@/components/Text'
 
 interface PageHeroProps {
   title: string
@@ -26,9 +27,9 @@ export default function PageHero({ title, description, backgroundImage }: PageHe
             {title}
           </h1>
           {description && (
-            <p className="text-xl md:text-xl font-semibold opacity-85">
+            <Text className="text-xl md:text-xl font-semibold opacity-85">
               {description}
-            </p>
+            </Text>
           )}
         </div>
       </div>

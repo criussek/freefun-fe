@@ -1,5 +1,6 @@
 import { Mail, Phone, MapPin } from 'lucide-react'
 import { SiteSettings } from '@/types/domain'
+import Text from '@/components/Text'
 
 interface ContactInfoSidebarProps {
   siteSettings?: SiteSettings
@@ -56,7 +57,7 @@ export default function ContactInfoSidebar({ siteSettings }: ContactInfoSidebarP
           </div>
           <div>
             <h3 className="text-lg font-bold text-[#253551] mb-1">Adres</h3>
-            <p className="text-gray-700 text-sm">{contactAddress}</p>
+            <Text className="text-gray-700 text-sm">{contactAddress}</Text>
           </div>
         </div>
       </div>
