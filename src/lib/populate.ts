@@ -116,6 +116,10 @@ export const POP_PARKING_PAGE = {
   },
 };
 
+export const POP_TERMS_AND_CONDITIONS_PAGE = {
+  fields: ['pageTitle', 'pageDescription', 'pageOverview'],
+};
+
 export const POP_PARTNERSHIP_PAGE = {
   fields: ['pageTitle', 'pageDescription', 'pageOverview'],
   populate: {

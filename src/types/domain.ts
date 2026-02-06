@@ -174,6 +174,13 @@ export interface ParkingPage {
   pageOverview?: string;
 }
 
+export interface TermsAndConditionsPage {
+  pageTitle?: string;
+  pageDescription?: string;
+  pageImage: string | null;
+  pageOverview?: string;
+}
+
 export interface PartnershipPage {
   pageTitle?: string;
   pageDescription?: string;
