@@ -52,6 +52,7 @@ export function fromStrapiMachine(e: StrapiEntity<any>): Machine {
     type: a.type ?? 'other',
     overview: a.overview ?? '',
     fleetOverview: a.fleetOverview ?? undefined,
+    description: a.description ?? undefined,
     cardPhoto: mediaURL(a.cardPhoto) ?? null,
     specification,
     basepriceperday: a.basePricePerDay ? Number(a.basePricePerDay) : undefined,

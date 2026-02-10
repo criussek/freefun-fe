@@ -44,6 +44,7 @@ export interface Machine {
   type: 'camper' | 'jet_ski' | 'motocross' | 'quad' | 'other';
   overview: string;
   fleetOverview?: string;
+  description?: string;
   cardPhoto: string | null;
   specification?: string[];
   basepriceperday?: number;

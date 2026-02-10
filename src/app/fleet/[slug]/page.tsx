@@ -9,6 +9,9 @@ import MachineGallery from '@/components/MachineGallery'
 import MachineDatePicker from '@/components/MachineDatePicker'
 import { getLowestPricePerDay } from '@/lib/seasons'
 import Text from '@/components/Text'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import rehypeRaw from 'rehype-raw'
 
 interface MachinePageProps {
   params: Promise<{
@@ -196,17 +199,17 @@ export default async function MachinePage({ params }: MachinePageProps) {
             </div>
           </header>
 
-          {/* Fleet Overview */}
-          {machine.fleetOverview && (
+          {/* Description (rich text) */}
+          {machine.description && (
             <div className="mb-12">
-              <Text className="text-lg text-gray-700" style={{
-                fontFamily: 'Poppins',
-                fontSize: '18px',
-                fontWeight: 300,
-                lineHeight: '28.8px'
-              }}>
-                {machine.fleetOverview}
-              </Text>
+              <div className="prose prose-lg max-w-none text-gray-700">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  rehypePlugins={[rehypeRaw]}
+                >
+                  {machine.description}
+                </ReactMarkdown>
+              </div>
             </div>
           )}
 
