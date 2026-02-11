@@ -27,7 +27,7 @@ export async function generateStaticParams() {
     revalidate: 3600,
   })
 
-  const machines = Array.isArray(machinesRes?.data) ? machinesRes.data : []
+  const machines = Array.isArray(machinesRes?.data) ? machinesRes!.data : []
 
   return machines.map((machine: any) => ({
     slug: machine.attributes?.slug || machine.slug,
@@ -51,7 +51,7 @@ export default async function MachinePage({ params }: MachinePageProps) {
   })
 
   const machines = Array.isArray(machinesRes?.data)
-    ? machinesRes.data.map(fromStrapiMachine).filter(Boolean)
+    ? machinesRes!.data.map(fromStrapiMachine).filter(Boolean)
     : []
 
   const machine = machines[0]
@@ -70,7 +70,7 @@ export default async function MachinePage({ params }: MachinePageProps) {
   })
 
   const seasons = Array.isArray(seasonsRes?.data)
-    ? seasonsRes.data.map(fromStrapiSeason).filter(Boolean)
+    ? seasonsRes!.data.map(fromStrapiSeason).filter(Boolean)
     : []
 
   // Calculate the lowest possible price for this machine type
@@ -82,7 +82,7 @@ export default async function MachinePage({ params }: MachinePageProps) {
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
       <PageHero
-        title={machine.heroName || `Poznaj "${machine.name}"`}
+        title={machine.heroName || machine.name}
         description={machine.heroDescription || machine.fleetOverview || machine.overview || ''}
         backgroundImage={machine.cardPhoto}
       />
