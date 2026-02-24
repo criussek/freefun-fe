@@ -61,7 +61,6 @@ export default function CheckoutPageComponent({
   );
   const [pickupTime, setPickupTime] = useState(defaultPickupTime);
   const [returnTime, setReturnTime] = useState(defaultReturnTime);
-  const [specialInstructions, setSpecialInstructions] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -211,7 +210,7 @@ export default function CheckoutPageComponent({
             pickupLocation: pickupAddress,
             pickupTime,
             returnTime,
-            specialInstructions,
+            specialInstructions: '',
             agreedToTerms,
             agreedToCancellation: agreedToTerms
           })
@@ -304,10 +303,6 @@ export default function CheckoutPageComponent({
             pickupAddress={pickupAddress}
             pickupTime={pickupTime}
             returnTime={returnTime}
-            onPickupTimeChange={setPickupTime}
-            onReturnTimeChange={setReturnTime}
-            specialInstructions={specialInstructions}
-            onInstructionsChange={setSpecialInstructions}
           />
 
           {/* Terms Section */}
