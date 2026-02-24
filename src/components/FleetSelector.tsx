@@ -125,7 +125,12 @@ export default function FleetSelector({
       {machines.length > 0 ? (
         <div className="flex flex-col gap-[114px]">
           {machines.map((machine, index) => (
-            <MachineCard key={machine.slug || index} machine={machine} seasons={seasons} />
+            <div key={machine.slug || index}>
+              <MachineCard machine={machine} seasons={seasons} />
+              {index < machines.length - 1 && (
+                <hr className="mt-[114px] border-0 h-[2px] bg-gradient-to-r from-transparent via-gray-400 to-transparent opacity-50" />
+              )}
+            </div>
           ))}
         </div>
       ) : (

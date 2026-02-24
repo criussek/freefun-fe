@@ -32,6 +32,23 @@ export default function MachineCard({ machine, seasons = [] }: MachineCardProps)
               Poznaj &ldquo;{machine.name}&rdquo;
             </h2>
 
+            {/* Mobile-only image - shown right below the title */}
+            <div className="block lg:hidden relative w-full h-[300px] overflow-hidden">
+              {machine.cardPhoto ? (
+                <Image
+                  src={machine.cardPhoto}
+                  alt={machine.name}
+                  fill
+                  className="object-cover"
+                  sizes="100vw"
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                  <p className="text-gray-500 text-lg">Brak zdjęcia</p>
+                </div>
+              )}
+            </div>
+
             {/* Overview */}
             {machine.fleetOverview && (
               <div className="text-[18px] font-light leading-[28.8px] text-gray-700" style={{ fontFamily: 'Poppins' }}>
