@@ -415,19 +415,7 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
 
                 return ''
               }}
-              renderDayContents={(day, date) => {
-                if (!date) return <span>{day}</span>
-                const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-                if (returnDates[dateStr]) {
-                  return (
-                    <span className="return-date-inner">
-                      <span className="return-date-triangle" />
-                      <span className="return-date-number">{day}</span>
-                    </span>
-                  )
-                }
-                return <span>{day}</span>
-              }}
+              renderDayContents={(day) => <span>{day}</span>}
             />
           )}
         </div>
