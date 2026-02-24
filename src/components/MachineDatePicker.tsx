@@ -46,6 +46,7 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
   const [endDate, setEndDate] = useState<Date | null>(null)
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [excludedDates, setExcludedDates] = useState<Date[]>([])
+  const [returnDates, setReturnDates] = useState<Record<string, string>>({})
   const [isLoadingDates, setIsLoadingDates] = useState(true)
   const [seasons, setSeasons] = useState<Season[]>([])
   const [isLoadingSeasons, setIsLoadingSeasons] = useState(true)
@@ -87,6 +88,7 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
           // Convert date strings to Date objects
           const dates = data.unavailableDates.map((dateStr: string) => new Date(dateStr))
           setExcludedDates(dates)
+          setReturnDates(data.returnDates || {})
         }
       } catch (error) {
         console.error('Error fetching unavailable dates:', error)
@@ -400,14 +402,31 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
               locale="pl"
               key={`${currentMonth.toISOString()}-${monthsShown}`}
               dayClassName={(date) => {
-                // Check if this date is in the excluded dates
                 const isExcluded = excludedDates.some(
                   (excludedDate) =>
                     excludedDate.getFullYear() === date.getFullYear() &&
                     excludedDate.getMonth() === date.getMonth() &&
                     excludedDate.getDate() === date.getDate()
                 )
-                return isExcluded ? 'booked-date' : ''
+                if (isExcluded) return 'booked-date'
+
+                const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+                if (returnDates[dateStr]) return 'return-date'
+
+                return ''
+              }}
+              renderDayContents={(day, date) => {
+                if (!date) return <span>{day}</span>
+                const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+                if (returnDates[dateStr]) {
+                  return (
+                    <span className="return-date-inner">
+                      <span className="return-date-triangle" />
+                      <span className="return-date-number">{day}</span>
+                    </span>
+                  )
+                }
+                return <span>{day}</span>
               }}
             />
           )}
