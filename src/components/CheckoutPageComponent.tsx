@@ -53,7 +53,7 @@ export default function CheckoutPageComponent({
 
   // Initialize state
   const [guests, setGuests] = useState<Guest[]>([
-    { fullName: attributes.customerName, age: 0 }
+    { fullName: attributes.customerName, age: 26 }
   ]);
   const [selectedAdditionalMachines, setSelectedAdditionalMachines] = useState<AdditionalMachine[]>([]);
   const [services, setServices] = useState<AdditionalService[]>(
@@ -257,7 +257,7 @@ export default function CheckoutPageComponent({
           {/* Guest Details Section */}
           <GuestDetailsSection
             guests={guests}
-            onAddGuest={() => setGuests([...guests, { fullName: '', age: 0 }])}
+            onAddGuest={() => setGuests([...guests, { fullName: '', age: 26 }])}
             onRemoveGuest={(index) => setGuests(guests.filter((_, i) => i !== index))}
             onUpdateGuest={(index, field, value) => {
               const updated = [...guests];
