@@ -96,7 +96,7 @@ export default function MachineCard({ machine, seasons = [] }: MachineCardProps)
         </div>
 
         {/* Right Side - Image */}
-        <div className="lg:w-[65%]">
+        <div className="hidden lg:block lg:w-[65%]">
           <div className="relative w-full h-[520px] lg:h-[780px] overflow-hidden">
             {machine.cardPhoto ? (
               <Image
