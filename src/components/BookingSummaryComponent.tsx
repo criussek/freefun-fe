@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
@@ -294,7 +294,7 @@ export default function BookingSummaryComponent({
                 </div>
                 <div className="flex flex-col sm:flex-row gap-1 sm:gap-0">
                   <dt className="font-medium text-gray-600 sm:w-32">Odbiorca:</dt>
-                  <dd className="text-gray-900">Free & Fun Sp. z o.o.</dd>
+                  <dd className="text-gray-900">MCJ KAROLINA KAMIŃSKA</dd>
                 </div>
               </dl>
             </div>
@@ -307,8 +307,7 @@ export default function BookingSummaryComponent({
               <p className="text-sm text-gray-700">
                 Odwiedź nasze biuro:<br />
                 {pickupAddress || 'ul. Przykładowa 123, 80-000 Gdańsk'}<br />
-                Pon-Pt: 9:00-17:00, Sob: 10:00-14:00
-              </p>
+                              </p>
             </div>
           </div>
 

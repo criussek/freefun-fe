@@ -69,9 +69,9 @@ export default function GuestDetailsSection({
                   type="number"
                   min="0"
                   max="120"
-                  value={guest.age}
-                  onChange={(e) => onUpdateGuest(index, 'age', parseInt(e.target.value) || 0)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#253551] focus:border-transparent"
+                  value={guest.age === 0 ? '' : guest.age}
+                  onChange={(e) => onUpdateGuest(index, 'age', e.target.value === '' ? 0 : parseInt(e.target.value) || 0)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#253551] focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
               </div>
 

@@ -58,8 +58,6 @@ export default function CheckoutPageComponent({
     { fullName: attributes.customerName, age: 18, isDriver: false }
   ]);
   const [primaryDriverName, setPrimaryDriverName] = useState('');
-  const [driverLicense, setDriverLicense] = useState('');
-  const [driverExperience, setDriverExperience] = useState<number>(0);
   const [selectedAdditionalMachines, setSelectedAdditionalMachines] = useState<AdditionalMachine[]>([]);
   const [services, setServices] = useState<AdditionalService[]>(
     additionalServices.map((s, index) => ({ ...s, id: index, selected: false }))
@@ -68,7 +66,6 @@ export default function CheckoutPageComponent({
   const [returnTime, setReturnTime] = useState(defaultReturnTime);
   const [specialInstructions, setSpecialInstructions] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
-  const [agreedToCancellation, setAgreedToCancellation] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [seasons, setSeasons] = useState<Season[]>([]);
@@ -169,8 +166,7 @@ export default function CheckoutPageComponent({
       guests.every(g => g.fullName.trim() && g.age > 0) &&
       guests.some(g => g.age >= 18 && g.isDriver) &&
       primaryDriverName.trim() !== '' &&
-      agreedToTerms &&
-      agreedToCancellation
+      agreedToTerms
     );
   };
 
@@ -212,8 +208,8 @@ export default function CheckoutPageComponent({
           body: JSON.stringify({
             guests,
             primaryDriverName,
-            driverLicenseNumber: driverLicense,
-            driverExperience,
+            driverLicenseNumber: '',
+            driverExperience: 0,
             additionalMachines: additionalMachinesData,
             additionalServices: selectedServicesData,
             pickupLocation: pickupAddress,
@@ -221,7 +217,7 @@ export default function CheckoutPageComponent({
             returnTime,
             specialInstructions,
             agreedToTerms,
-            agreedToCancellation
+            agreedToCancellation: agreedToTerms
           })
         }
       );
@@ -279,10 +275,6 @@ export default function CheckoutPageComponent({
             guests={guests}
             primaryDriverName={primaryDriverName}
             onDriverChange={setPrimaryDriverName}
-            driverLicense={driverLicense}
-            onLicenseChange={setDriverLicense}
-            driverExperience={driverExperience}
-            onExperienceChange={setDriverExperience}
           />
 
           {/* Additional Machines Section */}
@@ -333,8 +325,6 @@ export default function CheckoutPageComponent({
           <TermsSection
             agreedToTerms={agreedToTerms}
             onTermsChange={setAgreedToTerms}
-            agreedToCancellation={agreedToCancellation}
-            onCancellationChange={setAgreedToCancellation}
           />
 
           {/* Error Display */}
