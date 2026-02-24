@@ -13,6 +13,7 @@ import {
   calculateTotalPrice,
   getMinimumDaysRequired
 } from '@/lib/seasons'
+import { Phone } from 'lucide-react'
 
 // Register Polish locale
 registerLocale('pl', pl)
@@ -326,6 +327,7 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
   return (
     <div className="bg-gray-50 rounded-lg p-4 md:p-8">
       <h2 className="text-xl md:text-2xl font-bold text-[#253551] mb-4 md:mb-6">Wybierz daty rezerwacji:</h2>
+      <p>Nie ma Twojej daty w kalendarzu? Zadzwoń: +48 780 780 160</p><br/>
 
       <div className="bg-white rounded-lg p-4 md:p-6 shadow-sm">
         {/* Custom Header with Navigation */}
