@@ -202,7 +202,7 @@ export default function CheckoutPageComponent({
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            guests,
+            guests: guests.map((g, i) => ({ ...g, isDriver: i === 0 })),
             primaryDriverName: guests[0]?.fullName || '',
             driverLicenseNumber: '',
             driverExperience: 0,
