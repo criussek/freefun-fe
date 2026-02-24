@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import GuestDetailsSection from './GuestDetailsSection';
-import DriverDetailsSection from './DriverDetailsSection';
 import AdditionalMachinesSection from './AdditionalMachinesSection';
 import AdditionalServicesSection from './AdditionalServicesSection';
 import PickupDetailsSection from './PickupDetailsSection';
@@ -14,7 +13,6 @@ import { Season, Machine, calculateTotalPrice } from '@/lib/seasons';
 interface Guest {
   fullName: string;
   age: number;
-  isDriver: boolean;
 }
 
 interface AdditionalMachine {
@@ -55,9 +53,8 @@ export default function CheckoutPageComponent({
 
   // Initialize state
   const [guests, setGuests] = useState<Guest[]>([
-    { fullName: attributes.customerName, age: 18, isDriver: false }
+    { fullName: attributes.customerName, age: 0 }
   ]);
-  const [primaryDriverName, setPrimaryDriverName] = useState('');
   const [selectedAdditionalMachines, setSelectedAdditionalMachines] = useState<AdditionalMachine[]>([]);
   const [services, setServices] = useState<AdditionalService[]>(
     additionalServices.map((s, index) => ({ ...s, id: index, selected: false }))
@@ -164,8 +161,7 @@ export default function CheckoutPageComponent({
     return (
       guests.length > 0 &&
       guests.every(g => g.fullName.trim() && g.age > 0) &&
-      guests.some(g => g.age >= 18 && g.isDriver) &&
-      primaryDriverName.trim() !== '' &&
+      guests[0]?.age >= 26 &&
       agreedToTerms
     );
   };
@@ -210,6 +206,7 @@ export default function CheckoutPageComponent({
             primaryDriverName,
             driverLicenseNumber: '',
             driverExperience: 0,
+            primaryDriverName: guests[0]?.fullName || '',
             additionalMachines: additionalMachinesData,
             additionalServices: selectedServicesData,
             pickupLocation: pickupAddress,
@@ -261,20 +258,13 @@ export default function CheckoutPageComponent({
           {/* Guest Details Section */}
           <GuestDetailsSection
             guests={guests}
-            onAddGuest={() => setGuests([...guests, { fullName: '', age: 18, isDriver: false }])}
+            onAddGuest={() => setGuests([...guests, { fullName: '', age: 0 }])}
             onRemoveGuest={(index) => setGuests(guests.filter((_, i) => i !== index))}
             onUpdateGuest={(index, field, value) => {
               const updated = [...guests];
               updated[index] = { ...updated[index], [field]: value };
               setGuests(updated);
             }}
-          />
-
-          {/* Driver Details Section */}
-          <DriverDetailsSection
-            guests={guests}
-            primaryDriverName={primaryDriverName}
-            onDriverChange={setPrimaryDriverName}
           />
 
           {/* Additional Machines Section */}
