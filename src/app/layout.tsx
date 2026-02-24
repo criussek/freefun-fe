@@ -7,7 +7,7 @@ import { POP_SITE_SETTINGS } from '@/lib/populate'
 import LayoutWrapper from './LayoutWrapper'
 
 export const metadata: Metadata = {
-  title: '3FUN - Premium Campervan Rentals',
+  title: '3FUN - Wypożyczalnia kamperów, wynajem kamperów, przyczep kempingowych, Warszawa, Janki',
   description: 'Bringing people closer to the wonder of nature',
 }
 
