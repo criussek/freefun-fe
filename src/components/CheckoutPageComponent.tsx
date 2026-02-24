@@ -203,10 +203,9 @@ export default function CheckoutPageComponent({
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             guests,
-            primaryDriverName,
+            primaryDriverName: guests[0]?.fullName || '',
             driverLicenseNumber: '',
             driverExperience: 0,
-            primaryDriverName: guests[0]?.fullName || '',
             additionalMachines: additionalMachinesData,
             additionalServices: selectedServicesData,
             pickupLocation: pickupAddress,
