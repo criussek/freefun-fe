@@ -53,7 +53,7 @@ export default function CheckoutPageComponent({
 
   // Initialize state
   const [guests, setGuests] = useState<Guest[]>([
-    { fullName: attributes.customerName, age: 26 }
+    { fullName: attributes.customerName, age: 18 }
   ]);
   const [selectedAdditionalMachines, setSelectedAdditionalMachines] = useState<AdditionalMachine[]>([]);
   const [services, setServices] = useState<AdditionalService[]>(
@@ -161,7 +161,7 @@ export default function CheckoutPageComponent({
     return (
       guests.length > 0 &&
       guests.every(g => g.fullName.trim() && g.age > 0) &&
-      guests[0]?.age >= 26 &&
+      guests[0]?.age >= 18 &&
       agreedToTerms
     );
   };

@@ -70,13 +70,19 @@ export default function GuestDetailsSection({
                   onChange={(e) => onUpdateGuest(index, 'age', e.target.value === '' ? 0 : parseInt(e.target.value) || 0)}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#253551] focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
-                {index === 0 && guest.age > 0 && guest.age < 26 && (
-                  <p className="mt-1 text-sm text-red-600">
-                    ⚠️ Musisz mieć minimum 26 lat, aby złożyć rezerwację
-                  </p>
-                )}
               </div>
             </div>
+
+            {index === 0 && guest.age > 0 && guest.age < 18 && (
+              <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-800">
+                ⚠️ Musisz mieć minimum 18 lat, aby złożyć rezerwację
+              </div>
+            )}
+            {index === 0 && guest.age >= 18 && guest.age < 26 && (
+              <div className="mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800">
+                ⚠️ Warunkiem wydania pojazdu i zawarcia umowy jest uprzednia weryfikacja wieku Najemcy – minimum 26 lat.
+              </div>
+            )}
           </div>
         ))}
       </div>
