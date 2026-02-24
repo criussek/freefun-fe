@@ -257,7 +257,7 @@ export default function CheckoutPageComponent({
           {/* Guest Details Section */}
           <GuestDetailsSection
             guests={guests}
-            onAddGuest={() => setGuests([...guests, { fullName: '', age: 26 }])}
+            onAddGuest={() => setGuests([...guests, { fullName: '', age: 0 }])}
             onRemoveGuest={(index) => setGuests(guests.filter((_, i) => i !== index))}
             onUpdateGuest={(index, field, value) => {
               const updated = [...guests];
