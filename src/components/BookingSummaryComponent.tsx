@@ -448,7 +448,7 @@ export default function BookingSummaryComponent({
           {attributes.primaryDriverName && (
             <div className="mb-6 pb-6 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                Dane kierowcy
+                Dane Wynajmującego
               </h3>
               <dl className="space-y-2 text-sm">
                 <div className="flex">
