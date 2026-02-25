@@ -5,10 +5,12 @@ import Text from '@/components/Text'
 
 interface FeaturedCampersSectionProps {
   featuredCampers: FeaturedCampers
+  linkType?: 'free' | 'fun'
 }
 
-export default function FeaturedCampersSection({ featuredCampers }: FeaturedCampersSectionProps) {
+export default function FeaturedCampersSection({ featuredCampers, linkType }: FeaturedCampersSectionProps) {
   const { sectionTitle, sectionDescription, machines, seeCampersLabel, seeCampersUrl } = featuredCampers
+  const href = linkType ? `${seeCampersUrl}?type=${linkType}` : seeCampersUrl
 
   return (
     <section className="relative w-full text-white py-16 md:py-20">
@@ -44,7 +46,7 @@ export default function FeaturedCampersSection({ featuredCampers }: FeaturedCamp
 
         {/* See All Button */}
         <div className="text-center mt-16">
-          <Link href={seeCampersUrl} className="border-2 tracking-wider border-white text-white px-8 py-4 font-bold hover:bg-white hover:text-black transition-all text-center">
+          <Link href={href} className="border-2 tracking-wider border-white text-white px-8 py-4 font-bold hover:bg-white hover:text-black transition-all text-center">
             {seeCampersLabel}
           </Link>
         </div>

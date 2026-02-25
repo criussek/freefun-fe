@@ -8,14 +8,23 @@ interface WhyChooseUsItem {
   imagePosition: 'left' | 'right';
   buttonText?: string;
   buttonUrl?: string;
+  displayFor?: 'free' | 'fun';
 }
 
 interface WhyChooseUsSectionProps {
   item: WhyChooseUsItem;
 }
 
+function buildHref(url: string, displayFor?: 'free' | 'fun'): string {
+  if (!displayFor) return url
+  if (!url.startsWith('/fleet') && !url.startsWith('/flota')) return url
+  if (url.includes('?')) return `${url}&type=${displayFor}`
+  return `${url}?type=${displayFor}`
+}
+
 export default function WhyChooseUsSection({ item }: WhyChooseUsSectionProps) {
-  const { title, content, image, imagePosition, buttonText, buttonUrl } = item;
+  const { title, content, image, imagePosition, buttonText, buttonUrl, displayFor } = item;
+  const href = buttonUrl ? buildHref(buttonUrl, displayFor) : undefined
 
   // Image on RIGHT (like ElevateSection)
   if (imagePosition === 'right') {
@@ -33,8 +42,8 @@ export default function WhyChooseUsSection({ item }: WhyChooseUsSectionProps) {
               className="prose prose-lg max-w-none tracking-wide text-base/7"
               dangerouslySetInnerHTML={{ __html: content }}
             />
-            {buttonText && buttonUrl && (
-              <Link href={buttonUrl} className="btn-secondary mt-5">
+            {buttonText && href && (
+              <Link href={href} className="btn-secondary mt-5">
                 {buttonText}
               </Link>
             )}
@@ -101,8 +110,8 @@ export default function WhyChooseUsSection({ item }: WhyChooseUsSectionProps) {
             className="prose prose-lg max-w-none tracking-wide text-base/7"
             dangerouslySetInnerHTML={{ __html: content }}
           />
-          {buttonText && buttonUrl && (
-            <Link href={buttonUrl} className="btn-secondary mt-5">
+          {buttonText && href && (
+            <Link href={href} className="btn-secondary mt-5">
               {buttonText}
             </Link>
           )}

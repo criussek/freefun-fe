@@ -15,6 +15,7 @@ interface FleetSelectorProps {
   freeMachines: Machine[]
   funMachines: Machine[]
   seasons: Season[]
+  initialSelection?: 'free' | 'fun' | null
 }
 
 type Selection = 'free' | 'fun' | null
@@ -28,9 +29,10 @@ export default function FleetSelector({
   funDescription,
   freeMachines,
   funMachines,
-  seasons
+  seasons,
+  initialSelection = null
 }: FleetSelectorProps) {
-  const [selected, setSelected] = useState<Selection>(null)
+  const [selected, setSelected] = useState<Selection>(initialSelection ?? null)
 
   const handleSelect = (selection: Selection) => {
     setSelected(selection)

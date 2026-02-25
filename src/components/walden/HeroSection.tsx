@@ -147,7 +147,7 @@ export default function HeroSection({
 
             {/* Featured Campers/Machines Section */}
             {featuredSection && (
-              <FeaturedCampersSection featuredCampers={featuredSection} />
+              <FeaturedCampersSection featuredCampers={featuredSection} linkType={selected ?? undefined} />
             )}
           </div>
         )}

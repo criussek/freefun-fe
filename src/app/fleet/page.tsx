@@ -7,7 +7,7 @@ import { POP_MACHINES, POP_FLEET_PAGE } from '@/lib/populate'
 import PageHero from '@/components/walden/PageHero'
 import FleetSelector from '@/components/FleetSelector'
 
-export default async function FleetPage() {
+export default async function FleetPage({ searchParams }: { searchParams: Promise<{ type?: string }> }) {
   // Fetch machines from Strapi
   const machinesRes = await fetchStrapiOrNull<StrapiList<any>>('/api/machines', {
     params: { populate: '*' },
@@ -41,6 +41,9 @@ export default async function FleetPage() {
   const seasons = Array.isArray(seasonsRes?.data)
     ? seasonsRes.data.map(fromStrapiSeason).filter(Boolean)
     : []
+
+  const { type } = await searchParams
+  const initialSelection = type === 'free' ? 'free' : type === 'fun' ? 'fun' : null
 
   return (
     <main className="min-h-screen bg-white">
@@ -81,6 +84,7 @@ export default async function FleetPage() {
             freeMachines={freeMachines}
             funMachines={funMachines}
             seasons={seasons}
+            initialSelection={initialSelection}
           />
         </div>
       </section>
