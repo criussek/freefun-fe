@@ -1,5 +1,16 @@
 import { differenceInDays, addDays } from 'date-fns';
 
+/**
+ * Long-term booking threshold: 7+ days = no service fee
+ */
+export const LONG_TERM_DAYS_THRESHOLD = 7
+
+export function isLongTermBooking(daysCount: number): boolean {
+  return daysCount >= LONG_TERM_DAYS_THRESHOLD
+}
+
+
+
 export interface Season {
   documentId: string;
   name: string;

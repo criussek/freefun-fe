@@ -3,7 +3,7 @@
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
 import { mediaURL } from '@/lib/images';
-import { Season, Machine, calculateTotalPrice } from '@/lib/seasons';
+import { Season, Machine, calculateTotalPrice, isLongTermBooking } from '@/lib/seasons';
 
 interface AdditionalMachine {
   machine: any;
@@ -77,6 +77,12 @@ export default function BookingSummaryCard({
 
     return pricing.totalPrice;
   };
+
+  // Check if any machine in the booking has a service fee (to know whether to show the row)
+  const hasServiceFee = machines.some((m: any) => {
+    const attrs = m.attributes || m;
+    return (attrs.serviceFee || 0) > 0;
+  });
 
   if (!primaryMachine) {
     return (
@@ -220,8 +226,8 @@ export default function BookingSummaryCard({
 
       {/* Pricing */}
       <div className="space-y-3">
-        {/* Service Fees */}
-        {serviceFees > 0 && (
+        {/* Service Fees - always show if machines have service fee */}
+        {(serviceFees > 0 || (isLongTermBooking(daysCount) && hasServiceFee)) && (
           <div className="flex justify-between text-sm">
             <div className="flex items-center gap-2">
               <span className="text-gray-600">Opłata serwisowa:</span>
@@ -232,14 +238,15 @@ export default function BookingSummaryCard({
                   <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
                 <div className="absolute right-0 bottom-full mb-2 w-48 sm:w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                  Ta opłata pokrywa przygotowanie i dezynfekcję jednostki przed każdym wynajmem.
+                  Ta opłata pokrywa przygotowanie i dezynfekcję jednostki przed każdym wynajmem. Przy rezerwacji 7 dni lub dłużej – gratis.
                   <div className="absolute right-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                 </div>
               </div>
             </div>
-            <span className="font-medium text-gray-900">
-              {serviceFees.toFixed(2)} zł
-            </span>
+            {isLongTermBooking(daysCount)
+              ? <span className="font-medium text-green-600">gratis</span>
+              : <span className="font-medium text-gray-900">{serviceFees.toFixed(2)} zł</span>
+            }
           </div>
         )}
 

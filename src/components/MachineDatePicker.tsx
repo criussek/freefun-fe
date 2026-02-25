@@ -11,7 +11,8 @@ import {
   getMinimumEndDate,
   getSeasonForDate,
   calculateTotalPrice,
-  getMinimumDaysRequired
+  getMinimumDaysRequired,
+  isLongTermBooking
 } from '@/lib/seasons'
 import { Phone } from 'lucide-react'
 
@@ -274,7 +275,7 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
     activeSeason = getSeasonForDate(startDate, seasons)
   }
 
-  const totalPrice = rentalPrice + (serviceFee || 0)
+  const totalPrice = rentalPrice + (isLongTermBooking(days) ? 0 : (serviceFee || 0))
   const depositAmount = totalPrice * 0.5 // 50% deposit
 
   // Get minimum days required for validation message
@@ -496,12 +497,15 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
                             <line x1="12" y1="17" x2="12.01" y2="17"></line>
                           </svg>
                           <div className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                            Ta opłata pokrywa przygotowanie i dezynfekcję jednostki przed każdym wynajmem.
+                            Ta opłata pokrywa przygotowanie i dezynfekcję jednostki przed każdym wynajmem. Przy rezerwacji 7 dni lub dłużej – gratis.
                             <div className="absolute left-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                           </div>
                         </div>
                       </div>
-                      <span className="font-semibold">{serviceFee.toFixed(2)} zł</span>
+                      {isLongTermBooking(days)
+                        ? <span className="font-semibold text-green-600">gratis</span>
+                        : <span className="font-semibold">{serviceFee.toFixed(2)} zł</span>
+                      }
                     </div>
                   )}
                 </div>

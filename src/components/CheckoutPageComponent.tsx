@@ -8,7 +8,7 @@ import AdditionalServicesSection from './AdditionalServicesSection';
 import PickupDetailsSection from './PickupDetailsSection';
 import TermsSection from './TermsSection';
 import BookingSummaryCard from './BookingSummaryCard';
-import { Season, Machine, calculateTotalPrice } from '@/lib/seasons';
+import { Season, Machine, calculateTotalPrice, isLongTermBooking } from '@/lib/seasons';
 
 interface Guest {
   fullName: string;
@@ -87,17 +87,24 @@ export default function CheckoutPageComponent({
   }, []);
 
   // Calculations
-  // bookingTotal already includes primary machines + their service fees
+  // bookingTotal already includes primary machines + their service fees (for short bookings)
   const bookingTotal = attributes.totalPrice || 0;
+  const longTerm = isLongTermBooking(attributes.daysCount);
 
   // Get primary machine(s) from booking
   const bookingMachines = attributes.machines?.data || attributes.machines || [];
 
-  // Calculate service fees for display breakdown (already included in bookingTotal)
-  const primaryServiceFees = bookingMachines.reduce((sum: number, machine: any) => {
+  // Raw primary service fees (always calculated, needed to subtract from bookingTotal for long-term)
+  const rawPrimaryServiceFees = bookingMachines.reduce((sum: number, machine: any) => {
     const machineAttrs = machine.attributes || machine;
     return sum + (machineAttrs.serviceFee || 0);
   }, 0);
+
+  // For display: 0 for long-term bookings
+  const primaryServiceFees = longTerm ? 0 : rawPrimaryServiceFees;
+
+  // For long-term bookings, subtract service fees from bookingTotal (BE still includes them)
+  const adjustedBookingTotal = longTerm ? bookingTotal - rawPrimaryServiceFees : bookingTotal;
 
   // Calculate refundable deposit for primary machines
   const primaryDepositFees = bookingMachines.reduce((sum: number, machine: any) => {
@@ -128,7 +135,7 @@ export default function CheckoutPageComponent({
     return sum + (pricing.totalPrice * item.quantity);
   }, 0);
 
-  const additionalServiceFees = selectedAdditionalMachines.reduce((sum, item) => {
+  const additionalServiceFees = longTerm ? 0 : selectedAdditionalMachines.reduce((sum, item) => {
     const machineAttrs = item.machine.attributes || item.machine;
     return sum + ((machineAttrs.serviceFee || 0) * item.quantity);
   }, 0);
@@ -151,7 +158,7 @@ export default function CheckoutPageComponent({
   // Totals (bookingTotal already has primary service fees, only add additional ones)
   const totalServiceFees = primaryServiceFees + additionalServiceFees;
   const totalDepositFees = primaryDepositFees + additionalDepositFees;
-  const subtotal = bookingTotal + additionalMachinesTotal + additionalServicesTotal + additionalServiceFees;
+  const subtotal = adjustedBookingTotal + additionalMachinesTotal + additionalServicesTotal + additionalServiceFees;
   const deposit = subtotal * 0.5; // 50% payment deposit
   const remaining = subtotal - deposit;
 

@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
 import { useState } from 'react';
 import { mediaURL } from '@/lib/images';
+import { isLongTermBooking } from '@/lib/seasons';
 
 interface BookingSummaryComponentProps {
   booking: any;
@@ -64,13 +65,17 @@ export default function BookingSummaryComponent({
   };
 
   // Calculate service fees (for display purposes)
-  const serviceFees = machines.reduce((sum: number, machine: any) => {
+  const rawServiceFees = machines.reduce((sum: number, machine: any) => {
     const machineAttrs = machine.attributes || machine;
     return sum + (machineAttrs.serviceFee || 0);
   }, 0);
 
+  const longTerm = isLongTermBooking(attributes.daysCount);
+  const serviceFees = longTerm ? 0 : rawServiceFees;
+
   // Use totals from backend (already includes machines + services + fees)
-  const subtotal = attributes.totalPrice || 0;
+  // For long-term bookings, subtract service fees that BE still includes
+  const subtotal = (attributes.totalPrice || 0) - (longTerm ? rawServiceFees : 0);
   const depositAmount = subtotal * 0.5; // 50% payment deposit
   const remainingAmount = subtotal - depositAmount;
   const refundableDeposit = attributes.depositAmount || 0; // Refundable security deposit
@@ -528,7 +533,7 @@ export default function BookingSummaryComponent({
               )}
 
               {/* Service Fee */}
-              {serviceFees > 0 && (
+              {(serviceFees > 0 || (longTerm && rawServiceFees > 0)) && (
                 <div className="flex justify-between">
                   <dt className="flex items-center gap-2 text-gray-600">
                     <span>Opłata serwisowa:</span>
@@ -550,13 +555,13 @@ export default function BookingSummaryComponent({
                         <line x1="12" y1="17" x2="12.01" y2="17"></line>
                       </svg>
                       <div className="absolute right-0 bottom-full mb-2 w-48 sm:w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                        Ta opłata pokrywa przygotowanie i dezynfekcję jednostki przed każdym wynajmem.
+                        Ta opłata pokrywa przygotowanie i dezynfekcję jednostki przed każdym wynajmem. Przy rezerwacji 7 dni lub dłużej – gratis.
                         <div className="absolute right-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                       </div>
                     </div>
                   </dt>
-                  <dd className="text-gray-900">
-                    {serviceFees.toFixed(2)} zł
+                  <dd className={longTerm ? 'text-green-600 font-medium' : 'text-gray-900'}>
+                    {longTerm ? 'gratis' : `${serviceFees.toFixed(2)} zł`}
                   </dd>
                 </div>
               )}

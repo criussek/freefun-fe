@@ -124,7 +124,7 @@ export default function Navbar({ siteSettings, variant = 'transparent' }: Navbar
               <img
                 src={logoUrl}
                 alt="3FUN Logo"
-                style={{ width: '380px', height: '380px', marginTop: '-40px', marginLeft: '-6px' }}
+                style={{ width: '300px', height: '300px', marginTop: '0px', marginLeft: '0px' }}
               />
             </Link>
           </div>
