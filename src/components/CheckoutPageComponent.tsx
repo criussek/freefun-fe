@@ -103,8 +103,8 @@ export default function CheckoutPageComponent({
   // For display: 0 for long-term bookings
   const primaryServiceFees = longTerm ? 0 : rawPrimaryServiceFees;
 
-  // For long-term bookings, subtract service fees from bookingTotal (BE still includes them)
-  const adjustedBookingTotal = longTerm ? bookingTotal - rawPrimaryServiceFees : bookingTotal;
+  // BE now correctly excludes service fees from totalPrice for long-term bookings
+  const adjustedBookingTotal = bookingTotal;
 
   // Calculate refundable deposit for primary machines
   const primaryDepositFees = bookingMachines.reduce((sum: number, machine: any) => {

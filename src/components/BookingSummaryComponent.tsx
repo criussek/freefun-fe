@@ -75,7 +75,7 @@ export default function BookingSummaryComponent({
 
   // Use totals from backend (already includes machines + services + fees)
   // For long-term bookings, subtract service fees that BE still includes
-  const subtotal = (attributes.totalPrice || 0) - (longTerm ? rawServiceFees : 0);
+  const subtotal = (attributes.totalPrice || 0);
   const depositAmount = subtotal * 0.5; // 50% payment deposit
   const remainingAmount = subtotal - depositAmount;
   const refundableDeposit = attributes.depositAmount || 0; // Refundable security deposit
