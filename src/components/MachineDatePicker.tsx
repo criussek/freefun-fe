@@ -518,7 +518,7 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
                 <div className="mt-4 pt-4 border-t border-gray-200">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
-                      <span className="text-gray-700">Do zapłaty do {paymentDueDate.toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' }).split('.').join('.')} {paymentDueDate.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })} (zaliczka 50%)</span>
+                      <span className="text-gray-700">Do zapłaty do {paymentDueDate.toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' }).split('.').join('.')} {paymentDueDate.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })} (zadatek 50%)</span>
                       <div className="relative group">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -537,7 +537,7 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
                           <line x1="12" y1="17" x2="12.01" y2="17"></line>
                         </svg>
                         <div className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                          Ta kwota musi być wpłacona przed tą datą, aby potwierdzić rezerwację. Jeśli nie zostanie wpłacona, rezerwacja zostanie usunięta.
+                          Ta kwota musi być wpłacona przed tą datą, aby potwierdzić rezerwację. Potwierdzenie płatności wyślij na <a href="mailto:kontakt@3fun.pl" className="underline">kontakt@3fun.pl</a>. Jeśli nie zostanie wpłacona, rezerwacja zostanie usunięta.
                           <div className="absolute left-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                         </div>
                       </div>
@@ -568,7 +568,7 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
                             <line x1="12" y1="17" x2="12.01" y2="17"></line>
                           </svg>
                           <div className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                            Kaucja zabezpieczająca pobierana z góry w celu pokrycia ewentualnych szkód podczas wynajmu. Jest w pełni zwracana po bezpiecznym zwrocie sprzętu.
+                            Kaucja zabezpieczająca pobierana jest z góry jako zabezpieczenie na wypadek uszkodzeń pojazdu, braków w wyposażeniu lub innych należności wynikających z umowy. Podlega zwrotowi po zwrocie pojazdu w stanie zgodnym z warunkami umowy.
                             <div className="absolute left-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                           </div>
                         </div>

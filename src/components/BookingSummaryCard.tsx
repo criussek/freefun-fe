@@ -255,7 +255,7 @@ export default function BookingSummaryCard({
         <div className="flex flex-col sm:flex-row sm:justify-between text-sm gap-2 sm:items-start">
           <div className="flex items-start gap-2 flex-1">
             <span className="text-gray-600 break-words">
-              Do zapłaty do {formatDateTime(attributes.paymentDeadline)} (zaliczka 50%):
+              Do zapłaty do {formatDateTime(attributes.paymentDeadline)} (zadatek 50%):
             </span>
             <div className="relative group flex-shrink-0 mt-0.5">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500 cursor-help">
@@ -264,7 +264,7 @@ export default function BookingSummaryCard({
                 <line x1="12" y1="17" x2="12.01" y2="17"></line>
               </svg>
               <div className="absolute right-0 bottom-full mb-2 w-48 sm:w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                Ta kwota musi być wpłacona w ciągu 24 godzin od złożenia rezerwacji, aby ją potwierdzić. Jeśli nie zostanie wpłacona, rezerwacja zostanie usunięta.
+                Ta kwota musi być wpłacona w ciągu 24 godzin od złożenia rezerwacji, aby ją potwierdzić. Potwierdzenie płatności wyślij na <a href="mailto:kontakt@3fun.pl" className="underline">kontakt@3fun.pl</a>. Jeśli nie zostanie wpłacona, rezerwacja zostanie usunięta.
                 <div className="absolute right-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
               </div>
             </div>
@@ -294,7 +294,7 @@ export default function BookingSummaryCard({
                   <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
                 <div className="absolute right-0 bottom-full mb-2 w-48 sm:w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                  Kaucja zabezpieczająca pobierana z góry w celu pokrycia ewentualnych szkód podczas wynajmu. Jest w pełni zwracana po bezpiecznym zwrocie sprzętu.
+                  Kaucja zabezpieczająca pobierana jest z góry jako zabezpieczenie na wypadek uszkodzeń pojazdu, braków w wyposażeniu lub innych należności wynikających z umowy. Podlega zwrotowi po zwrocie pojazdu w stanie zgodnym z warunkami umowy.
                   <div className="absolute right-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                 </div>
               </div>
@@ -309,7 +309,7 @@ export default function BookingSummaryCard({
       {/* Info */}
       <div className="mt-6 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-800">
         <p>
-          💳 Po złożeniu rezerwacji otrzymasz email z instrukcjami płatności.
+          💳 Po złożeniu rezerwacji otrzymasz email z instrukcjami płatności. Wiadomosć mogła trafić do folderu SPAM, sprawdź również tam.
         </p>
       </div>
     </div>

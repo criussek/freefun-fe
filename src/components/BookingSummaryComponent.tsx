@@ -170,8 +170,7 @@ export default function BookingSummaryComponent({
               </h1>
             </div>
             <p className="text-green-800">
-              Dziękujemy za złożenie rezerwacji. Sprawdź swój email, aby uzyskać szczegóły płatności.
-            </p>
+              Dziękujemy za złożenie rezerwacji. Sprawdź swój email, aby uzyskać szczegóły płatności. Wiadomość mogła trafić do folderu SPAM, więc sprawdź również tam.       </p>
           </div>
         )}
 
@@ -228,9 +227,9 @@ export default function BookingSummaryComponent({
           </h2>
 
           <p className="mb-4 text-yellow-900">
-            Aby potwierdzić rezerwację, wpłać zaliczkę w wysokości{' '}
+            Aby potwierdzić rezerwację, wpłać zadatek w wysokości{' '}
             <strong className="text-lg">{depositAmount.toFixed(2)} zł</strong>{' '}
-            w ciągu 24 godzin (do {formatDateTime(attributes.paymentDeadline)}).
+            w ciągu 24 godzin (do {formatDateTime(attributes.paymentDeadline)}) oraz prześlij potwierdzenie przelewu na: <a href="mailto:kontakt@3fun.pl">kontakt@3fun.pl</a>.
           </p>
 
           <div className="space-y-4">
@@ -320,7 +319,7 @@ export default function BookingSummaryComponent({
           {refundableDeposit > 0 && (
             <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded text-sm text-blue-800">
               <strong>ℹ️ Informacja o kaucji:</strong> Kaucja zwrotna w wysokości{' '}
-              <strong>{refundableDeposit.toFixed(2)} zł</strong> zostanie pobrana przy odbiorze i zwrócona po zwrocie pojazdu bez uszkodzeń.
+              <strong>{refundableDeposit.toFixed(2)} zł</strong> zostanie pobrana przy odbiorze i zwrócona na zasadach określonych w regulaminie.
             </div>
           )}
         </div>
@@ -573,7 +572,7 @@ export default function BookingSummaryComponent({
               {/* Deposit (50%) */}
               <div className="flex justify-between">
                 <dt className="flex items-center gap-2 text-gray-600">
-                  <span>Do zapłaty do {formatDateTime(attributes.paymentDeadline)} (zaliczka 50%):</span>
+                  <span>Do zapłaty do {formatDateTime(attributes.paymentDeadline)} (zadatek 50%):</span>
                   <div className="relative group">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -592,7 +591,7 @@ export default function BookingSummaryComponent({
                       <line x1="12" y1="17" x2="12.01" y2="17"></line>
                     </svg>
                     <div className="absolute right-0 bottom-full mb-2 w-48 sm:w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                      Ta kwota musi być wpłacona przed tą datą, aby potwierdzić rezerwację. Jeśli nie zostanie wpłacona, rezerwacja zostanie usunięta.
+                      Ta kwota musi być wpłacona przed tą datą, aby potwierdzić rezerwację. Potwierdzenie wyślij na <a href="mailto:kontakt@3fun.pl" className="underline">kontakt@3fun.pl</a>. Jeśli nie zostanie wpłacona, rezerwacja zostanie usunięta.
                       <div className="absolute right-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                     </div>
                   </div>
@@ -633,7 +632,7 @@ export default function BookingSummaryComponent({
                         <line x1="12" y1="17" x2="12.01" y2="17"></line>
                       </svg>
                       <div className="absolute right-0 bottom-full mb-2 w-48 sm:w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                        Kaucja zabezpieczająca pobierana z góry w celu pokrycia ewentualnych szkód podczas wynajmu. Jest w pełni zwracana po bezpiecznym zwrocie sprzętu.
+                        Kaucja zabezpieczająca pobierana jest z góry jako zabezpieczenie na wypadek uszkodzeń pojazdu, braków w wyposażeniu lub innych należności wynikających z umowy. Podlega zwrotowi po zwrocie pojazdu w stanie zgodnym z warunkami umowy.
                         <div className="absolute right-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                       </div>
                     </div>
@@ -653,24 +652,24 @@ export default function BookingSummaryComponent({
             Polityka anulowania
           </h2>
           <p className="text-sm text-gray-700 mb-3">
-            Możesz odstąpić od rezerwacji w każdym czasie składając pisemne oświadczenie. W przypadku anulowania rezerwacji obowiązują następujące opłaty:
+            Najemca jest uprawniony do odstąpienia od Umowy w każdym czasie poprzez złożenie Wynajmującemu pisemnego oświadczenia o odstąpieniu od Umowy. Za dzień złożenia oświadczenia uznaje się dzień jego doręczenia Wynajmującemu. W przypadku odstąpienia przez Najemcę od Umowy, Wynajmujący jest uprawniony do zatrzymania zadatku lub – w przypadkach określonych poniżej – całości opłaty za najem, w następującej wysokości: 
           </p>
           <ul className="space-y-2 text-sm text-gray-700">
             <li className="flex items-start">
               <span className="text-green-600 mr-2 font-bold">•</span>
-              <span><strong>61 dni lub wcześniej przed odbiorem:</strong> zatrzymujemy 25% zaliczki (zwrot 75%)</span>
+              <span>25% wartości zadatku – w przypadku odstąpienia na 61 dni lub wcześniej przed rozpoczęciem okresu najmu.</span>
             </li>
             <li className="flex items-start">
               <span className="text-yellow-600 mr-2 font-bold">•</span>
-              <span><strong>60-31 dni przed odbiorem:</strong> zatrzymujemy 50% zaliczki (zwrot 50%)</span>
+              <span>50% wartości zadatku – w przypadku odstąpienia w okresie od 60. do 31. dnia przed rozpoczęciem okresu najmu.</span>
             </li>
             <li className="flex items-start">
               <span className="text-orange-600 mr-2 font-bold">•</span>
-              <span><strong>30-8 dni przed odbiorem:</strong> zatrzymujemy 100% zaliczki (brak zwrotu)</span>
+              <span>100% wartości zadatku – w przypadku odstąpienia w okresie od 30. do 8. dnia przed rozpoczęciem okresu najmu.</span>
             </li>
             <li className="flex items-start">
               <span className="text-red-600 mr-2 font-bold">•</span>
-              <span><strong>Mniej niż 8 dni przed odbiorem:</strong> należy zapłacić 100% opłaty za najem (dodatkowo pozostałe 50%)</span>
+              <span>100% opłaty za najem – w przypadku odstąpienia w terminie krótszym niż 8 dni przed rozpoczęciem okresu najmu.</span>
             </li>
           </ul>
         </div>
