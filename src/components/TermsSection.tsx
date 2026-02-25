@@ -45,7 +45,7 @@ export default function TermsSection({
           📋 Najważniejsze informacje:
         </h3>
         <ul className="text-sm text-blue-800 space-y-1">
-          <li>• Rezerwacja wymaga wpłaty zadatku w wysokości 50% wartości</li>
+          <li>• Rezerwacja wymaga wpłaty zadatku w wysokości 50% wartości wynajmu</li>
           <li>• Wpłatę zadatku 50% należy dokonać w ciągu 24 godzin</li>
           <li>• Kaucja zwrotna płatna jest przy odbiorze pojazdu</li>
           <li>• Pozostała część opłaty za najem podlega zapłacie najpóźniej 14 dni przed planowanym okresem najmu</li>
