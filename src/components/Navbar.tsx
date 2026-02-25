@@ -8,7 +8,7 @@ import bgLogo from '@/media/bg-logo.png'
 
 interface NavbarProps {
   siteSettings?: SiteSettings
-  variant?: 'transparent' | 'black'
+  variant?: 'transparent' | 'black' | 'static'
 }
 
 export default function Navbar({ siteSettings, variant = 'transparent' }: NavbarProps) {
@@ -41,6 +41,8 @@ export default function Navbar({ siteSettings, variant = 'transparent' }: Navbar
 
   const navClasses = variant === 'black'
     ? "fixed top-0 left-0 right-0 z-50 bg-black/80 shadow-md"
+    : variant === 'static'
+    ? "relative z-50 bg-black shadow-md"
     : "absolute top-0 left-0 right-0 z-50"
 
   return (

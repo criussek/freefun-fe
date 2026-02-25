@@ -21,7 +21,7 @@ export default function LayoutWrapper({ children, siteSettings }: LayoutWrapperP
                         pathname === '/polityka-cookies' ||
                         pathname === '/regulamin-rezerwacji'
 
-  const navbarVariant = isPolicyPage ? 'black' : 'transparent'
+  const navbarVariant = isPolicyPage ? 'static' : 'transparent'
 
   return (
     <>

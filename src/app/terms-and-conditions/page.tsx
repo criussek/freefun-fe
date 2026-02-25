@@ -16,7 +16,7 @@ export default async function TermsAndConditionsPage() {
 
   return (
     <main className="min-h-screen bg-white">
-      <section className="pt-[450px] pb-20">
+      <section className="pt-12 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {termsPage?.pageTitle && (
             <h1 className="text-3xl font-bold mb-6">{termsPage.pageTitle}</h1>
