@@ -1,5 +1,66 @@
 import { differenceInDays, addDays } from 'date-fns';
 
+const DATE_PREFIX_REGEX = /^(\d{4})-(\d{2})-(\d{2})/;
+const WARSAW_DATE_FORMATTER = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Europe/Warsaw',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
+
+function createUtcDate(year: number, month: number, day: number): Date {
+  return new Date(Date.UTC(year, month - 1, day));
+}
+
+function getWarsawDateParts(value: Date): [number, number, number] {
+  const parts = WARSAW_DATE_FORMATTER.formatToParts(value);
+  const year = Number(parts.find((part) => part.type === 'year')?.value);
+  const month = Number(parts.find((part) => part.type === 'month')?.value);
+  const day = Number(parts.find((part) => part.type === 'day')?.value);
+
+  if ([year, month, day].some(Number.isNaN)) {
+    throw new Error('Invalid date value');
+  }
+
+  return [year, month, day];
+}
+
+function parseCalendarDate(value: Date | string): Date {
+  if (typeof value === 'string') {
+    const dateMatch = value.match(DATE_PREFIX_REGEX);
+    if (dateMatch) {
+      const [, year, month, day] = dateMatch;
+      return createUtcDate(Number(year), Number(month), Number(day));
+    }
+
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) {
+      throw new Error(`Invalid date value: ${value}`);
+    }
+
+    return createUtcDate(
+      parsed.getUTCFullYear(),
+      parsed.getUTCMonth() + 1,
+      parsed.getUTCDate()
+    );
+  }
+
+  if (Number.isNaN(value.getTime())) {
+    throw new Error('Invalid date value');
+  }
+
+  const [year, month, day] = getWarsawDateParts(value);
+  return createUtcDate(year, month, day);
+}
+
+export function formatCalendarDate(value: Date | string): string {
+  const normalizedDate = parseCalendarDate(value);
+  const year = normalizedDate.getUTCFullYear();
+  const month = String(normalizedDate.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(normalizedDate.getUTCDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 /**
  * Long-term booking threshold: 7+ days = no service fee
  */
@@ -40,12 +101,14 @@ export function getSeasonForDate(
   seasons: Season[],
   machineType?: string
 ): Season | null {
+  const normalizedDate = parseCalendarDate(date);
+
   for (const season of seasons) {
-    const seasonStart = new Date(season.startDate);
-    const seasonEnd = new Date(season.endDate);
+    const seasonStart = parseCalendarDate(season.startDate);
+    const seasonEnd = parseCalendarDate(season.endDate);
 
     // Check if date is in range
-    if (date >= seasonStart && date <= seasonEnd) {
+    if (normalizedDate >= seasonStart && normalizedDate <= seasonEnd) {
       // If season has no machineTypes specified, it applies to all machines
       if (!season.machineTypes || season.machineTypes.length === 0) {
         return season;
@@ -90,12 +153,8 @@ export function calculatePricePerDay(
 export function getDateRange(startDate: Date, endDate: Date): Date[] {
   const dates: Date[] = [];
 
-  // Normalize to midnight to count calendar days, not time difference
-  const start = new Date(startDate);
-  start.setHours(0, 0, 0, 0);
-
-  const end = new Date(endDate);
-  end.setHours(0, 0, 0, 0);
+  const start = parseCalendarDate(startDate);
+  const end = parseCalendarDate(endDate);
 
   const days = differenceInDays(end, start) + 1;
 

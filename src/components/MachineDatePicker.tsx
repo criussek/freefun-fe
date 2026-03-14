@@ -12,8 +12,10 @@ import {
   getSeasonForDate,
   calculateTotalPrice,
   getMinimumDaysRequired,
-  isLongTermBooking
+  isLongTermBooking,
+  formatCalendarDate
 } from '@/lib/seasons'
+import { fromStrapiSeason } from '@/lib/adapters/season'
 import { Phone } from 'lucide-react'
 
 // Register Polish locale
@@ -112,7 +114,7 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
 
         if (response.ok) {
           const data = await response.json()
-          setSeasons(data.data || [])
+          setSeasons((data.data || []).map(fromStrapiSeason))
         }
       } catch (error) {
         console.error('Error fetching seasons:', error)
@@ -301,8 +303,8 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
         body: JSON.stringify({
           data: {
             machines: [machineId],
-            startDate: startDate.toISOString(),
-            endDate: endDate.toISOString(),
+            startDate: formatCalendarDate(startDate),
+            endDate: formatCalendarDate(endDate),
             customerName: `${formData.firstname} ${formData.lastname}`,
             email: formData.email,
             phone: formData.phone,
