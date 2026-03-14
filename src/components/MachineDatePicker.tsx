@@ -170,8 +170,12 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
     const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate())
     const startDateOnly = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())
 
-    // If date is before or equal to start date, allow it (user can change start date)
-    if (dateOnly <= startDateOnly) return true
+    // Allow picking an earlier date to restart the range, but disallow selecting
+    // the same start date as an invalid 1-day end date when a longer minimum applies.
+    if (dateOnly < startDateOnly) return true
+    if (dateOnly.getTime() === startDateOnly.getTime()) {
+      return getMinimumDaysRequired(startDate, seasons, [machine]) <= 1
+    }
 
     // If date is after start date, enforce minimum days requirement for end date
     const minEndDate = getMinimumEndDate(startDate, seasons, [machine])
@@ -181,6 +185,16 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
 
   const onChange = (dates: [Date | null, Date | null]) => {
     const [start, end] = dates
+
+    if (start && end) {
+      const minEndDate = getMinimumEndDate(start, seasons, [machine])
+      if (formatCalendarDate(end) < formatCalendarDate(minEndDate)) {
+        setStartDate(start)
+        setEndDate(null)
+        return
+      }
+    }
+
     setStartDate(start)
     setEndDate(end)
   }
@@ -290,6 +304,11 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
   // Handle booking submission
   const handleSubmit = async () => {
     if (!isFormValid() || !startDate || !endDate) return
+
+    if (days < minDaysRequired) {
+      setSubmitError(`Minimalny czas wynajmu dla wybranego terminu to ${minDaysRequired} dni.`)
+      return
+    }
 
     setIsSubmitting(true)
     setSubmitError(null)
