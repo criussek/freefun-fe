@@ -141,3 +141,25 @@
 .availability-calendar .react-datepicker__header {
   padding-top: 4px;
 }
+/* Full-width calendar — stretch to fill container */
+.availability-calendar .react-datepicker,
+.availability-calendar .react-datepicker__month-container {
+  width: 100%;
+  border: none;
+  background: transparent;
+}
+.availability-calendar .react-datepicker__header {
+  background: transparent;
+  border-bottom: 1px solid #e5e7eb;
+}
+.availability-calendar .react-datepicker__day-names,
+.availability-calendar .react-datepicker__week {
+  display: flex;
+  justify-content: space-around;
+}
+.availability-calendar .react-datepicker__day-name,
+.availability-calendar .react-datepicker__day {
+  flex: 1;
+  text-align: center;
+  margin: 1px 0;
+}

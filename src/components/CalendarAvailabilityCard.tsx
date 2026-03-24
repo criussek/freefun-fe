@@ -14,7 +14,6 @@ interface CalendarAvailabilityCardProps {
   machineName: string
   machineSlug: string
   cardPhoto: string | null
-  machineType: string
 }
 
 export default function CalendarAvailabilityCard({
@@ -22,7 +21,6 @@ export default function CalendarAvailabilityCard({
   machineName,
   machineSlug,
   cardPhoto,
-  machineType,
 }: CalendarAvailabilityCardProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [excludedDates, setExcludedDates] = useState<Date[]>([])
@@ -51,9 +49,6 @@ export default function CalendarAvailabilityCard({
     fetchUnavailableDates()
   }, [machineId])
 
-  const typeLabel = machineType === 'camper' ? 'FREE' : 'FUN'
-  const typeColor = machineType === 'camper' ? 'bg-[#2d5016] text-white' : 'bg-[#253551] text-white'
-
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col">
       {/* Photo */}
@@ -74,9 +69,6 @@ export default function CalendarAvailabilityCard({
             </svg>
           </div>
         )}
-        <span className={`absolute top-3 left-3 text-xs font-bold px-2 py-0.5 rounded-full ${typeColor}`}>
-          {typeLabel}
-        </span>
       </div>
 
       {/* Name */}

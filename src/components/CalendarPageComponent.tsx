@@ -16,7 +16,6 @@ function MachineGrid({ machines }: { machines: Machine[] }) {
           machineName={machine.name}
           machineSlug={machine.slug}
           cardPhoto={machine.cardPhoto}
-          machineType={machine.type}
         />
       ))}
     </div>
@@ -31,12 +30,10 @@ export default function CalendarPageComponent({ freeMachines, funMachines }: Cal
         {/* FREE section */}
         {freeMachines.length > 0 && (
           <div className="mb-20">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="h-px flex-1 bg-gray-200"></div>
-              <h2 className="text-2xl md:text-3xl font-bold text-[#2d5016] whitespace-nowrap">
-                FREE — Kampery
+            <div className="text-center mb-10">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#253551]">
+                Kampery
               </h2>
-              <div className="h-px flex-1 bg-gray-200"></div>
             </div>
             <MachineGrid machines={freeMachines} />
           </div>
@@ -45,12 +42,10 @@ export default function CalendarPageComponent({ freeMachines, funMachines }: Cal
         {/* FUN section */}
         {funMachines.length > 0 && (
           <div>
-            <div className="flex items-center gap-4 mb-8">
-              <div className="h-px flex-1 bg-gray-200"></div>
-              <h2 className="text-2xl md:text-3xl font-bold text-[#253551] whitespace-nowrap">
-                FUN — Maszyny
+            <div className="text-center mb-10">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#253551]">
+                Inne maszyny
               </h2>
-              <div className="h-px flex-1 bg-gray-200"></div>
             </div>
             <MachineGrid machines={funMachines} />
           </div>
