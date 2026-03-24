@@ -141,18 +141,18 @@ export default function CalendarAvailabilityCard({
           </div>
 
           {/* Legend */}
-          <div className="flex gap-4 mt-2 text-xs text-gray-500 justify-center">
-            <span className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-sm bg-red-100 inline-block border border-red-200"></span>
-              Zajęty
+          <div className="flex gap-3 mt-3 justify-center">
+            <span className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-1.5">
+              <span className="w-4 h-4 rounded flex-shrink-0" style={{ backgroundColor: '#fee2e2', border: '1px solid #fca5a5' }}></span>
+              <span className="text-sm font-medium text-gray-700">Zajęty</span>
             </span>
-            <span className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-sm inline-block border border-gray-200" style={{ background: 'linear-gradient(to bottom right, #fee2e2 50%, white 50%)' }}></span>
-              Powrót
+            <span className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-1.5">
+              <span className="w-4 h-4 rounded flex-shrink-0" style={{ background: 'linear-gradient(to bottom right, #fee2e2 50%, white 50%)', border: '1px solid #d1d5db' }}></span>
+              <span className="text-sm font-medium text-gray-700">Powrót</span>
             </span>
-            <span className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-sm bg-white inline-block border border-gray-200"></span>
-              Wolny
+            <span className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-1.5">
+              <span className="w-4 h-4 rounded flex-shrink-0 bg-green-100" style={{ border: '1px solid #86efac' }}></span>
+              <span className="text-sm font-medium text-gray-700">Wolny</span>
             </span>
           </div>
         </div>

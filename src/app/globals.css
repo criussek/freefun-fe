@@ -163,3 +163,19 @@
   text-align: center;
   margin: 1px 0;
 }
+/* Disable all interaction on every day */
+.availability-calendar .react-datepicker__day {
+  pointer-events: none !important;
+  cursor: default !important;
+}
+.availability-calendar .react-datepicker__day:hover,
+.availability-calendar .react-datepicker__day--selected,
+.availability-calendar .react-datepicker__day--keyboard-selected,
+.availability-calendar .react-datepicker__day--range-start,
+.availability-calendar .react-datepicker__day--range-end,
+.availability-calendar .react-datepicker__day--in-range,
+.availability-calendar .react-datepicker__day--in-selecting-range {
+  background-color: transparent !important;
+  color: inherit !important;
+  font-weight: inherit !important;
+}
