@@ -114,3 +114,30 @@
   background: linear-gradient(to bottom right, #fee2e2 50%, #216ba5 50%) !important;
   color: white !important;
 }
+
+/* Availability-only calendar — disable selection highlight and pointer */
+.availability-calendar .react-datepicker__day:not(.booked-date):not(.return-date) {
+  cursor: default;
+}
+.availability-calendar .react-datepicker__day:not(.booked-date):not(.return-date):hover {
+  background-color: transparent !important;
+}
+.availability-calendar .react-datepicker__day--selected,
+.availability-calendar .react-datepicker__day--range-start,
+.availability-calendar .react-datepicker__day--range-end,
+.availability-calendar .react-datepicker__day--in-range,
+.availability-calendar .react-datepicker__day--in-selecting-range {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+/* Hide the header nav arrows — we use our own */
+.availability-calendar .react-datepicker__navigation {
+  display: none;
+}
+/* Hide month/year header — we render our own */
+.availability-calendar .react-datepicker__current-month {
+  display: none;
+}
+.availability-calendar .react-datepicker__header {
+  padding-top: 4px;
+}

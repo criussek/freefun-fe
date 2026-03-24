@@ -45,6 +45,7 @@ export function fromStrapiMachine(e: StrapiEntity<any>): Machine {
   }
 
   return {
+    documentId: (e as any).documentId ?? a.documentId ?? undefined,
     name: a.name ?? '',
     heroName: a.heroName ?? undefined,
     heroDescription: a.heroDescription ?? undefined,

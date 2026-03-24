@@ -37,6 +37,7 @@ export interface MachineFeature {
 }
 
 export interface Machine {
+  documentId?: string;
   name: string;
   heroName?: string;
   heroDescription?: string;
@@ -183,6 +184,13 @@ export interface TermsAndConditionsPage {
 }
 
 export interface PartnershipPage {
+  pageTitle?: string;
+  pageDescription?: string;
+  pageImage: string | null;
+  pageOverview?: string;
+}
+
+export interface CalendarPage {
   pageTitle?: string;
   pageDescription?: string;
   pageImage: string | null;

@@ -129,6 +129,15 @@ export const POP_PARTNERSHIP_PAGE = {
   },
 };
 
+export const POP_CALENDAR_PAGE = {
+  fields: ['pageTitle', 'pageDescription', 'pageOverview'],
+  populate: {
+    pageImage: {
+      fields: ['url', 'alternativeText'],
+    },
+  },
+};
+
 export const POP_HOME = {
   populate: {
     sections: {

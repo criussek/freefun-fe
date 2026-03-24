@@ -40,6 +40,10 @@ const nextConfig = {
         source: '/wspolpraca',
         destination: '/partnership',
       },
+      {
+        source: '/dostepnosc',
+        destination: '/calendar',
+      },
     ]
   },
 }
