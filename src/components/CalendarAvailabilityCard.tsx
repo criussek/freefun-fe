@@ -139,10 +139,6 @@ export default function CalendarAvailabilityCard({
               <span className="w-4 h-4 rounded flex-shrink-0" style={{ backgroundColor: '#fee2e2', border: '1px solid #fca5a5' }}></span>
               <span className="text-sm font-medium text-gray-700">Zajęty</span>
             </span>
-            <span className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-1.5">
-              <span className="w-4 h-4 rounded flex-shrink-0 bg-green-100" style={{ border: '1px solid #86efac' }}></span>
-              <span className="text-sm font-medium text-gray-700">Wolny</span>
-            </span>
           </div>
         </div>
 
