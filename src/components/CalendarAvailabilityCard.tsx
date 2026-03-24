@@ -24,7 +24,6 @@ export default function CalendarAvailabilityCard({
 }: CalendarAvailabilityCardProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [excludedDates, setExcludedDates] = useState<Date[]>([])
-  const [returnDates, setReturnDates] = useState<Record<string, string>>({})
   const [isLoadingDates, setIsLoadingDates] = useState(true)
 
   useEffect(() => {
@@ -37,7 +36,6 @@ export default function CalendarAvailabilityCard({
         if (response.ok) {
           const data = await response.json()
           setExcludedDates(data.unavailableDates.map((d: string) => new Date(d)))
-          setReturnDates(data.returnDates || {})
         }
       } catch (error) {
         console.error('Error fetching unavailable dates:', error)
@@ -128,12 +126,7 @@ export default function CalendarAvailabilityCard({
                       d.getMonth() === date.getMonth() &&
                       d.getDate() === date.getDate()
                   )
-                  if (isExcluded) return 'booked-date'
-
-                  const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-                  if (returnDates[dateStr]) return 'return-date'
-
-                  return ''
+                  return isExcluded ? 'booked-date' : ''
                 }}
                 renderDayContents={(day) => <span>{day}</span>}
               />
@@ -145,10 +138,6 @@ export default function CalendarAvailabilityCard({
             <span className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-1.5">
               <span className="w-4 h-4 rounded flex-shrink-0" style={{ backgroundColor: '#fee2e2', border: '1px solid #fca5a5' }}></span>
               <span className="text-sm font-medium text-gray-700">Zajęty</span>
-            </span>
-            <span className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-1.5">
-              <span className="w-4 h-4 rounded flex-shrink-0" style={{ background: 'linear-gradient(to bottom right, #fee2e2 50%, white 50%)', border: '1px solid #d1d5db' }}></span>
-              <span className="text-sm font-medium text-gray-700">Powrót</span>
             </span>
             <span className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-1.5">
               <span className="w-4 h-4 rounded flex-shrink-0 bg-green-100" style={{ border: '1px solid #86efac' }}></span>

@@ -49,7 +49,6 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
   const [endDate, setEndDate] = useState<Date | null>(null)
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [excludedDates, setExcludedDates] = useState<Date[]>([])
-  const [returnDates, setReturnDates] = useState<Record<string, string>>({})
   const [isLoadingDates, setIsLoadingDates] = useState(true)
   const [seasons, setSeasons] = useState<Season[]>([])
   const [isLoadingSeasons, setIsLoadingSeasons] = useState(true)
@@ -88,10 +87,8 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
 
         if (response.ok) {
           const data = await response.json()
-          // Convert date strings to Date objects
           const dates = data.unavailableDates.map((dateStr: string) => new Date(dateStr))
           setExcludedDates(dates)
-          setReturnDates(data.returnDates || {})
         }
       } catch (error) {
         console.error('Error fetching unavailable dates:', error)
@@ -431,10 +428,6 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
                     excludedDate.getDate() === date.getDate()
                 )
                 if (isExcluded) return 'booked-date'
-
-                const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-                if (returnDates[dateStr]) return 'return-date'
-
                 return ''
               }}
               renderDayContents={(day) => <span>{day}</span>}

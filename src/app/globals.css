@@ -94,27 +94,6 @@
   pointer-events: none;
 }
 
-/* Return days — upper triangle red (like booked), lower triangle white (available) */
-.react-datepicker__day.return-date {
-  background: linear-gradient(to bottom right, #fee2e2 50%, white 50%) !important;
-  color: #333 !important;
-  cursor: pointer;
-}
-
-.react-datepicker__day.return-date:hover {
-  background: linear-gradient(to bottom right, #fecaca 50%, #f0f0f0 50%) !important;
-}
-
-/* When return-date is selected or in a selected range — lower triangle gets selection color */
-.react-datepicker__day.return-date.react-datepicker__day--selected,
-.react-datepicker__day.return-date.react-datepicker__day--range-start,
-.react-datepicker__day.return-date.react-datepicker__day--in-range,
-.react-datepicker__day.return-date.react-datepicker__day--in-selecting-range,
-.react-datepicker__day.return-date.react-datepicker__day--selecting-range-start {
-  background: linear-gradient(to bottom right, #fee2e2 50%, #216ba5 50%) !important;
-  color: white !important;
-}
-
 /* Availability-only calendar — disable selection highlight and pointer */
 .availability-calendar .react-datepicker__day:not(.booked-date):not(.return-date) {
   cursor: default;
