@@ -10,7 +10,7 @@ import FleetSelector from '@/components/FleetSelector'
 export default async function FleetPage({ searchParams }: { searchParams: Promise<{ type?: string }> }) {
   // Fetch machines from Strapi
   const machinesRes = await fetchStrapiOrNull<StrapiList<any>>('/api/machines', {
-    params: { populate: '*' },
+    params: { populate: '*', sort: 'name:asc' },
     revalidate: 60,
   })
 
