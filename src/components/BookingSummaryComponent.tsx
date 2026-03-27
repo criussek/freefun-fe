@@ -555,7 +555,7 @@ export default function BookingSummaryComponent({
                         <line x1="12" y1="17" x2="12.01" y2="17"></line>
                       </svg>
                       <div className="absolute right-0 bottom-full mb-2 w-48 sm:w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                        Ta opłata pokrywa przygotowanie i dezynfekcję jednostki przed każdym wynajmem. Przy rezerwacji 7 dni lub dłużej – gratis.
+                        Ta opłata pokrywa przygotowanie i dezynfekcję jednostki przed każdym wynajmem. Przy rezerwacji 8 dni lub dłużej – gratis.
                         <div className="absolute right-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                       </div>
                     </div>
