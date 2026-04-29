@@ -21,9 +21,13 @@ export default async function FleetPage({ searchParams }: { searchParams: Promis
   // Filter only active machines
   const activeMachines = allMachines.filter(machine => machine.isActive !== false)
 
-  // Split machines: FREE (camper) vs FUN (jet_ski, quad, motocross, other)
-  const freeMachines = activeMachines.filter(machine => machine.type === 'camper')
-  const funMachines = activeMachines.filter(machine => machine.type !== 'camper')
+  // Split machines: FREE (camper, other) vs FUN (jet_ski, quad, motocross)
+  // Campers are shown first, "other" machines follow
+  const freeMachines = [
+    ...activeMachines.filter(machine => machine.type === 'camper'),
+    ...activeMachines.filter(machine => machine.type === 'other'),
+  ]
+  const funMachines = activeMachines.filter(machine => machine.type !== 'camper' && machine.type !== 'other')
 
   // Fetch fleet page data
   const fleetPageRes = await fetchStrapiOrNull<StrapiSingle<any>>('/api/fleet', {
