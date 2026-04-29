@@ -44,7 +44,7 @@ export default function CalendarPageComponent({ freeMachines, funMachines }: Cal
           <div>
             <div className="text-center mb-10">
               <h2 className="text-3xl md:text-4xl font-bold text-[#253551]">
-                Inne maszyny
+                Przyczepy kempingowe
               </h2>
             </div>
             <MachineGrid machines={funMachines} />
