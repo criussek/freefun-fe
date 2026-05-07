@@ -108,6 +108,7 @@ export function getSeasonForDate(
 ): Season | null {
   const normalizedDate = parseCalendarDate(date);
   const normalizedMachineType = normalizeMachineType(machineType);
+  let fallbackSeason: Season | null = null;
 
   for (const season of seasons) {
     const seasonStart = parseCalendarDate(season.startDate);
@@ -118,14 +119,14 @@ export function getSeasonForDate(
 
     // Check if date is in range
     if (normalizedDate >= seasonStart && normalizedDate <= seasonEnd) {
-      // If season has no machineTypes specified, it applies to all machines
-      if (seasonMachineTypes.length === 0) {
-        return season;
-      }
-
       // If machineType is provided and season applies to that type
       if (normalizedMachineType && seasonMachineTypes.includes(normalizedMachineType)) {
         return season;
+      }
+
+      // If season has no machineTypes specified, it applies to all machines
+      if (seasonMachineTypes.length === 0 && !fallbackSeason) {
+        fallbackSeason = season;
       }
 
       // If no machineType provided, return season (for backward compatibility)
@@ -134,7 +135,7 @@ export function getSeasonForDate(
       }
     }
   }
-  return null;
+  return fallbackSeason;
 }
 
 /**

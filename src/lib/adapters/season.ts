@@ -1,19 +1,48 @@
 import { Season } from '@/lib/seasons'
 
+function extractMachineTypes(rawMachineTypes: any): string[] {
+  if (!rawMachineTypes) return []
+
+  if (Array.isArray(rawMachineTypes)) {
+    return rawMachineTypes
+      .flatMap(extractMachineTypes)
+      .filter((machineType): machineType is string => Boolean(machineType))
+  }
+
+  if (typeof rawMachineTypes === 'string') {
+    return [rawMachineTypes]
+  }
+
+  if (typeof rawMachineTypes !== 'object') {
+    return []
+  }
+
+  // Strapi relation shape: { data: [...] } or { data: {...} }
+  if ('data' in rawMachineTypes) {
+    return extractMachineTypes(rawMachineTypes.data)
+  }
+
+  const candidate =
+    rawMachineTypes.value ||
+    rawMachineTypes.type ||
+    rawMachineTypes.name ||
+    rawMachineTypes.slug
+
+  if (typeof candidate === 'string') {
+    return [candidate]
+  }
+
+  // Nested entity shape: { attributes: { type/name/value/slug } }
+  if (rawMachineTypes.attributes && typeof rawMachineTypes.attributes === 'object') {
+    return extractMachineTypes(rawMachineTypes.attributes)
+  }
+
+  return []
+}
+
 export function fromStrapiSeason(strapiData: any): Season {
   const attrs = strapiData.attributes || strapiData
-  const rawMachineTypes = attrs.machineTypes
-  const machineTypes = Array.isArray(rawMachineTypes)
-    ? rawMachineTypes
-      .map((machineType: any) => {
-        if (typeof machineType === 'string') return machineType
-        if (machineType && typeof machineType === 'object') {
-          return machineType.value || machineType.type || machineType.name || null
-        }
-        return null
-      })
-      .filter((machineType: any): machineType is string => Boolean(machineType))
-    : []
+  const machineTypes = extractMachineTypes(attrs.machineTypes)
 
   return {
     documentId: strapiData.documentId || strapiData.id,
