@@ -239,6 +239,7 @@ export default async function MachinePage({ params }: MachinePageProps) {
           <MachineDatePicker
             machineId={machineId}
             machineName={machine.name}
+            machineType={machine.type}
             pricePerDay={machine.basepriceperday}
             serviceFee={machine.serviceFee}
             depositFee={machine.depositFee}

@@ -28,6 +28,8 @@ interface MachineDatePickerProps {
   serviceFee?: number
   depositFee?: number
   minRentalDays?: number
+  machineType?: string
+
 }
 
 interface FormData {
@@ -44,7 +46,7 @@ interface FormErrors {
   phone?: string
 }
 
-export default function MachineDatePicker({ machineId, machineName, pricePerDay, serviceFee, depositFee, minRentalDays }: MachineDatePickerProps) {
+export default function MachineDatePicker({ machineId, machineName, machineType, pricePerDay, serviceFee, depositFee, minRentalDays }: MachineDatePickerProps) {
   const [startDate, setStartDate] = useState<Date | null>(null)
   const [endDate, setEndDate] = useState<Date | null>(null)
   const [currentMonth, setCurrentMonth] = useState(new Date())
@@ -151,7 +153,9 @@ export default function MachineDatePicker({ machineId, machineName, pricePerDay,
     documentId: machineId,
     name: machineName,
     basePricePerDay: pricePerDay || 0,
-    minRentalDays: minRentalDays
+    minRentalDays: minRentalDays,
+    type: machineType
+
   }
 
   // Filter function to disable invalid end dates based on minimum days

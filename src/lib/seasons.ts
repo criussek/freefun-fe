@@ -196,7 +196,7 @@ export function calculateTotalPrice(
   for (const date of dates) {
     for (const machine of machines) {
       const pricePerDay = calculatePricePerDay(machine, date, seasons);
-      const season = getSeasonForDate(date, seasons);
+      const season = getSeasonForDate(date, seasons, machine.type);
 
       breakdown.push({
         date,
