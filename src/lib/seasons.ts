@@ -108,7 +108,8 @@ export function getSeasonForDate(
 ): Season | null {
   const normalizedDate = parseCalendarDate(date);
   const normalizedMachineType = normalizeMachineType(machineType);
-  let fallbackSeason: Season | null = null;
+  const exactTypeMatches: Season[] = [];
+  const fallbackMatches: Season[] = [];
 
   for (const season of seasons) {
     const seasonStart = parseCalendarDate(season.startDate);
@@ -121,12 +122,14 @@ export function getSeasonForDate(
     if (normalizedDate >= seasonStart && normalizedDate <= seasonEnd) {
       // If machineType is provided and season applies to that type
       if (normalizedMachineType && seasonMachineTypes.includes(normalizedMachineType)) {
-        return season;
+        exactTypeMatches.push(season);
+        continue;
       }
 
       // If season has no machineTypes specified, it applies to all machines
-      if (seasonMachineTypes.length === 0 && !fallbackSeason) {
-        fallbackSeason = season;
+      if (seasonMachineTypes.length === 0) {
+        fallbackMatches.push(season);
+        continue;
       }
 
       // If no machineType provided, return season (for backward compatibility)
@@ -135,7 +138,20 @@ export function getSeasonForDate(
       }
     }
   }
-  return fallbackSeason;
+
+  if (exactTypeMatches.length > 0) {
+    return exactTypeMatches.reduce((best, current) =>
+      current.priceMultiplier < best.priceMultiplier ? current : best
+    );
+  }
+
+  if (fallbackMatches.length > 0) {
+    return fallbackMatches.reduce((best, current) =>
+      current.priceMultiplier < best.priceMultiplier ? current : best
+    );
+  }
+
+  return null;
 }
 
 /**
