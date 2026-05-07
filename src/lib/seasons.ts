@@ -90,6 +90,11 @@ export interface Machine {
   type?: string; // Machine type (e.g., 'camper', 'jet_ski', 'motocross', 'quad', 'other')
 }
 
+function normalizeMachineType(type?: string): string | undefined {
+  if (!type) return undefined;
+  return type.trim().toLowerCase().replace(/[-\s]+/g, '_');
+}
+
 /**
  * Get applicable season for a specific date and machine type (or null if no season)
  * If machineType is provided, only returns seasons that:
@@ -102,20 +107,24 @@ export function getSeasonForDate(
   machineType?: string
 ): Season | null {
   const normalizedDate = parseCalendarDate(date);
+  const normalizedMachineType = normalizeMachineType(machineType);
 
   for (const season of seasons) {
     const seasonStart = parseCalendarDate(season.startDate);
     const seasonEnd = parseCalendarDate(season.endDate);
+    const seasonMachineTypes = (season.machineTypes || [])
+      .map(normalizeMachineType)
+      .filter((type): type is string => Boolean(type));
 
     // Check if date is in range
     if (normalizedDate >= seasonStart && normalizedDate <= seasonEnd) {
       // If season has no machineTypes specified, it applies to all machines
-      if (!season.machineTypes || season.machineTypes.length === 0) {
+      if (seasonMachineTypes.length === 0) {
         return season;
       }
 
       // If machineType is provided and season applies to that type
-      if (machineType && season.machineTypes.includes(machineType)) {
+      if (normalizedMachineType && seasonMachineTypes.includes(normalizedMachineType)) {
         return season;
       }
 
@@ -225,8 +234,10 @@ export function getMinimumDaysRequired(
   seasons: Season[],
   machines?: Machine[]
 ): number {
+  // Use first machine type (single-machine flow) for proper season matching.
+  const machineType = machines?.[0]?.type;
   // First check if start date is in a season
-  const startSeason = getSeasonForDate(startDate, seasons);
+  const startSeason = getSeasonForDate(startDate, seasons, machineType);
   if (startSeason) {
     return startSeason.minDays;
   }
@@ -282,18 +293,22 @@ export function getLowestPricePerDay(
   seasons: Season[],
   machineType?: string
 ): number {
+  const normalizedMachineType = normalizeMachineType(machineType);
   if (!seasons || seasons.length === 0) {
     return basePricePerDay;
   }
 
   // Filter seasons that apply to this machine type
   const applicableSeasons = seasons.filter(season => {
+    const seasonMachineTypes = (season.machineTypes || [])
+      .map(normalizeMachineType)
+      .filter((type): type is string => Boolean(type));
     // Season with no machineTypes applies to all
-    if (!season.machineTypes || season.machineTypes.length === 0) {
+    if (seasonMachineTypes.length === 0) {
       return true;
     }
     // Season with machineTypes only applies if machine type matches
-    return machineType && season.machineTypes.includes(machineType);
+    return normalizedMachineType ? seasonMachineTypes.includes(normalizedMachineType) : false;
   });
 
   // If no applicable seasons, return base price

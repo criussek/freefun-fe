@@ -2,6 +2,15 @@ import { StrapiEntity } from '@/types/strapi';
 import { Machine, MachineFeature } from '@/types/domain';
 import { mediaURL } from '@/lib/images';
 
+function normalizeMachineType(type: unknown): Machine['type'] {
+  if (typeof type !== 'string') return 'other';
+  const normalized = type.trim().toLowerCase().replace(/[-\s]+/g, '_');
+  if (normalized === 'camper' || normalized === 'jet_ski' || normalized === 'motocross' || normalized === 'quad' || normalized === 'other') {
+    return normalized;
+  }
+  return 'other';
+}
+
 export function fromStrapiMachine(e: StrapiEntity<any>): Machine {
   const a = (e && (e as any).attributes) ? (e as any).attributes : (e ?? {});
 
@@ -50,7 +59,7 @@ export function fromStrapiMachine(e: StrapiEntity<any>): Machine {
     heroName: a.heroName ?? undefined,
     heroDescription: a.heroDescription ?? undefined,
     slug: a.slug ?? '',
-    type: a.type ?? 'other',
+    type: normalizeMachineType(a.type),
     overview: a.overview ?? '',
     fleetOverview: a.fleetOverview ?? undefined,
     description: a.description ?? undefined,

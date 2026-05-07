@@ -289,7 +289,7 @@ export default function MachineDatePicker({ machineId, machineName, machineType,
     const pricing = calculateTotalPrice([machine], startDate, endDate, seasons)
     rentalPrice = pricing.totalPrice
     // Check if start date is in a season for display
-    activeSeason = getSeasonForDate(startDate, seasons)
+    activeSeason = getSeasonForDate(startDate, seasons, machine.type)
   }
 
   const totalPrice = rentalPrice + (isLongTermBooking(days) ? 0 : (serviceFee || 0))
