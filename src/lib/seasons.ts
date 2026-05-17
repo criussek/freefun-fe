@@ -95,6 +95,48 @@ function normalizeMachineType(type?: string): string | undefined {
   return type.trim().toLowerCase().replace(/[-\s]+/g, '_');
 }
 
+/** Normalize Strapi machineTypes (string, array, or nested shapes) to a flat string array. */
+export function extractMachineTypes(rawMachineTypes: unknown): string[] {
+  if (!rawMachineTypes) return [];
+
+  if (Array.isArray(rawMachineTypes)) {
+    return rawMachineTypes
+      .flatMap(extractMachineTypes)
+      .filter((machineType): machineType is string => Boolean(machineType));
+  }
+
+  if (typeof rawMachineTypes === 'string') {
+    return [rawMachineTypes];
+  }
+
+  if (typeof rawMachineTypes !== 'object') {
+    return [];
+  }
+
+  if ('data' in rawMachineTypes) {
+    return extractMachineTypes((rawMachineTypes as { data: unknown }).data);
+  }
+
+  const record = rawMachineTypes as Record<string, unknown>;
+  const candidate = record.value || record.type || record.name || record.slug;
+
+  if (typeof candidate === 'string') {
+    return [candidate];
+  }
+
+  if (record.attributes && typeof record.attributes === 'object') {
+    return extractMachineTypes(record.attributes);
+  }
+
+  return [];
+}
+
+function getSeasonMachineTypes(season: Season): string[] {
+  return extractMachineTypes(season.machineTypes)
+    .map(normalizeMachineType)
+    .filter((type): type is string => Boolean(type));
+}
+
 /**
  * Get applicable season for a specific date and machine type (or null if no season)
  * If machineType is provided, only returns seasons that:
@@ -114,9 +156,7 @@ export function getSeasonForDate(
   for (const season of seasons) {
     const seasonStart = parseCalendarDate(season.startDate);
     const seasonEnd = parseCalendarDate(season.endDate);
-    const seasonMachineTypes = (season.machineTypes || [])
-      .map(normalizeMachineType)
-      .filter((type): type is string => Boolean(type));
+    const seasonMachineTypes = getSeasonMachineTypes(season);
 
     // Check if date is in range
     if (normalizedDate >= seasonStart && normalizedDate <= seasonEnd) {
@@ -130,11 +170,6 @@ export function getSeasonForDate(
       if (seasonMachineTypes.length === 0) {
         fallbackMatches.push(season);
         continue;
-      }
-
-      // If no machineType provided, return season (for backward compatibility)
-      if (!machineType) {
-        return season;
       }
     }
   }
@@ -251,23 +286,23 @@ export function getMinimumDaysRequired(
   seasons: Season[],
   machines?: Machine[]
 ): number {
-  // Use first machine type (single-machine flow) for proper season matching.
-  const machineType = machines?.[0]?.type;
-  // First check if start date is in a season
-  const startSeason = getSeasonForDate(startDate, seasons, machineType);
-  if (startSeason) {
-    return startSeason.minDays;
-  }
-
-  // If no season, check machines for their minRentalDays (use the highest)
   if (machines && machines.length > 0) {
-    const machineMinDays = machines
-      .map(m => m.minRentalDays || 1)
+    return machines
+      .map(machine => {
+        const startSeason = getSeasonForDate(startDate, seasons, machine.type);
+        if (startSeason) {
+          return startSeason.minDays;
+        }
+        return machine.minRentalDays || 1;
+      })
       .reduce((max, current) => Math.max(max, current), 1);
-    return machineMinDays;
   }
 
-  // Default to 1 day
+  const universalSeason = getSeasonForDate(startDate, seasons);
+  if (universalSeason) {
+    return universalSeason.minDays;
+  }
+
   return 1;
 }
 
@@ -317,9 +352,7 @@ export function getLowestPricePerDay(
 
   // Filter seasons that apply to this machine type
   const applicableSeasons = seasons.filter(season => {
-    const seasonMachineTypes = (season.machineTypes || [])
-      .map(normalizeMachineType)
-      .filter((type): type is string => Boolean(type));
+    const seasonMachineTypes = getSeasonMachineTypes(season);
     // Season with no machineTypes applies to all
     if (seasonMachineTypes.length === 0) {
       return true;

@@ -9,6 +9,7 @@ import PickupDetailsSection from './PickupDetailsSection';
 import TermsSection from './TermsSection';
 import BookingSummaryCard from './BookingSummaryCard';
 import { Season, Machine, calculateTotalPrice, isLongTermBooking } from '@/lib/seasons';
+import { fromStrapiSeason } from '@/lib/adapters/season';
 
 interface Guest {
   fullName: string;
@@ -75,7 +76,7 @@ export default function CheckoutPageComponent({
         const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/seasons`);
         if (response.ok) {
           const data = await response.json();
-          setSeasons(data.data || []);
+          setSeasons((data.data || []).map(fromStrapiSeason));
         }
       } catch (error) {
         console.error('Error fetching seasons:', error);
