@@ -32,7 +32,8 @@ export default async function CalendarPage() {
 
   // FREE = campers, FUN = everything else
   const freeMachines = activeMachines.filter((m) => m.type === 'camper')
-  const funMachines = activeMachines.filter((m) => m.type !== 'camper')
+  const trailerMachines = activeMachines.filter((m) => m.type === 'other')
+  const funMachines = activeMachines.filter((m) => m.type !== 'camper' && m.type !== 'other')
 
   return (
     <main className="min-h-screen bg-white">
@@ -44,6 +45,7 @@ export default async function CalendarPage() {
 
       <CalendarPageComponent
         freeMachines={freeMachines}
+        trailerMachines={trailerMachines}
         funMachines={funMachines}
       />
     </main>
