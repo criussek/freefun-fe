@@ -57,7 +57,7 @@ export default function CalendarPageComponent({ freeMachines, funMachines, trail
           <div>
             <div className="text-center mb-10">
               <h2 className="text-3xl md:text-4xl font-bold text-[#253551]">
-                fun - pojazdy do zabawy
+                FUN - pojazdy do zabawy
               </h2>
             </div>
             <MachineGrid machines={funMachines} />
