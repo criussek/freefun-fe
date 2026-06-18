@@ -2,12 +2,20 @@
 
 import { useState, useEffect } from 'react'
 import DatePicker, { registerLocale } from 'react-datepicker'
-import { addMonths, subMonths } from 'date-fns'
+import { addMonths, endOfMonth, startOfMonth, subMonths } from 'date-fns'
 import { pl } from 'date-fns/locale'
 import 'react-datepicker/dist/react-datepicker.css'
 import Link from 'next/link'
 
 registerLocale('pl', pl)
+
+function getUnavailableDatesUrl(machineId: string, visibleMonth: Date) {
+  const startDate = startOfMonth(visibleMonth).toISOString()
+  const endDate = endOfMonth(visibleMonth).toISOString()
+  const params = new URLSearchParams({ startDate, endDate })
+
+  return `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/bookings/unavailable-dates/${machineId}?${params.toString()}`
+}
 
 interface CalendarAvailabilityCardProps {
   machineId: string
@@ -31,7 +39,7 @@ export default function CalendarAvailabilityCard({
       try {
         setIsLoadingDates(true)
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/bookings/unavailable-dates/${machineId}`
+          getUnavailableDatesUrl(machineId, currentMonth)
         )
         if (response.ok) {
           const data = await response.json()
@@ -45,7 +53,7 @@ export default function CalendarAvailabilityCard({
     }
 
     fetchUnavailableDates()
-  }, [machineId])
+  }, [machineId, currentMonth])
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col">

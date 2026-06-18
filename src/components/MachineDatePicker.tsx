@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import DatePicker, { registerLocale } from 'react-datepicker'
-import { addMonths, subMonths, differenceInDays } from 'date-fns'
+import { addMonths, subMonths, differenceInDays, endOfMonth, startOfMonth } from 'date-fns'
 import { pl } from 'date-fns/locale'
 import 'react-datepicker/dist/react-datepicker.css'
 import {
@@ -20,6 +20,14 @@ import { Phone } from 'lucide-react'
 
 // Register Polish locale
 registerLocale('pl', pl)
+
+function getUnavailableDatesUrl(machineId: string, visibleMonth: Date, monthsShown: number) {
+  const startDate = startOfMonth(visibleMonth).toISOString()
+  const endDate = endOfMonth(addMonths(visibleMonth, monthsShown - 1)).toISOString()
+  const params = new URLSearchParams({ startDate, endDate })
+
+  return `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/bookings/unavailable-dates/${machineId}?${params.toString()}`
+}
 
 interface MachineDatePickerProps {
   machineId: string
@@ -84,7 +92,7 @@ export default function MachineDatePicker({ machineId, machineName, machineType,
       try {
         setIsLoadingDates(true)
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/bookings/unavailable-dates/${machineId}`
+          getUnavailableDatesUrl(machineId, currentMonth, monthsShown)
         )
 
         if (response.ok) {
@@ -100,7 +108,7 @@ export default function MachineDatePicker({ machineId, machineName, machineType,
     }
 
     fetchUnavailableDates()
-  }, [machineId])
+  }, [machineId, currentMonth, monthsShown])
 
   // Fetch seasons when component mounts
   useEffect(() => {
