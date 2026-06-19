@@ -20,10 +20,26 @@ import { fromStrapiSeason } from '@/lib/adapters/season'
 // Register Polish locale
 registerLocale('pl', pl)
 
-function getUnavailableDatesUrl(machineId: string, visibleMonth: Date, monthsShown: number) {
-  const startDate = startOfWeek(startOfMonth(visibleMonth), { locale: pl }).toISOString()
-  const endDate = endOfWeek(endOfMonth(addMonths(visibleMonth, monthsShown - 1)), { locale: pl }).toISOString()
-  const params = new URLSearchParams({ startDate, endDate })
+function getUnavailableDatesUrl(
+  machineId: string,
+  visibleMonth: Date,
+  monthsShown: number,
+  selectedStartDate: Date | null
+) {
+  const visibleStartDate = startOfWeek(startOfMonth(visibleMonth), { locale: pl })
+  const visibleEndDate = endOfWeek(endOfMonth(addMonths(visibleMonth, monthsShown - 1)), { locale: pl })
+
+  const startDate = selectedStartDate && formatCalendarDate(selectedStartDate) < formatCalendarDate(visibleStartDate)
+    ? selectedStartDate
+    : visibleStartDate
+  const endDate = selectedStartDate && formatCalendarDate(selectedStartDate) > formatCalendarDate(visibleEndDate)
+    ? selectedStartDate
+    : visibleEndDate
+
+  const params = new URLSearchParams({
+    startDate: startDate.toISOString(),
+    endDate: endDate.toISOString()
+  })
 
   return `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/bookings/unavailable-dates/${machineId}?${params.toString()}`
 }
@@ -114,7 +130,7 @@ export default function MachineDatePicker({ machineId, machineName, machineType,
       try {
         setIsLoadingDates(true)
         const response = await fetch(
-          getUnavailableDatesUrl(machineId, currentMonth, monthsShown)
+          getUnavailableDatesUrl(machineId, currentMonth, monthsShown, startDate)
         )
 
         if (response.ok) {
@@ -130,7 +146,7 @@ export default function MachineDatePicker({ machineId, machineName, machineType,
     }
 
     fetchUnavailableDates()
-  }, [machineId, currentMonth, monthsShown])
+  }, [machineId, currentMonth, monthsShown, startDate])
 
   // Fetch seasons when component mounts
   useEffect(() => {
@@ -201,11 +217,10 @@ export default function MachineDatePicker({ machineId, machineName, machineType,
     const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate())
     const startDateOnly = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())
 
-    // Allow picking an earlier date to restart the range, but disallow selecting
-    // the same start date as an invalid 1-day end date when a longer minimum applies.
+    // Allow picking an earlier date to restart the range, or the same date to clear it.
     if (dateOnly < startDateOnly) return true
     if (dateOnly.getTime() === startDateOnly.getTime()) {
-      return getMinimumDaysRequired(startDate, seasons, [machine]) <= 1
+      return true
     }
 
     // If date is after start date, enforce minimum days requirement for end date
@@ -219,6 +234,17 @@ export default function MachineDatePicker({ machineId, machineName, machineType,
     setSubmitError(null)
 
     if (start && end) {
+      if (
+        startDate &&
+        isSameCalendarDay(start, end) &&
+        isSameCalendarDay(start, startDate) &&
+        getMinimumDaysRequired(startDate, seasons, [machine]) > 1
+      ) {
+        setStartDate(null)
+        setEndDate(null)
+        return
+      }
+
       const minEndDate = getMinimumEndDate(start, seasons, [machine])
       if (formatCalendarDate(end) < formatCalendarDate(minEndDate)) {
         setStartDate(start)
