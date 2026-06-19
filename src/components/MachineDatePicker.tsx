@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import DatePicker, { registerLocale } from 'react-datepicker'
-import { addMonths, subMonths, differenceInDays, endOfMonth, startOfMonth } from 'date-fns'
+import { addDays, addMonths, differenceInDays, endOfMonth, endOfWeek, startOfMonth, startOfWeek, subMonths } from 'date-fns'
 import { pl } from 'date-fns/locale'
 import 'react-datepicker/dist/react-datepicker.css'
 import {
@@ -16,17 +16,39 @@ import {
   formatCalendarDate
 } from '@/lib/seasons'
 import { fromStrapiSeason } from '@/lib/adapters/season'
-import { Phone } from 'lucide-react'
 
 // Register Polish locale
 registerLocale('pl', pl)
 
 function getUnavailableDatesUrl(machineId: string, visibleMonth: Date, monthsShown: number) {
-  const startDate = startOfMonth(visibleMonth).toISOString()
-  const endDate = endOfMonth(addMonths(visibleMonth, monthsShown - 1)).toISOString()
+  const startDate = startOfWeek(startOfMonth(visibleMonth), { locale: pl }).toISOString()
+  const endDate = endOfWeek(endOfMonth(addMonths(visibleMonth, monthsShown - 1)), { locale: pl }).toISOString()
   const params = new URLSearchParams({ startDate, endDate })
 
   return `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/bookings/unavailable-dates/${machineId}?${params.toString()}`
+}
+
+function isSameCalendarDay(date: Date, otherDate: Date): boolean {
+  return formatCalendarDate(date) === formatCalendarDate(otherDate)
+}
+
+function containsUnavailableDate(start: Date, end: Date, unavailableDates: Date[]): boolean {
+  const normalizedStart = formatCalendarDate(start)
+  const normalizedEnd = formatCalendarDate(end)
+  const rangeStart = normalizedStart <= normalizedEnd ? start : end
+  const rangeEnd = normalizedStart <= normalizedEnd ? end : start
+
+  for (
+    let date = new Date(rangeStart.getFullYear(), rangeStart.getMonth(), rangeStart.getDate());
+    formatCalendarDate(date) <= formatCalendarDate(rangeEnd);
+    date = addDays(date, 1)
+  ) {
+    if (unavailableDates.some((unavailableDate) => isSameCalendarDay(unavailableDate, date))) {
+      return true
+    }
+  }
+
+  return false
 }
 
 interface MachineDatePickerProps {
@@ -189,17 +211,25 @@ export default function MachineDatePicker({ machineId, machineName, machineType,
     // If date is after start date, enforce minimum days requirement for end date
     const minEndDate = getMinimumEndDate(startDate, seasons, [machine])
     const minEndDateOnly = new Date(minEndDate.getFullYear(), minEndDate.getMonth(), minEndDate.getDate())
-    return dateOnly >= minEndDateOnly
+    return dateOnly >= minEndDateOnly && !containsUnavailableDate(startDate, date, excludedDates)
   }
 
   const onChange = (dates: [Date | null, Date | null]) => {
     const [start, end] = dates
+    setSubmitError(null)
 
     if (start && end) {
       const minEndDate = getMinimumEndDate(start, seasons, [machine])
       if (formatCalendarDate(end) < formatCalendarDate(minEndDate)) {
         setStartDate(start)
         setEndDate(null)
+        return
+      }
+
+      if (containsUnavailableDate(start, end, excludedDates)) {
+        setStartDate(start)
+        setEndDate(null)
+        setSubmitError('Wybrany zakres zawiera już zarezerwowany termin.')
         return
       }
     }
@@ -290,6 +320,9 @@ export default function MachineDatePicker({ machineId, machineName, machineType,
 
   // Calculate prices with season awareness
   const days = calculateDays()
+  const selectedRangeContainsUnavailableDate = Boolean(
+    startDate && endDate && containsUnavailableDate(startDate, endDate, excludedDates)
+  )
   let rentalPrice = 0
   let activeSeason: Season | null = null
 
@@ -316,6 +349,11 @@ export default function MachineDatePicker({ machineId, machineName, machineType,
 
     if (days < minDaysRequired) {
       setSubmitError(`Minimalny czas wynajmu dla wybranego terminu to ${minDaysRequired} dni.`)
+      return
+    }
+
+    if (selectedRangeContainsUnavailableDate) {
+      setSubmitError('Wybrany zakres zawiera już zarezerwowany termin.')
       return
     }
 
@@ -429,15 +467,14 @@ export default function MachineDatePicker({ machineId, machineName, machineType,
               excludeDates={excludedDates}
               filterDate={filterDate}
               openToDate={currentMonth}
+              onMonthChange={setCurrentMonth}
               calendarClassName="custom-calendar"
               locale="pl"
               key={`${currentMonth.toISOString()}-${monthsShown}`}
               dayClassName={(date) => {
                 const isExcluded = excludedDates.some(
                   (excludedDate) =>
-                    excludedDate.getFullYear() === date.getFullYear() &&
-                    excludedDate.getMonth() === date.getMonth() &&
-                    excludedDate.getDate() === date.getDate()
+                    isSameCalendarDay(excludedDate, date)
                 )
                 if (isExcluded) return 'booked-date'
                 return ''
@@ -725,7 +762,7 @@ export default function MachineDatePicker({ machineId, machineName, machineType,
                 <button
                   onClick={handleSubmit}
                   className="btn-secondary w-full mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={!isFormValid() || isSubmitting}
+                  disabled={!isFormValid() || selectedRangeContainsUnavailableDate || isSubmitting}
                 >
                   {isSubmitting ? 'Tworzenie rezerwacji...' : 'Rezerwuj teraz'}
                 </button>

@@ -2,19 +2,24 @@
 
 import { useState, useEffect } from 'react'
 import DatePicker, { registerLocale } from 'react-datepicker'
-import { addMonths, endOfMonth, startOfMonth, subMonths } from 'date-fns'
+import { addMonths, endOfMonth, endOfWeek, startOfMonth, startOfWeek, subMonths } from 'date-fns'
 import { pl } from 'date-fns/locale'
 import 'react-datepicker/dist/react-datepicker.css'
 import Link from 'next/link'
+import { formatCalendarDate } from '@/lib/seasons'
 
 registerLocale('pl', pl)
 
 function getUnavailableDatesUrl(machineId: string, visibleMonth: Date) {
-  const startDate = startOfMonth(visibleMonth).toISOString()
-  const endDate = endOfMonth(visibleMonth).toISOString()
+  const startDate = startOfWeek(startOfMonth(visibleMonth), { locale: pl }).toISOString()
+  const endDate = endOfWeek(endOfMonth(visibleMonth), { locale: pl }).toISOString()
   const params = new URLSearchParams({ startDate, endDate })
 
   return `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/bookings/unavailable-dates/${machineId}?${params.toString()}`
+}
+
+function isSameCalendarDay(date: Date, otherDate: Date): boolean {
+  return formatCalendarDate(date) === formatCalendarDate(otherDate)
 }
 
 interface CalendarAvailabilityCardProps {
@@ -123,6 +128,7 @@ export default function CalendarAvailabilityCard({
                 inline
                 monthsShown={1}
                 openToDate={currentMonth}
+                onMonthChange={setCurrentMonth}
                 excludeDates={excludedDates}
                 locale="pl"
                 calendarClassName="custom-calendar"
@@ -130,9 +136,7 @@ export default function CalendarAvailabilityCard({
                 dayClassName={(date) => {
                   const isExcluded = excludedDates.some(
                     (d) =>
-                      d.getFullYear() === date.getFullYear() &&
-                      d.getMonth() === date.getMonth() &&
-                      d.getDate() === date.getDate()
+                      isSameCalendarDay(d, date)
                   )
                   return isExcluded ? 'booked-date' : ''
                 }}
